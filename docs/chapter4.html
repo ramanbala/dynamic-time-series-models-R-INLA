@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Modeling Univariate Time Series | Dynamic Time Series Models using R-INLA: An Applied Perspective</title>
+  <meta name="description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Modeling Univariate Time Series | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA/" />
+  <meta property="og:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+  <meta property="og:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="github-repo" content="ramanbala/dynamic-time-series-models-R-INLA" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Modeling Univariate Time Series | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  
+  <meta name="twitter:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="twitter:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+
+<meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
+
+
+<meta name="date" content="2022-06-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chapter3.html"/>
+<link rel="next" href="chapter5.html"/>
+<script src="libs/header-attrs/header-attrs.js"></script>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+<script src="libs/kePrint/kePrint.js"></script>
+<link href="libs/lightable/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a></li>
+
+<li class="divider"></li>
+<li><a href="index.html#preface">Preface<span></span></a>
+<ul>
+<li><a href="index.html#why-read-this-book">Why read this book?<span></span></a></li>
+<li><a href="index.html#structure-of-the-book">Structure of the book<span></span></a></li>
+<li><a href="index.html#software-information-and-conventions">Software information and conventions<span></span></a></li>
+<li><a href="index.html#acknowledgments">Acknowledgments<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="chapter1.html"><a href="chapter1.html"><i class="fa fa-check"></i><b>1</b> Bayesian Analysis<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="chapter1.html"><a href="chapter1.html#intro-ch1"><i class="fa fa-check"></i><b>1.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="1.2" data-path="chapter1.html"><a href="chapter1.html#bayes-framework"><i class="fa fa-check"></i><b>1.2</b> Bayesian framework<span></span></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="chapter1.html"><a href="chapter1.html#bayesian-model-comparison"><i class="fa fa-check"></i><b>1.2.1</b> Bayesian model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="chapter1.html"><a href="chapter1.html#bayes-ts"><i class="fa fa-check"></i><b>1.3</b> Bayesian analysis of time series<span></span></a></li>
+<li class="chapter" data-level="1.4" data-path="chapter1.html"><a href="chapter1.html#dlms"><i class="fa fa-check"></i><b>1.4</b> Gaussian dynamic linear models (DLMs)<span></span></a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="chapter1.html"><a href="chapter1.html#constant-level-plus-noise-model"><i class="fa fa-check"></i><b>1.4.1</b> Constant level plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.2" data-path="chapter1.html"><a href="chapter1.html#local-level-model"><i class="fa fa-check"></i><b>1.4.2</b> Local level model<span></span></a></li>
+<li class="chapter" data-level="1.4.3" data-path="chapter1.html"><a href="chapter1.html#gaussian-dlm-framework-for-univariate-time-series"><i class="fa fa-check"></i><b>1.4.3</b> Gaussian DLM framework for univariate time series<span></span></a></li>
+<li class="chapter" data-level="1.4.4" data-path="chapter1.html"><a href="chapter1.html#ar1-plus-noise-model"><i class="fa fa-check"></i><b>1.4.4</b> AR(1) plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.5" data-path="chapter1.html"><a href="chapter1.html#dlm-for-vector-valued-time-series"><i class="fa fa-check"></i><b>1.4.5</b> DLM for vector-valued time series<span></span></a></li>
+<li class="chapter" data-level="1.4.6" data-path="chapter1.html"><a href="chapter1.html#kalman-filtering-and-smoothing"><i class="fa fa-check"></i><b>1.4.6</b> Kalman filtering and smoothing<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="chapter1.html"><a href="chapter1.html#beyonddlm"><i class="fa fa-check"></i><b>1.5</b> Beyond basic Gaussian DLMs<span></span></a></li>
+<li><a href="chapter1.html#chapter-1-appendix">Chapter 1 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter1.html#conditional-distributions">Conditional distributions<span></span></a></li>
+<li><a href="chapter1.html#exponential-family-of-distributions">Exponential family of distributions<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter2.html"><a href="chapter2.html"><i class="fa fa-check"></i><b>2</b> A Review of INLA<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="chapter2.html"><a href="chapter2.html#intro-ch2"><i class="fa fa-check"></i><b>2.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="2.2" data-path="chapter2.html"><a href="chapter2.html#laplace"><i class="fa fa-check"></i><b>2.2</b> Laplace approximation<span></span></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="chapter2.html"><a href="chapter2.html#simplaplace"><i class="fa fa-check"></i><b>2.2.1</b> Simplified Laplace approximation<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="chapter2.html"><a href="chapter2.html#inlats"><i class="fa fa-check"></i><b>2.3</b> INLA structure for time series<span></span></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="chapter2.html"><a href="chapter2.html#inla-steps"><i class="fa fa-check"></i><b>2.3.1</b> INLA steps<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="chapter2.html"><a href="chapter2.html#forecast"><i class="fa fa-check"></i><b>2.4</b> Forecasting in INLA<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="chapter2.html"><a href="chapter2.html#marglik"><i class="fa fa-check"></i><b>2.5</b> Marginal likelihood computation in INLA<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="chapter2.html"><a href="chapter2.html#rinlapkg"><i class="fa fa-check"></i><b>2.6</b> <code>R-INLA</code> package – some basics<span></span></a></li>
+<li><a href="chapter2.html#chapter-2-appendix">Chapter 2 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter2.html#gaussian-markov-random-field-gmrf">Gaussian Markov Random Field (GMRF)<span></span></a></li>
+<li><a href="chapter2.html#kullback-leibler-divergence">Kullback-Leibler divergence<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter3.html"><a href="chapter3.html"><i class="fa fa-check"></i><b>3</b> Details of R-INLA for Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="chapter3.html"><a href="chapter3.html#intro-ch3"><i class="fa fa-check"></i><b>3.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="3.2" data-path="chapter3.html"><a href="chapter3.html#ch3-rw1noise"><i class="fa fa-check"></i><b>3.2</b> Random walk plus noise model<span></span></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="chapter3.html"><a href="chapter3.html#inlaformula"><i class="fa fa-check"></i><b>3.2.1</b> <code>R-INLA</code> model formula<span></span></a></li>
+<li class="chapter" data-level="3.2.2" data-path="chapter3.html"><a href="chapter3.html#inlaexec"><i class="fa fa-check"></i><b>3.2.2</b> Model execution<span></span></a></li>
+<li class="chapter" data-level="3.2.3" data-path="chapter3.html"><a href="chapter3.html#inlaprior"><i class="fa fa-check"></i><b>3.2.3</b> Prior specifications for hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.4" data-path="chapter3.html"><a href="chapter3.html#inlaposterior"><i class="fa fa-check"></i><b>3.2.4</b> Posterior distributions of hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.5" data-path="chapter3.html"><a href="chapter3.html#fittedvalues"><i class="fa fa-check"></i><b>3.2.5</b> Fitted values for latent states and responses<span></span></a></li>
+<li class="chapter" data-level="3.2.6" data-path="chapter3.html"><a href="chapter3.html#filterestimate"><i class="fa fa-check"></i><b>3.2.6</b> Filtering and smoothing in DLM<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="chapter3.html"><a href="chapter3.html#ch3-ar1levelnoise"><i class="fa fa-check"></i><b>3.3</b> AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="chapter3.html"><a href="chapter3.html#ch3-high-lags"><i class="fa fa-check"></i><b>3.4</b> Dynamic linear models with higher order AR lags<span></span></a>
+<ul>
+<li><a href="chapter3.html#arp-with-level-plus-noise-model">AR<span class="math inline">\((p)\)</span> with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="chapter3.html"><a href="chapter3.html#ch3-rwdrift"><i class="fa fa-check"></i><b>3.5</b> Random walk with drift plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.6" data-path="chapter3.html"><a href="chapter3.html#ch3-rwtvdrift"><i class="fa fa-check"></i><b>3.6</b> Second-order polynomial model<span></span></a></li>
+<li class="chapter" data-level="3.7" data-path="chapter3.html"><a href="chapter3.html#forecasting"><i class="fa fa-check"></i><b>3.7</b> Forecasting states and observations<span></span></a></li>
+<li class="chapter" data-level="3.8" data-path="chapter3.html"><a href="chapter3.html#modsel"><i class="fa fa-check"></i><b>3.8</b> Model comparisons<span></span></a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="chapter3.html"><a href="chapter3.html#modsel-insamp-ch3"><i class="fa fa-check"></i><b>3.8.1</b> In-sample model comparisons<span></span></a></li>
+<li class="chapter" data-level="3.8.2" data-path="chapter3.html"><a href="chapter3.html#modsel-outsamp-ch3"><i class="fa fa-check"></i><b>3.8.2</b> Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="chapter3.html"><a href="chapter3.html#nondefault-priors"><i class="fa fa-check"></i><b>3.9</b> Non-default prior specifications<span></span></a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="chapter3.html"><a href="chapter3.html#custom-priors"><i class="fa fa-check"></i><b>3.9.1</b> Custom prior specifications<span></span></a></li>
+<li class="chapter" data-level="3.9.2" data-path="chapter3.html"><a href="chapter3.html#pc-priors"><i class="fa fa-check"></i><b>3.9.2</b> Penalized complexity (PC) priors<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="chapter3.html"><a href="chapter3.html#post-sampling"><i class="fa fa-check"></i><b>3.10</b> Posterior sampling of latent effects and hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.11" data-path="chapter3.html"><a href="chapter3.html#postpred-samples"><i class="fa fa-check"></i><b>3.11</b> Posterior predictive samples of unknown observations<span></span></a></li>
+<li><a href="chapter3.html#chapter-3-appendix">Chapter 3 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter3.html#sampling-properties-of-time-series">Sampling properties of time series<span></span></a></li>
+<li><a href="chapter3.html#autoregressive-models">Autoregressive models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter4.html"><a href="chapter4.html"><i class="fa fa-check"></i><b>4</b> Modeling Univariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="chapter4.html"><a href="chapter4.html#intro-ch4"><i class="fa fa-check"></i><b>4.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="4.2" data-path="chapter4.html"><a href="chapter4.html#dat-analysis"><i class="fa fa-check"></i><b>4.2</b> Example: A software engineering example – Musa data<span></span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="chapter4.html"><a href="chapter4.html#ch4-model1"><i class="fa fa-check"></i><b>4.2.1</b> Model 1. AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.2" data-path="chapter4.html"><a href="chapter4.html#ch4-model2"><i class="fa fa-check"></i><b>4.2.2</b> Model 2. Random walk plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.3" data-path="chapter4.html"><a href="chapter4.html#ch4-model3"><i class="fa fa-check"></i><b>4.2.3</b> Model 3. AR(1) with trend plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.4" data-path="chapter4.html"><a href="chapter4.html#ch4-model4"><i class="fa fa-check"></i><b>4.2.4</b> Model 4. AR(2) with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chapter4.html"><a href="chapter4.html#forecasting-musa"><i class="fa fa-check"></i><b>4.3</b> Forecasting future states and responses<span></span></a></li>
+<li class="chapter" data-level="4.4" data-path="chapter4.html"><a href="chapter4.html#modsel-ch4"><i class="fa fa-check"></i><b>4.4</b> Model comparisons<span></span></a>
+<ul>
+<li><a href="chapter4.html#in-sample-comparisons">In-sample comparisons<span></span></a></li>
+<li><a href="chapter4.html#out-of-sample-comparisons">Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter5.html"><a href="chapter5.html"><i class="fa fa-check"></i><b>5</b> Time Series Regression Models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="chapter5.html"><a href="chapter5.html#intro-ch5"><i class="fa fa-check"></i><b>5.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="5.2" data-path="chapter5.html"><a href="chapter5.html#ch5-strdecomp"><i class="fa fa-check"></i><b>5.2</b> Structural models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="chapter5.html"><a href="chapter5.html#hotelcost"><i class="fa fa-check"></i><b>5.2.1</b> Example: Monthly average cost of nightly hotel stay<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="chapter5.html"><a href="chapter5.html#ch5-exogpreds"><i class="fa fa-check"></i><b>5.3</b> Models with exogenous predictors<span></span></a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter5.html"><a href="chapter5.html#hourly-traffic"><i class="fa fa-check"></i><b>5.3.1</b> Example: Hourly traffic volumes<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="chapter5.html"><a href="chapter5.html#ar1c"><i class="fa fa-check"></i><b>5.4</b> Latent AR(1) model with covariates plus noise<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Hierarchical Dynamic Models for Panel Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#intro-ch6"><i class="fa fa-check"></i><b>6.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#homog-state"><i class="fa fa-check"></i><b>6.2</b> Models with homogenous state evolution<span></span></a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="chapter6.html"><a href="chapter6.html#simul1-panelts"><i class="fa fa-check"></i><b>6.2.1</b> Example: Simulated homogeneous panel time series with the same level<span></span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="chapter6.html"><a href="chapter6.html#simul2-panelts"><i class="fa fa-check"></i><b>6.2.2</b> Example: Simulated homogeneous panel time series with different levels<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#ridesource-hdlm"><i class="fa fa-check"></i><b>6.3</b> Example: Ridesourcing in NYC<span></span></a>
+<ul>
+<li><a href="chapter6.html#description-of-variables">Description of variables<span></span></a></li>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#hmod.H1"><i class="fa fa-check"></i><b>6.3.1</b> Model H1. Dynamic intercept and exogenous predictors<span></span></a></li>
+<li class="chapter" data-level="6.3.2" data-path="chapter6.html"><a href="chapter6.html#hmod.H2"><i class="fa fa-check"></i><b>6.3.2</b> Model H2. Dynamic intercept and Taxi usage<span></span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="chapter6.html"><a href="chapter6.html#hmod.H3"><i class="fa fa-check"></i><b>6.3.3</b> Model H3. Taxi usage varies by time and zone<span></span></a></li>
+<li class="chapter" data-level="6.3.4" data-path="chapter6.html"><a href="chapter6.html#hmod.H4"><i class="fa fa-check"></i><b>6.3.4</b> Model H4. Fixed intercept, Taxi usage varies over time and zones<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="chapter6.html"><a href="chapter6.html#model-comparison"><i class="fa fa-check"></i><b>6.4</b> Model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-nongaus.html"><a href="ch-nongaus.html"><i class="fa fa-check"></i><b>7</b> Non-Gaussian Continuous Responses<span></span></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#intro-nongaus"><i class="fa fa-check"></i><b>7.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="7.2" data-path="ch-nongaus.html"><a href="ch-nongaus.html#gamma-model"><i class="fa fa-check"></i><b>7.2</b> Gamma state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#vix"><i class="fa fa-check"></i><b>7.2.1</b> Example: Volatility index (VIX) time series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="ch-nongaus.html"><a href="ch-nongaus.html#weibull-model"><i class="fa fa-check"></i><b>7.3</b> Weibull state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#forecasting-from-weibull-models"><i class="fa fa-check"></i><b>7.3.1</b> Forecasting from Weibull models<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="ch-nongaus.html"><a href="ch-nongaus.html#beta-model"><i class="fa fa-check"></i><b>7.4</b> Beta state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#crest"><i class="fa fa-check"></i><b>7.4.1</b> Example: Crest market share<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ch-binary.html"><a href="ch-binary.html"><i class="fa fa-check"></i><b>8</b> Modeling Categorical Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="ch-binary.html"><a href="ch-binary.html#intro-ch-binary"><i class="fa fa-check"></i><b>8.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="8.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-model"><i class="fa fa-check"></i><b>8.2</b> Binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-bin"><i class="fa fa-check"></i><b>8.2.1</b> Example: Simulated single binomial response series<span></span></a></li>
+<li class="chapter" data-level="8.2.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-weekly-shopping"><i class="fa fa-check"></i><b>8.2.2</b> Example: Weekly shopping trips for a single household<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="ch-binary.html"><a href="ch-binary.html#hbin"><i class="fa fa-check"></i><b>8.3</b> Modeling multiple binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-hbin"><i class="fa fa-check"></i><b>8.3.1</b> Example: Dynamic aggregated model for multiple binomial response time series<span></span></a></li>
+<li class="chapter" data-level="8.3.2" data-path="ch-binary.html"><a href="ch-binary.html#hbin-weekly-shopping"><i class="fa fa-check"></i><b>8.3.2</b> Example: Weekly shopping trips for multiple households<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="ch-binary.html"><a href="ch-binary.html#cat-models"><i class="fa fa-check"></i><b>8.4</b> Multinomial time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-mn-p"><i class="fa fa-check"></i><b>8.4.1</b> Example: Simulated categorical time series<span></span></a></li>
+<li><a href="ch-binary.html#model-d4-dynamic-coefficient-for-c_jt">Model D4: Dynamic coefficient for <span class="math inline">\(C_{j,t}\)</span><span></span></a></li>
+</ul></li>
+<li><a href="ch-binary.html#chapter-8-appendix">Chapter 8 – Appendix<span></span></a>
+<ul>
+<li><a href="ch-binary.html#poisson-trick-for-multinomial-models">Poisson-trick for multinomial models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-count.html"><a href="ch-count.html"><i class="fa fa-check"></i><b>9</b> Modeling Count Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="ch-count.html"><a href="ch-count.html#intro-ch-count"><i class="fa fa-check"></i><b>9.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="9.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts"><i class="fa fa-check"></i><b>9.2</b> Univariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="ch-count.html"><a href="ch-count.html#uvcounts-simpois"><i class="fa fa-check"></i><b>9.2.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.2.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts-crashct"><i class="fa fa-check"></i><b>9.2.2</b> Example: Modeling crash counts in CT<span></span></a></li>
+<li class="chapter" data-level="9.2.3" data-path="ch-count.html"><a href="ch-count.html#uvcounts-bikerental"><i class="fa fa-check"></i><b>9.2.3</b> Example: Daily bike rentals in Washington D.C.<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="ch-count.html"><a href="ch-count.html#hieruvcounts"><i class="fa fa-check"></i><b>9.3</b> Hierarchical modeling of univariate count time series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="ch-count.html"><a href="ch-count.html#simul1-hcount"><i class="fa fa-check"></i><b>9.3.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.3.2" data-path="ch-count.html"><a href="ch-count.html#tnc-hcount"><i class="fa fa-check"></i><b>9.3.2</b> Example: Modeling daily TNC usage in NYC<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="ch-sv.html"><a href="ch-sv.html"><i class="fa fa-check"></i><b>10</b> Modeling Stochastic Volatility<span></span></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="ch-sv.html"><a href="ch-sv.html#ch-sv-intro"><i class="fa fa-check"></i><b>10.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="10.2" data-path="ch-sv.html"><a href="ch-sv.html#sv-uv"><i class="fa fa-check"></i><b>10.2</b> Univariate SV models<span></span></a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="ch-sv.html"><a href="ch-sv.html#simul-svnormal"><i class="fa fa-check"></i><b>10.2.1</b> Example: Simulated SV data with standard normal errors<span></span></a></li>
+<li class="chapter" data-level="10.2.2" data-path="ch-sv.html"><a href="ch-sv.html#simul-svt5"><i class="fa fa-check"></i><b>10.2.2</b> Example: Simulated SV data with Student-<span class="math inline">\(t_{\nu}\)</span> errors<span></span></a></li>
+<li class="chapter" data-level="10.2.3" data-path="ch-sv.html"><a href="ch-sv.html#stockrets"><i class="fa fa-check"></i><b>10.2.3</b> Example: IBM stock returns<span></span></a></li>
+<li class="chapter" data-level="10.2.4" data-path="ch-sv.html"><a href="ch-sv.html#nysestockrets"><i class="fa fa-check"></i><b>10.2.4</b> Example: NYSE returns<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="ch-st.html"><a href="ch-st.html"><i class="fa fa-check"></i><b>11</b> Spatio-temporal Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="ch-st.html"><a href="ch-st.html#ch-st-intro"><i class="fa fa-check"></i><b>11.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="11.2" data-path="ch-st.html"><a href="ch-st.html#st-process"><i class="fa fa-check"></i><b>11.2</b> Spatio-temporal process<span></span></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-st.html"><a href="ch-st.html#dyn-areal-model"><i class="fa fa-check"></i><b>11.3</b> Dynamic spatial models for areal data<span></span></a></li>
+<li class="chapter" data-level="11.4" data-path="ch-st.html"><a href="ch-st.html#st-tnc-example"><i class="fa fa-check"></i><b>11.4</b> Example: Monthly TNC usage in NYC taxi zones<span></span></a>
+<ul>
+<li><a href="ch-st.html#data-preprocessing">Data preprocessing<span></span></a></li>
+<li class="chapter" data-level="11.4.1" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh"><i class="fa fa-check"></i><b>11.4.1</b> Model 1. Knorr-Held additive effects model<span></span></a></li>
+<li class="chapter" data-level="11.4.2" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh-inter"><i class="fa fa-check"></i><b>11.4.2</b> Knorr-Held models with space-time interactions<span></span></a></li>
+<li><a href="ch-st.html#model-kh3.-knorr-held-model-with-interaction-between-epsilon_i-and-gamma_t">Model KH3. Knorr-Held model with interaction between <span class="math inline">\(\epsilon_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+<li><a href="ch-st.html#model-kh4.-knorr-held-model-with-interaction-between-nu_i-and-gamma_t">Model KH4. Knorr-Held model with interaction between <span class="math inline">\(\nu_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chmvdlm.html"><a href="chmvdlm.html"><i class="fa fa-check"></i><b>12</b> Multivariate Gaussian Dynamic Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="chmvdlm.html"><a href="chmvdlm.html#intro-chmvdlm"><i class="fa fa-check"></i><b>12.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="12.2" data-path="chmvdlm.html"><a href="chmvdlm.html#MVDiagWPhi"><i class="fa fa-check"></i><b>12.2</b> Model with diagonal <span class="math inline">\(\boldsymbol W\)</span> and <span class="math inline">\(\boldsymbol \Phi\)</span> matrices<span></span></a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="chmvdlm.html"><a href="chmvdlm.html#V-setup"><i class="fa fa-check"></i><b>12.2.1</b> Description of the setup for <span class="math inline">\(\boldsymbol V\)</span><span></span></a></li>
+<li class="chapter" data-level="12.2.2" data-path="chmvdlm.html"><a href="chmvdlm.html#simbivar1"><i class="fa fa-check"></i><b>12.2.2</b> Example: Simulated bivariate AR(1) series<span></span></a></li>
+<li class="chapter" data-level="12.2.3" data-path="chmvdlm.html"><a href="chmvdlm.html#tnctaxi-onezone"><i class="fa fa-check"></i><b>12.2.3</b> Example: Ridesourcing data in NYC for a single taxi zone<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="chmvdlm.html"><a href="chmvdlm.html#MVICCWPhi"><i class="fa fa-check"></i><b>12.3</b> Model with equicorrelated <span class="math inline">\(\boldsymbol{w}_t\)</span> and diagonal <span class="math inline">\(\boldsymbol \Phi\)</span><span></span></a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simtrivar1"><i class="fa fa-check"></i><b>12.3.1</b> Example: Simulated trivariate series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chmvdlm.html"><a href="chmvdlm.html#rgenericmv"><i class="fa fa-check"></i><b>12.4</b> Fitting multivariate models using <code>rgeneric</code><span></span></a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simulgen"><i class="fa fa-check"></i><b>12.4.1</b> Example: Simulated bivariate VAR(1) series<span></span></a></li>
+</ul></li>
+<li><a href="chmvdlm.html#chapter-12-appendix">Chapter 12 – Appendix<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="ch-hmv.html"><a href="ch-hmv.html"><i class="fa fa-check"></i><b>13</b> Hierarchical Multivariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="ch-hmv.html"><a href="ch-hmv.html#intro-ch-hmv"><i class="fa fa-check"></i><b>13.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="13.2" data-path="ch-hmv.html"><a href="ch-hmv.html#mvhdlm"><i class="fa fa-check"></i><b>13.2</b> Multivariate hierarchical dynamic linear model<span></span></a>
+<ul>
+<li><a href="ch-hmv.html#response-and-predictor-variables">Response and predictor variables<span></span></a></li>
+<li><a href="ch-hmv.html#model-setup">Model setup<span></span></a></li>
+<li class="chapter" data-level="13.2.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-hmv"><i class="fa fa-check"></i><b>13.2.1</b> Example: Analysis of TNC and Taxi as responses<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="ch-hmv.html"><a href="ch-hmv.html#lcmcounts"><i class="fa fa-check"></i><b>13.3</b> Level correlated models for multivariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-daily"><i class="fa fa-check"></i><b>13.3.1</b> Example: TNC and Taxi counts based on daily data<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>14</b> Resources for the User<span></span></a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="resources.html"><a href="resources.html#intro-resources"><i class="fa fa-check"></i><b>14.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="14.2" data-path="resources.html"><a href="resources.html#package-list"><i class="fa fa-check"></i><b>14.2</b> Packages used in the book<span></span></a></li>
+<li class="chapter" data-level="14.3" data-path="resources.html"><a href="resources.html#custom-functions"><i class="fa fa-check"></i><b>14.3</b> Custom functions used in the book<span></span></a>
+<ul>
+<li><a href="resources.html#basic-plotting-functions">Basic plotting functions<span></span></a></li>
+<li><a href="resources.html#functions-for-forecast-evaluation">Functions for forecast evaluation<span></span></a></li>
+<li><a href="resources.html#function-for-model-comparison">Function for model comparison<span></span></a></li>
+<li><a href="resources.html#function-for-the-filtering-algorithm-in-dlm">Function for the filtering algorithm in DLM<span></span></a></li>
+<li class="chapter" data-level="14.3.1" data-path="resources.html"><a href="resources.html#rgeneric-fn"><i class="fa fa-check"></i><b>14.3.1</b> <code>rgeneric()</code> function for DLM-VAR model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="resources.html"><a href="resources.html#items-often-used"><i class="fa fa-check"></i><b>14.4</b> Often used <code>R-INLA</code> items<span></span></a>
+<ul>
+<li><a href="resources.html#control-options">Control options<span></span></a></li>
+<li><a href="resources.html#options-for-computing-marginals">Options for computing marginals<span></span></a></li>
+<li><a href="resources.html#random-effect-specifications">Random effect specifications<span></span></a></li>
+<li><a href="resources.html#prior-specifications">Prior specifications<span></span></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chapter4" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Modeling Univariate Time Series<a href="chapter4.html#chapter4" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="intro-ch4" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Introduction<a href="chapter4.html#intro-ch4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We present a real data illustration of a univariate time series using <code>R-INLA</code>. In Section <a href="chapter4.html#dat-analysis">4.2</a>, we describe the data <span class="citation">(<a href="#ref-musa1979software" role="doc-biblioref">Musa 1979</a>)</span>.
+Sections <a href="chapter4.html#ch4-model1">4.2.1</a>–<a href="chapter4.html#ch4-model4">4.2.4</a> describe fitting different DLMs to the data. In Section <a href="chapter4.html#forecasting-musa">4.3</a>, we obtain forecasts of future states and realizations. We then discuss model selection using both in-sample criteria based on
+adequacy of fit and out-of-sample criteria based on accuracy of forecasts.
+As we did in Chapter <a href="chapter3.html#chapter3">3</a>, our custom functions must be sourced so that they may be called throughout the chapter.</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="chapter4.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;functions_custom.R&quot;</span>)</span></code></pre></div>
+<p>The following <code>R</code> packages are used in this chapter.</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="chapter4.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb95-2"><a href="chapter4.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb95-3"><a href="chapter4.html#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(INLA)</span></code></pre></div>
+<p>We analyze the following data set.</p>
+<ol style="list-style-type: decimal">
+<li>Musa data – a software engineering example</li>
+</ol>
+</div>
+<div id="dat-analysis" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Example: A software engineering example – Musa data<a href="chapter4.html#dat-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>During the software development phase, software goes through several stages of testing with the purpose of identifying and correcting “bugs” which cause failure of software. This process is referred to as debugging. Since it is expected that the debugging process improves the reliability of the software, such tests are known as reliability growth tests in the software engineering literature.
+<span class="citation">Singpurwalla and Soyer (<a href="#ref-singpurwalla1992non" role="doc-biblioref">1992</a>)</span> consider modeling the time between failures in a software debugging process and discuss how the analysis of such data provides insights about assessment of <em>reliability growth</em>.
+The authors use <em>system 40</em> data from <span class="citation">Musa (<a href="#ref-musa1979software" role="doc-biblioref">1979</a>)</span>, which consists of observations on the times between failures over <span class="math inline">\(n=101\)</span> testing stages.</p>
+<p>We use a function from the <code>readxl</code> package to read the data from an <em>xlsx</em> file into <code>R</code>.
+Alternatively, one can also convert the data to a <em>csv</em> file and read it into R using the <code>read.csv()</code> function.</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="chapter4.html#cb96-1" aria-hidden="true" tabindex="-1"></a>musa <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">&quot;MusaSystem40Data.xlsx&quot;</span>)</span>
+<span id="cb96-2"><a href="chapter4.html#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(musa)</span>
+<span id="cb96-3"><a href="chapter4.html#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 x 1</span></span>
+<span id="cb96-4"><a href="chapter4.html#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="do">##   `Time Beween Failures`</span></span>
+<span id="cb96-5"><a href="chapter4.html#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="do">##                    &lt;dbl&gt;</span></span>
+<span id="cb96-6"><a href="chapter4.html#cb96-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                    320</span></span>
+<span id="cb96-7"><a href="chapter4.html#cb96-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                  14390</span></span>
+<span id="cb96-8"><a href="chapter4.html#cb96-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                   9000</span></span>
+<span id="cb96-9"><a href="chapter4.html#cb96-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                   2880</span></span>
+<span id="cb96-10"><a href="chapter4.html#cb96-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 5                   5700</span></span>
+<span id="cb96-11"><a href="chapter4.html#cb96-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 6                  21800</span></span></code></pre></div>
+<p>Let <span class="math inline">\(y_t\)</span> denote the logarithms of the times between software failures, <span class="math inline">\(t=1,\ldots, 101\)</span>. Figure <a href="chapter4.html#fig:musa-plot">4.1</a> shows a plot of <span class="math inline">\(y_t\)</span> which exhibits an increasing trend over time, suggesting potential reliability growth.</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="chapter4.html#cb97-1" aria-hidden="true" tabindex="-1"></a>musa <span class="ot">&lt;-</span> musa <span class="sc">%&gt;%</span></span>
+<span id="cb97-2"><a href="chapter4.html#cb97-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log.tbf =</span> <span class="fu">log</span>(<span class="st">`</span><span class="at">Time Beween Failures</span><span class="st">`</span>))</span>
+<span id="cb97-3"><a href="chapter4.html#cb97-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tsline</span>(</span>
+<span id="cb97-4"><a href="chapter4.html#cb97-4" aria-hidden="true" tabindex="-1"></a>  musa<span class="sc">$</span>log.tbf,</span>
+<span id="cb97-5"><a href="chapter4.html#cb97-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>,</span>
+<span id="cb97-6"><a href="chapter4.html#cb97-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;log inter-failure time&quot;</span>,</span>
+<span id="cb97-7"><a href="chapter4.html#cb97-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">line.size =</span> <span class="fl">0.6</span>,</span>
+<span id="cb97-8"><a href="chapter4.html#cb97-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">line.color =</span> <span class="st">&quot;red&quot;</span></span>
+<span id="cb97-9"><a href="chapter4.html#cb97-9" aria-hidden="true" tabindex="-1"></a>) </span></code></pre></div>
+<div class="figure"><span id="fig:musa-plot"></span>
+<img src="gitbook_version_files/figure-html/musa-plot-1.png" alt="Logarithms of times between software failures." width="672" />
+<p class="caption">
+FIGURE 4.1: Logarithms of times between software failures.
+</p>
+</div>
+<p>We split the time series into a training (or calibration, or fitting) portion consisting of the first <span class="math inline">\(n_t=95\)</span> observations, and a hold-out (or test, or validation) portion consisting of the last
+<span class="math inline">\(n_h=6\)</span> observations, with <span class="math inline">\(n=n_t+n_h\)</span>.
+Under each model, we fit DLMs to the training data and use the fitted model to forecast the hold-out data. Recall that in <code>R-INLA</code>, there is no separate forecasting function like the <code>predict()</code> function in the <code>stats</code> package. Therefore, we append the end of the training data (of length <span class="math inline">\(n_t=95\)</span>) with NA’s to represent the times to hold-out (the last <span class="math inline">\(n_h=6\)</span> data points). The vectors <em>id</em> and <em>y.append</em> shown below each has length <span class="math inline">\(n=101\)</span>.</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="chapter4.html#cb98-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(musa)</span>
+<span id="cb98-2"><a href="chapter4.html#cb98-2" aria-hidden="true" tabindex="-1"></a>n.hold <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb98-3"><a href="chapter4.html#cb98-3" aria-hidden="true" tabindex="-1"></a>n.train <span class="ot">&lt;-</span> n <span class="sc">-</span> n.hold</span>
+<span id="cb98-4"><a href="chapter4.html#cb98-4" aria-hidden="true" tabindex="-1"></a>test.data <span class="ot">&lt;-</span> <span class="fu">tail</span>(musa, n.hold)</span>
+<span id="cb98-5"><a href="chapter4.html#cb98-5" aria-hidden="true" tabindex="-1"></a>train.data <span class="ot">&lt;-</span> musa[<span class="dv">1</span><span class="sc">:</span>n.train,]</span>
+<span id="cb98-6"><a href="chapter4.html#cb98-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> train.data<span class="sc">$</span>log.tbf</span>
+<span id="cb98-7"><a href="chapter4.html#cb98-7" aria-hidden="true" tabindex="-1"></a>y.append <span class="ot">&lt;-</span> <span class="fu">c</span>(y, <span class="fu">rep</span>(<span class="cn">NA</span>, n.hold))</span></code></pre></div>
+<p><span class="citation">Singpurwalla and Soyer (<a href="#ref-singpurwalla1992non" role="doc-biblioref">1992</a>)</span> point out that modifications made to the software at different stages of testing may potentially deteriorate the software’s reliability even though the intention is to improve it. As a result, the expected time to failure of the software from one period to the next may not necessarily increase. This dynamic nature of the mean time to failure needs to be taken into account in modeling the behavior of times between software failures.</p>
+<p>In Chapter <a href="chapter3.html#chapter3">3</a>, we described how to fit a DLM of the form</p>
+<p><span class="math display" id="eq:genmodel-st" id="eq:genmodel-obs">\[\begin{align}
+y_t &amp; =  \alpha  + x_t + v_t,
+\tag{4.1} \\
+x_t &amp;=  \phi x_{t-1} + w_t,  
+\tag{4.2}
+\end{align}\]</span>
+where, <span class="math inline">\(\phi=1 \, (|\phi| &lt;1)\)</span> gives us a random walk (AR(1)) model, and <span class="math inline">\(\alpha\)</span> denotes the level. In <a href="chapter4.html#eq:genmodel-st">(4.2)</a>, the state variable <span class="math inline">\(x_t\)</span> enables us to capture the dynamic behavior of the mean time to failure in the <em>Musa</em> data as a result of modifications made to the software at each stage. For example, when <span class="math inline">\(\phi=1\)</span>, the model implies that the mean is locally constant and the effect of modifications will be reflected by the magnitude of the state error variance. In other words, higher values of the state error variance will suggest a more drastic effect of modifications on the reliability of the software. By looking at the posterior distributions of <span class="math inline">\(x_t\)</span> at each stage <span class="math inline">\(t\)</span>, we can examine such behavior.</p>
+<div id="ch4-model1" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Model 1. AR(1) with level plus noise model<a href="chapter4.html#ch4-model1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We fit an AR(1) with level plus noise model shown in <a href="chapter4.html#eq:genmodel-obs">(4.1)</a> and <a href="chapter4.html#eq:genmodel-st">(4.2)</a> with <span class="math inline">\(|\phi| &lt;1\)</span> to the training data of length <span class="math inline">\(n_t\)</span>.</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="chapter4.html#cb99-1" aria-hidden="true" tabindex="-1"></a>id.x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(y.append)</span>
+<span id="cb99-2"><a href="chapter4.html#cb99-2" aria-hidden="true" tabindex="-1"></a>musa.ar1.dat <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(id.x, y.append)</span></code></pre></div>
+<p>Recall from Chapter <a href="chapter3.html#chapter3">3</a> that <em>id.x</em> helps us to specify the random effect corresponding to the state variable <span class="math inline">\(x_t\)</span>. The model formula and the <code>inla()</code> call are shown below.</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="chapter4.html#cb100-1" aria-hidden="true" tabindex="-1"></a>formula.ar1 <span class="ot">&lt;-</span> y.append <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.x, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>)</span>
+<span id="cb100-2"><a href="chapter4.html#cb100-2" aria-hidden="true" tabindex="-1"></a>model.ar1 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb100-3"><a href="chapter4.html#cb100-3" aria-hidden="true" tabindex="-1"></a>  formula.ar1,</span>
+<span id="cb100-4"><a href="chapter4.html#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb100-5"><a href="chapter4.html#cb100-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> musa.ar1.dat,</span>
+<span id="cb100-6"><a href="chapter4.html#cb100-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb100-7"><a href="chapter4.html#cb100-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb100-8"><a href="chapter4.html#cb100-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb100-9"><a href="chapter4.html#cb100-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb100-10"><a href="chapter4.html#cb100-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb100-11"><a href="chapter4.html#cb100-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb100-12"><a href="chapter4.html#cb100-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb100-13"><a href="chapter4.html#cb100-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>We show posterior summaries of the fixed and random parameters. The user may also obtain a complete summary using <code>summary(model.ar1)</code>.</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="chapter4.html#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.ar1)</span></span>
+<span id="cb101-2"><a href="chapter4.html#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.ar1<span class="sc">$</span>summary.fixed[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb101-3"><a href="chapter4.html#cb101-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean  sd    0.025q 0.5q  0.975q</span></span>
+<span id="cb101-4"><a href="chapter4.html#cb101-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept 10.02 0.869 8.155  10.03 11.78</span></span>
+<span id="cb101-5"><a href="chapter4.html#cb101-5" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.ar1<span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>)])</span>
+<span id="cb101-6"><a href="chapter4.html#cb101-6" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                       mean  sd    0.5q  0.975q</span></span>
+<span id="cb101-7"><a href="chapter4.html#cb101-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs 0.416 0.070 0.411 0.567 </span></span>
+<span id="cb101-8"><a href="chapter4.html#cb101-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.x         0.713 0.423 0.621 1.783 </span></span>
+<span id="cb101-9"><a href="chapter4.html#cb101-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.x               0.955 0.031 0.962 0.992</span></span></code></pre></div>
+<p>As we also discussed in Chapter <a href="chapter3.html#chapter3">3</a>, <code>Precision for id.x</code> value in the output
+does not refer to <span class="math inline">\(1/\sigma^2_w\)</span>, but to <span class="math inline">\(1/\sigma^2_x\)</span>, the precision of <span class="math inline">\(x_t\)</span> in the stationary AR(1) process. To recover the posterior mean of the distribution of <span class="math inline">\(\sigma^2_w\)</span>, we must use</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="chapter4.html#cb102-1" aria-hidden="true" tabindex="-1"></a>sigma2.w.post.mean <span class="ot">&lt;-</span> <span class="fu">inla.emarginal</span>(</span>
+<span id="cb102-2"><a href="chapter4.html#cb102-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">fun =</span> <span class="cf">function</span>(x)</span>
+<span id="cb102-3"><a href="chapter4.html#cb102-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exp</span>(<span class="sc">-</span>x),</span>
+<span id="cb102-4"><a href="chapter4.html#cb102-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">marginal =</span> model.ar1<span class="sc">$</span>internal.marginals.hyperpar<span class="sc">$</span><span class="st">`</span><span class="at">Log precision for id.x</span><span class="st">`</span></span>
+<span id="cb102-5"><a href="chapter4.html#cb102-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> model.ar1<span class="sc">$</span>summary.hyperpar[<span class="st">&quot;Rho for id.x&quot;</span>, <span class="st">&quot;mean&quot;</span>] <span class="sc">^</span> <span class="dv">2</span>)</span>
+<span id="cb102-6"><a href="chapter4.html#cb102-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sigma2.w.post.mean)</span>
+<span id="cb102-7"><a href="chapter4.html#cb102-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.1736</span></span></code></pre></div>
+<p>In this model, the fitted values are the means of the smoothing distributions of <span class="math inline">\(x_t\)</span>’s and provide us with an overall assessment of modifications made to the software. The upward trend in the posterior means of <span class="math inline">\(x_t\)</span>’s suggests an overall improvement in software reliability as a result of the modifications. However, to assess the local effects from one stage to another, we must look at the means from the <em>filtering distributions</em> of <span class="math inline">\(x_t\)</span>’s. We compute the filtered means of <span class="math inline">\(x_t\)</span> using code from the custom functions that we sourced, and then plot these along with observed <span class="math inline">\(y_t\)</span> and smoothed estimates of <span class="math inline">\(x_t\)</span> from Model 1; see Figure <a href="chapter4.html#fig:filt-ar1">4.2</a>. We can recover the fitted values of <span class="math inline">\(y_t\)</span> using the code</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="chapter4.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model.ar1$summary.fitted.values</span></span>
+<span id="cb103-2"><a href="chapter4.html#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(<span class="fu">head</span>(model.ar1<span class="sc">$</span>summary.fitted.values))</span>
+<span id="cb103-3"><a href="chapter4.html#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   name         mean  sd    0.025q 0.5q  0.975q mode </span></span>
+<span id="cb103-4"><a href="chapter4.html#cb103-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 fit.Pred.001 8.711 0.749 7.133  8.748 10.09  8.824</span></span>
+<span id="cb103-5"><a href="chapter4.html#cb103-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 fit.Pred.002 8.872 0.661 7.519  8.889 10.13  8.926</span></span>
+<span id="cb103-6"><a href="chapter4.html#cb103-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 fit.Pred.003 8.953 0.621 7.695  8.965 10.15  8.989</span></span>
+<span id="cb103-7"><a href="chapter4.html#cb103-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 fit.Pred.004 9.010 0.599 7.798  9.019 10.17  9.038</span></span>
+<span id="cb103-8"><a href="chapter4.html#cb103-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 fit.Pred.005 9.149 0.582 7.995  9.149 10.30  9.150</span></span>
+<span id="cb103-9"><a href="chapter4.html#cb103-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 fit.Pred.006 9.328 0.585 8.210  9.315 10.52  9.289</span></span></code></pre></div>
+<p>and the smooth estimates of <span class="math inline">\(x_t\)</span> from the code</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="chapter4.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model.ar1$summary.random$id.x</span></span>
+<span id="cb104-2"><a href="chapter4.html#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(<span class="fu">head</span>(model.ar1<span class="sc">$</span>summary.random<span class="sc">$</span>id.x))</span>
+<span id="cb104-3"><a href="chapter4.html#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   ID mean   sd    0.025q 0.5q   0.975q mode   kld</span></span>
+<span id="cb104-4"><a href="chapter4.html#cb104-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 1  -1.304 1.047 -3.483 -1.272 0.726  -1.201 0  </span></span>
+<span id="cb104-5"><a href="chapter4.html#cb104-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 2  -1.144 1.010 -3.226 -1.125 0.847  -1.084 0  </span></span>
+<span id="cb104-6"><a href="chapter4.html#cb104-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 3  -1.062 1.000 -3.114 -1.049 0.928  -1.021 0  </span></span>
+<span id="cb104-7"><a href="chapter4.html#cb104-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 4  -1.006 0.998 -3.045 -0.996 0.994  -0.975 0  </span></span>
+<span id="cb104-8"><a href="chapter4.html#cb104-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 5  -0.867 1.000 -2.899 -0.864 1.153  -0.858 0  </span></span>
+<span id="cb104-9"><a href="chapter4.html#cb104-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 6  -0.687 1.013 -2.734 -0.692 1.374  -0.707 0</span></span></code></pre></div>
+<p>As expected, the posterior means of the filtering distribution of the state variable, which capture the effects of the modifications at each time period, show more variation than the smoothing distribution means, and follow the local trends in the observed data more closely. Note that the gap between the posterior means of the filter estimates of <span class="math inline">\(x_t\)</span> and the observed series is due to the presence of a level <span class="math inline">\(\alpha\)</span> in the model. The posterior mean of <span class="math inline">\(\alpha\)</span> is 10.015.</p>
+<div class="figure"><span id="fig:filt-ar1"></span>
+<img src="gitbook_version_files/figure-html/filt-ar1-1.png" alt="Observed data (red) and posterior means from filtered (yellow) and smoothed (green) distributions for the AR(1) with level plus noise model (Model 1)." width="672" />
+<p class="caption">
+FIGURE 4.2: Observed data (red) and posterior means from filtered (yellow) and smoothed (green) distributions for the AR(1) with level plus noise model (Model 1).
+</p>
+</div>
+<p>The plot of the marginal posterior distribution of <span class="math inline">\(\phi\)</span> is shown in Figure <a href="chapter4.html#fig:marg-plot-phi-ar1">4.3</a>.</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="chapter4.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb105-2"><a href="chapter4.html#cb105-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inla.smarginal</span>(model.ar1<span class="sc">$</span>marginals.hyperpar<span class="sc">$</span><span class="st">`</span><span class="at">Rho for id.x</span><span class="st">`</span>),</span>
+<span id="cb105-3"><a href="chapter4.html#cb105-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb105-4"><a href="chapter4.html#cb105-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="fu">expression</span>(phi),</span>
+<span id="cb105-5"><a href="chapter4.html#cb105-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;density&quot;</span>,</span>
+<span id="cb105-6"><a href="chapter4.html#cb105-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;l&quot;</span></span>
+<span id="cb105-7"><a href="chapter4.html#cb105-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="figure"><span id="fig:marg-plot-phi-ar1"></span>
+<img src="gitbook_version_files/figure-html/marg-plot-phi-ar1-1.png" alt="Marginal posterior density of $\phi$ in Model 1." width="672" />
+<p class="caption">
+FIGURE 4.3: Marginal posterior density of <span class="math inline">\(\phi\)</span> in Model 1.
+</p>
+</div>
+<p>For each model, it is useful to recover and assess the residuals for model adequacy, by verifying that the sample ACF plot behaves like that of a white noise series; see the top left panel in Figure <a href="chapter4.html#fig:plots-acf">4.9</a>.</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="chapter4.html#cb106-1" aria-hidden="true" tabindex="-1"></a>resid.ar1 <span class="ot">&lt;-</span> y <span class="sc">-</span> fit.ar1</span>
+<span id="cb106-2"><a href="chapter4.html#cb106-2" aria-hidden="true" tabindex="-1"></a>acf.ar1 <span class="ot">&lt;-</span> <span class="fu">acf</span>(resid.ar1,<span class="at">plot =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+<div id="ch4-model2" class="section level3 hasAnchor" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> Model 2. Random walk plus noise model<a href="chapter4.html#ch4-model2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We fit a random walk plus noise model to the <em>Musa</em> data, with observation and state equations given by <a href="chapter1.html#eq:dlm-rw-obs">(1.15)</a> and <a href="chapter1.html#eq:dlm-rw-st">(1.16)</a>.
+Note that we denote the state random effect by <em>id.w</em> in this model, which is different than the <em>id.x</em> we used for the AR(1) model. This helps us keep in mind the difference in what <code>R-INLA</code> outputs for the state precisions in the two models. We first fitted a model with level <span class="math inline">\(\alpha\)</span>; however, since the estimated <span class="math inline">\(\alpha\)</span> indicated that the level was close to <span class="math inline">\(0\)</span>, we show below results from a model without level <span class="math inline">\(\alpha\)</span> in the observation equation (by including <span class="math inline">\(-1\)</span> in the formula below).</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="chapter4.html#cb107-1" aria-hidden="true" tabindex="-1"></a>id.w <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(y.append)</span>
+<span id="cb107-2"><a href="chapter4.html#cb107-2" aria-hidden="true" tabindex="-1"></a>musa.rw1.dat <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(y.append, id.w)</span>
+<span id="cb107-3"><a href="chapter4.html#cb107-3" aria-hidden="true" tabindex="-1"></a>formula.rw1 <span class="ot">&lt;-</span> y.append <span class="sc">~</span> <span class="fu">f</span>(id.w, <span class="at">model =</span> <span class="st">&quot;rw1&quot;</span>, <span class="at">constr =</span> <span class="cn">FALSE</span>) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb107-4"><a href="chapter4.html#cb107-4" aria-hidden="true" tabindex="-1"></a>model.rw1 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb107-5"><a href="chapter4.html#cb107-5" aria-hidden="true" tabindex="-1"></a>  formula.rw1,</span>
+<span id="cb107-6"><a href="chapter4.html#cb107-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb107-7"><a href="chapter4.html#cb107-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> musa.rw1.dat,</span>
+<span id="cb107-8"><a href="chapter4.html#cb107-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb107-9"><a href="chapter4.html#cb107-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb107-10"><a href="chapter4.html#cb107-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb107-11"><a href="chapter4.html#cb107-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb107-12"><a href="chapter4.html#cb107-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb107-13"><a href="chapter4.html#cb107-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb107-14"><a href="chapter4.html#cb107-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb107-15"><a href="chapter4.html#cb107-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb107-16"><a href="chapter4.html#cb107-16" aria-hidden="true" tabindex="-1"></a>summary.rw1 <span class="ot">&lt;-</span> <span class="fu">summary</span>(model.rw1)</span>
+<span id="cb107-17"><a href="chapter4.html#cb107-17" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.rw1<span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb107-18"><a href="chapter4.html#cb107-18" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                       mean  sd    </span></span>
+<span id="cb107-19"><a href="chapter4.html#cb107-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs  0.40  0.062</span></span>
+<span id="cb107-20"><a href="chapter4.html#cb107-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.w         19.13 15.332</span></span></code></pre></div>
+<p>Note that in this case, the posterior mean of <span class="math inline">\(\sigma^2_w\)</span> can be obtained as 0.0844 using the code given below.</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="chapter4.html#cb108-1" aria-hidden="true" tabindex="-1"></a>sigma2.w.post.mean.rw1 <span class="ot">&lt;-</span> <span class="fu">inla.emarginal</span>(</span>
+<span id="cb108-2"><a href="chapter4.html#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">fun =</span> <span class="cf">function</span>(x)</span>
+<span id="cb108-3"><a href="chapter4.html#cb108-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exp</span>(<span class="sc">-</span>x),</span>
+<span id="cb108-4"><a href="chapter4.html#cb108-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">marginal =</span> model.rw1<span class="sc">$</span>internal.marginals.hyperpar<span class="sc">$</span><span class="st">`</span><span class="at">Log precision for id.w</span><span class="st">`</span></span>
+<span id="cb108-5"><a href="chapter4.html#cb108-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Plots of the posterior means from the filtering and smoothing distributions from
+the random walk plus noise model (Model 2) are shown in Figure <a href="chapter4.html#fig:filt-rw1">4.4</a>. In this model also, the fitted values of <span class="math inline">\(y_t\)</span> correspond to the smooth estimates of <span class="math inline">\(x_t\)</span>.</p>
+<div class="figure"><span id="fig:filt-rw1"></span>
+<img src="gitbook_version_files/figure-html/filt-rw1-1.png" alt="Observed data (red) and posterior means from the filtering (yellow) and smoothing (green) distributions for a random walk plus noise model (Model 2)." width="672" />
+<p class="caption">
+FIGURE 4.4: Observed data (red) and posterior means from the filtering (yellow) and smoothing (green) distributions for a random walk plus noise model (Model 2).
+</p>
+</div>
+<p>In Figure <a href="chapter4.html#fig:musa-plot">4.1</a>, the plot of the data showed an upward trend over time. As we usually do in time series analysis, we can include a term
+<span class="math inline">\(\beta t\)</span> in the observation equation to account for this effect. This will be discussed next. In our development, we show the <code>R-INLA</code> model formulations, followed by plots of observed and fitted values, but suppress the detailed output. These can be seen in the GitHub page for our book.</p>
+</div>
+<div id="ch4-model3" class="section level3 hasAnchor" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> Model 3. AR(1) with trend plus noise model<a href="chapter4.html#ch4-model3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Previously, we fitted an AR(1) with level plus noise model (Model 1); now the model includes a time trend <span class="math inline">\(\beta t\)</span> which is indicated by the fixed effect term <em>trend</em> in the
+<code>formula</code>. This model does not include an intercept <span class="math inline">\(\alpha\)</span> in the observation equation.
+
+The observation equation is</p>
+<p><span class="math display" id="eq:genmodel-beta">\[\begin{align}
+y_t  =   \beta  t + x_t + v_t,
+\tag{4.3}
+\end{align}\]</span>
+while the state equation is the same as in Model 1, i.e., <a href="chapter1.html#eq:dlm-ar1-st">(1.20)</a>.
+Since <span class="math inline">\(\phi\)</span> is close to <span class="math inline">\(1\)</span>, the user may fit a random walk with trend plus noise model instead of the AR(1) with trend plus noise model, and compare it with the other models.</p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="chapter4.html#cb109-1" aria-hidden="true" tabindex="-1"></a>id.x <span class="ot">&lt;-</span> trend <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(y.append)</span>
+<span id="cb109-2"><a href="chapter4.html#cb109-2" aria-hidden="true" tabindex="-1"></a>musa.ar1trend.dat <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(id.x, y.append, trend)</span>
+<span id="cb109-3"><a href="chapter4.html#cb109-3" aria-hidden="true" tabindex="-1"></a>formula.ar1trend <span class="ot">&lt;-</span> y.append <span class="sc">~</span> <span class="fu">f</span>(id.x, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>) <span class="sc">+</span> trend <span class="sc">-</span><span class="dv">1</span> </span>
+<span id="cb109-4"><a href="chapter4.html#cb109-4" aria-hidden="true" tabindex="-1"></a>model.ar1trend <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb109-5"><a href="chapter4.html#cb109-5" aria-hidden="true" tabindex="-1"></a>  formula.ar1trend,</span>
+<span id="cb109-6"><a href="chapter4.html#cb109-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb109-7"><a href="chapter4.html#cb109-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> musa.ar1trend.dat,</span>
+<span id="cb109-8"><a href="chapter4.html#cb109-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb109-9"><a href="chapter4.html#cb109-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb109-10"><a href="chapter4.html#cb109-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb109-11"><a href="chapter4.html#cb109-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb109-12"><a href="chapter4.html#cb109-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb109-13"><a href="chapter4.html#cb109-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb109-14"><a href="chapter4.html#cb109-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb109-15"><a href="chapter4.html#cb109-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Partial output is shown below. Plots of the actual versus fitted values are shown in Figure <a href="chapter4.html#fig:fit-ar1-trend">4.5</a>. Unlike the random walk plus noise model, the fit does not show the smoothed <span class="math inline">\(x_t\)</span> values, but rather the smoothed values plus the estimated trend.</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="chapter4.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.ar1trend)</span></span>
+<span id="cb110-2"><a href="chapter4.html#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.ar1trend<span class="sc">$</span>summary.fixed[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb110-3"><a href="chapter4.html#cb110-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   name  mean  sd    0.025q 0.5q  0.975q</span></span>
+<span id="cb110-4"><a href="chapter4.html#cb110-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 trend 0.074 0.043 -0.009 0.074 0.158</span></span>
+<span id="cb110-5"><a href="chapter4.html#cb110-5" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.ar1trend<span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb110-6"><a href="chapter4.html#cb110-6" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                       mean  sd   </span></span>
+<span id="cb110-7"><a href="chapter4.html#cb110-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs 0.429 0.074</span></span>
+<span id="cb110-8"><a href="chapter4.html#cb110-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.x         0.076 0.050</span></span>
+<span id="cb110-9"><a href="chapter4.html#cb110-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.x               0.992 0.008</span></span></code></pre></div>
+<div class="figure"><span id="fig:fit-ar1-trend"></span>
+<img src="gitbook_version_files/figure-html/fit-ar1-trend-1.png" alt="Observed (red) and fitted (blue) responses and posterior means from the smoothing distribution (green) for the AR(1) with trend plus noise model (Model 3)." width="672" />
+<p class="caption">
+FIGURE 4.5: Observed (red) and fitted (blue) responses and posterior means from the smoothing distribution (green) for the AR(1) with trend plus noise model (Model 3).
+</p>
+</div>
+<p>The ACF plot of the residuals from Model 3 will be shown in Figure <a href="chapter4.html#fig:plots-acf">4.9</a>.</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="chapter4.html#cb111-1" aria-hidden="true" tabindex="-1"></a>fit.ar1trend <span class="ot">&lt;-</span> model.ar1trend<span class="sc">$</span>summary.fitted.values<span class="sc">$</span>mean[<span class="dv">1</span><span class="sc">:</span>n.train]</span>
+<span id="cb111-2"><a href="chapter4.html#cb111-2" aria-hidden="true" tabindex="-1"></a>resid.ar1trend <span class="ot">&lt;-</span> y <span class="sc">-</span> fit.ar1trend</span>
+<span id="cb111-3"><a href="chapter4.html#cb111-3" aria-hidden="true" tabindex="-1"></a>acf.ar1trend <span class="ot">&lt;-</span> <span class="fu">acf</span>(resid.ar1trend, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>We note that the posterior distribution of the trend coefficient <span class="math inline">\(\beta\)</span> is concentrated around positive values (see Figure <a href="chapter4.html#fig:beta-plot">4.6</a>), implying the global upward trend in the data.</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="chapter4.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb112-2"><a href="chapter4.html#cb112-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inla.smarginal</span>(model.ar1trend<span class="sc">$</span>marginals.fixed<span class="sc">$</span>trend),</span>
+<span id="cb112-3"><a href="chapter4.html#cb112-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
+<span id="cb112-4"><a href="chapter4.html#cb112-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb112-5"><a href="chapter4.html#cb112-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="fu">expression</span>(beta),</span>
+<span id="cb112-6"><a href="chapter4.html#cb112-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;density&quot;</span></span>
+<span id="cb112-7"><a href="chapter4.html#cb112-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="figure"><span id="fig:beta-plot"></span>
+<img src="gitbook_version_files/figure-html/beta-plot-1.png" alt="Marginal posterior of the trend coefficient $\beta$ in Model 3." width="672" />
+<p class="caption">
+FIGURE 4.6: Marginal posterior of the trend coefficient <span class="math inline">\(\beta\)</span> in Model 3.
+</p>
+</div>
+</div>
+<div id="ch4-model4" class="section level3 hasAnchor" number="4.2.4">
+<h3><span class="header-section-number">4.2.4</span> Model 4. AR(2) with level plus noise model<a href="chapter4.html#ch4-model4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We next consider an AR(2) with level plus noise model without a trend.
+The observation and state equations are given in <a href="chapter3.html#eq:dlm-arp-obs">(3.7)</a> and
+<a href="chapter3.html#eq:dlm-arp-st">(3.8)</a>, with <span class="math inline">\(p=2\)</span>, i.e.,</p>
+<p><span class="math display" id="eq:dlm-ar2-st" id="eq:dlm-ar2-obs">\[\begin{align}
+y_t &amp;= \alpha + x_t + v_t;~~ v_t \sim N(0, \sigma^2_v),  \tag{4.4} \\
+x_t &amp;=  \sum_{j=1}^2 \phi_j x_{t-j} + w_t;~~
+w_t  \sim N(0, \sigma^2_w).   \tag{4.5}
+\end{align}\]</span>
+Plots of the posterior means of <span class="math inline">\(x_t\)</span> from the filtering and smoothing distributions for Model 4
+are shown in Figure <a href="chapter4.html#fig:filt-ar2">4.7</a>, together with the observed time series.</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="chapter4.html#cb113-1" aria-hidden="true" tabindex="-1"></a>id.x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(y.append)</span>
+<span id="cb113-2"><a href="chapter4.html#cb113-2" aria-hidden="true" tabindex="-1"></a>musa.ar2.dat <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(id.x, y.append)</span>
+<span id="cb113-3"><a href="chapter4.html#cb113-3" aria-hidden="true" tabindex="-1"></a>formula.ar2 <span class="ot">&lt;-</span> y.append <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.x,</span>
+<span id="cb113-4"><a href="chapter4.html#cb113-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">model =</span> <span class="st">&quot;ar&quot;</span>,</span>
+<span id="cb113-5"><a href="chapter4.html#cb113-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">order =</span> <span class="dv">2</span>,</span>
+<span id="cb113-6"><a href="chapter4.html#cb113-6" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">constr =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb113-7"><a href="chapter4.html#cb113-7" aria-hidden="true" tabindex="-1"></a>model.ar2 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb113-8"><a href="chapter4.html#cb113-8" aria-hidden="true" tabindex="-1"></a>  formula.ar2,</span>
+<span id="cb113-9"><a href="chapter4.html#cb113-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb113-10"><a href="chapter4.html#cb113-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> musa.ar2.dat,</span>
+<span id="cb113-11"><a href="chapter4.html#cb113-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb113-12"><a href="chapter4.html#cb113-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb113-13"><a href="chapter4.html#cb113-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb113-14"><a href="chapter4.html#cb113-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb113-15"><a href="chapter4.html#cb113-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb113-16"><a href="chapter4.html#cb113-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb113-17"><a href="chapter4.html#cb113-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb113-18"><a href="chapter4.html#cb113-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb113-19"><a href="chapter4.html#cb113-19" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.ar2)</span></span>
+<span id="cb113-20"><a href="chapter4.html#cb113-20" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.ar2<span class="sc">$</span>summary.fixed[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb113-21"><a href="chapter4.html#cb113-21" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean  sd    0.025q 0.5q  0.975q</span></span>
+<span id="cb113-22"><a href="chapter4.html#cb113-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept 9.999 1.028 7.863  10.01 12.04</span></span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="chapter4.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.ar2<span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb114-2"><a href="chapter4.html#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                       mean  sd   </span></span>
+<span id="cb114-3"><a href="chapter4.html#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs 0.419 0.067</span></span>
+<span id="cb114-4"><a href="chapter4.html#cb114-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.x         0.528 0.320</span></span>
+<span id="cb114-5"><a href="chapter4.html#cb114-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 PACF1 for id.x             0.960 0.027</span></span>
+<span id="cb114-6"><a href="chapter4.html#cb114-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 PACF2 for id.x             0.035 0.179</span></span></code></pre></div>
+<div class="figure"><span id="fig:filt-ar2"></span>
+<img src="gitbook_version_files/figure-html/filt-ar2-1.png" alt="Observed data (red) and posterior means from the filtering (yellow) and smoothing (green) distributions for an AR(2) with level plus noise model (Model 4)." width="672" />
+<p class="caption">
+FIGURE 4.7: Observed data (red) and posterior means from the filtering (yellow) and smoothing (green) distributions for an AR(2) with level plus noise model (Model 4).
+</p>
+</div>
+<p>Plots of the marginal posterior distributions of the hyperparameters <span class="math inline">\(\phi_1\)</span> and <span class="math inline">\(\phi_2\)</span> are shown in Figure <a href="chapter4.html#fig:phi-post-plot">4.8</a>. The posterior mean of <span class="math inline">\(\phi_2\)</span> is concentrated around <span class="math inline">\(0\)</span>, suggesting that the AR(1) model is more appropriate for this series.</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="chapter4.html#cb115-1" aria-hidden="true" tabindex="-1"></a>n.samples <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb115-2"><a href="chapter4.html#cb115-2" aria-hidden="true" tabindex="-1"></a>pacfs <span class="ot">&lt;-</span> <span class="fu">inla.hyperpar.sample</span>(n.samples, model.ar2)[, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb115-3"><a href="chapter4.html#cb115-3" aria-hidden="true" tabindex="-1"></a>phis <span class="ot">&lt;-</span> <span class="fu">apply</span>(pacfs, 1L, inla.ar.pacf2phi)</span>
+<span id="cb115-4"><a href="chapter4.html#cb115-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb115-5"><a href="chapter4.html#cb115-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb115-6"><a href="chapter4.html#cb115-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">density</span>(phis[<span class="dv">1</span>, ]),</span>
+<span id="cb115-7"><a href="chapter4.html#cb115-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
+<span id="cb115-8"><a href="chapter4.html#cb115-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb115-9"><a href="chapter4.html#cb115-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="fu">expression</span>(phi[<span class="dv">1</span>]),</span>
+<span id="cb115-10"><a href="chapter4.html#cb115-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;density&quot;</span></span>
+<span id="cb115-11"><a href="chapter4.html#cb115-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb115-12"><a href="chapter4.html#cb115-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb115-13"><a href="chapter4.html#cb115-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">density</span>(phis[<span class="dv">2</span>, ]),</span>
+<span id="cb115-14"><a href="chapter4.html#cb115-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
+<span id="cb115-15"><a href="chapter4.html#cb115-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb115-16"><a href="chapter4.html#cb115-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="fu">expression</span>(phi[<span class="dv">2</span>]),</span>
+<span id="cb115-17"><a href="chapter4.html#cb115-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;density&quot;</span></span>
+<span id="cb115-18"><a href="chapter4.html#cb115-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="figure"><span id="fig:phi-post-plot"></span>
+<img src="gitbook_version_files/figure-html/phi-post-plot-1.png" alt="Marginal posterior densities of $\phi_1$ (left panel) and $\phi_2$ (right panel) under Model 4." width="672" />
+<p class="caption">
+FIGURE 4.8: Marginal posterior densities of <span class="math inline">\(\phi_1\)</span> (left panel) and <span class="math inline">\(\phi_2\)</span> (right panel) under Model 4.
+</p>
+</div>
+<div class="figure"><span id="fig:plots-acf"></span>
+<img src="gitbook_version_files/figure-html/plots-acf-1.png" alt="Sample ACF plots from Model 1--Model 4." width="672" />
+<p class="caption">
+FIGURE 4.9: Sample ACF plots from Model 1–Model 4.
+</p>
+</div>
+<p>In Section <a href="chapter4.html#modsel-ch4">4.4</a>, we will compare these models based on in-sample model criteria such as DIC, WAIC, and PsBF. In Section <a href="chapter4.html#forecasting-musa">4.3</a>, we see how to use <code>R-INLA</code> to forecast future states and observations.</p>
+</div>
+</div>
+<div id="forecasting-musa" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Forecasting future states and responses<a href="chapter4.html#forecasting-musa" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Given training data <span class="math inline">\(y_1,\ldots, y_{n_t}\)</span>, estimates of the states
+<span class="math inline">\(x_1,\ldots, x_{n_t}\)</span> and the estimates of model hyperparameters <span class="math inline">\(\boldsymbol{\theta}\)</span>,
+we forecast <span class="math inline">\(x_{n_t+\ell},~\ell=1,\ldots,n_h\)</span>. For <span class="math inline">\(n_t=95\)</span> and <span class="math inline">\(n_h=6\)</span>, we show below forecasts for the future latent states for time periods from <span class="math inline">\(t=96\)</span> to <span class="math inline">\(t=101\)</span>. See Section <a href="chapter3.html#forecasting">3.7</a> for more details.</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="chapter4.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecast the state variable</span></span>
+<span id="cb116-2"><a href="chapter4.html#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(<span class="fu">tail</span>(model.ar1<span class="sc">$</span>summary.random<span class="sc">$</span>id[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)]))</span>
+<span id="cb116-3"><a href="chapter4.html#cb116-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   ID  mean  sd    0.025q 0.5q  0.975q</span></span>
+<span id="cb116-4"><a href="chapter4.html#cb116-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  96 0.568 1.132 -1.704 0.572 2.878 </span></span>
+<span id="cb116-5"><a href="chapter4.html#cb116-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  97 0.547 1.166 -1.809 0.555 2.910 </span></span>
+<span id="cb116-6"><a href="chapter4.html#cb116-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  98 0.527 1.193 -1.893 0.537 2.938 </span></span>
+<span id="cb116-7"><a href="chapter4.html#cb116-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  99 0.508 1.217 -1.964 0.518 2.963 </span></span>
+<span id="cb116-8"><a href="chapter4.html#cb116-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 100 0.490 1.236 -2.023 0.500 2.984 </span></span>
+<span id="cb116-9"><a href="chapter4.html#cb116-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 101 0.472 1.253 -2.074 0.482 3.001</span></span></code></pre></div>
+<p>We then obtain forecasts of <span class="math inline">\(y_{n_t+\ell}\)</span> for <span class="math inline">\(\ell=1,\ldots,n_h\)</span>.</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="chapter4.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(<span class="fu">tail</span>(model.ar1<span class="sc">$</span>summary.fitted.values[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)]))</span>
+<span id="cb117-2"><a href="chapter4.html#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   name         mean  sd    0.025q 0.5q  0.975q</span></span>
+<span id="cb117-3"><a href="chapter4.html#cb117-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 fit.Pred.096 10.58 0.891 8.664  10.64 12.18 </span></span>
+<span id="cb117-4"><a href="chapter4.html#cb117-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 fit.Pred.097 10.56 0.955 8.493  10.63 12.27 </span></span>
+<span id="cb117-5"><a href="chapter4.html#cb117-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 fit.Pred.098 10.54 1.009 8.358  10.61 12.35 </span></span>
+<span id="cb117-6"><a href="chapter4.html#cb117-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 fit.Pred.099 10.52 1.055 8.245  10.59 12.43 </span></span>
+<span id="cb117-7"><a href="chapter4.html#cb117-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 fit.Pred.100 10.51 1.094 8.149  10.57 12.49 </span></span>
+<span id="cb117-8"><a href="chapter4.html#cb117-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 fit.Pred.101 10.49 1.128 8.067  10.55 12.55</span></span></code></pre></div>
+<p>Using similar code, we can obtain forecasts for <span class="math inline">\(y_{n_t+1},\ldots, y_{n_t+n_h}\)</span> from
+Model 2–Model 4. Figure <a href="chapter4.html#fig:fore-plot-all-models">4.10</a> shows plots of the training portion of the time series as well as the forecasts and forecast intervals (gray shaded region) from all four models. The shaded area is the interval at each time point between the lower limit (forecast minus twice the forecast standard deviation) and the upper limit (forecast plus twice the forecast standard deviation).</p>
+<div class="figure"><span id="fig:fore-plot-all-models"></span>
+<img src="gitbook_version_files/figure-html/fore-plot-all-models-1.png" alt="Observed data along with forecasts from Model 1--Model 4 for the last six observations. The gray shaded region shows the forecast intervals based on 2 standard deviation (sd) bounds around the means of the posterior predictive distributions. The black vertical line splits the data into training and test portions." width="672" />
+<p class="caption">
+FIGURE 4.10: Observed data along with forecasts from Model 1–Model 4 for the last six observations. The gray shaded region shows the forecast intervals based on 2 standard deviation (sd) bounds around the means of the posterior predictive distributions. The black vertical line splits the data into training and test portions.
+</p>
+</div>
+</div>
+<div id="modsel-ch4" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> Model comparisons<a href="chapter4.html#modsel-ch4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the next two sections, we present model comparisons.</p>
+<div id="in-sample-comparisons" class="section level3 unnumbered hasAnchor">
+<h3>In-sample comparisons<a href="chapter4.html#in-sample-comparisons" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The DIC, WAIC, and CPO criteria for the
+fitted models are obtained using <code>control.compute=list(dic=TRUE, waic = TRUE, cpo = TRUE)</code> during model fit:</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="chapter4.html#cb118-1" aria-hidden="true" tabindex="-1"></a>model.ar1<span class="sc">$</span>dic<span class="sc">$</span>dic</span>
+<span id="cb118-2"><a href="chapter4.html#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 368.9</span></span>
+<span id="cb118-3"><a href="chapter4.html#cb118-3" aria-hidden="true" tabindex="-1"></a>model.ar1<span class="sc">$</span>waic<span class="sc">$</span>waic</span>
+<span id="cb118-4"><a href="chapter4.html#cb118-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 371</span></span>
+<span id="cb118-5"><a href="chapter4.html#cb118-5" aria-hidden="true" tabindex="-1"></a>cpo.ar1 <span class="ot">&lt;-</span> model.ar1<span class="sc">$</span>cpo<span class="sc">$</span>cpo</span>
+<span id="cb118-6"><a href="chapter4.html#cb118-6" aria-hidden="true" tabindex="-1"></a>(PsBF.ar1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">log</span>(cpo.ar1[<span class="dv">1</span><span class="sc">:</span>n.train])))</span>
+<span id="cb118-7"><a href="chapter4.html#cb118-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] -186.1</span></span></code></pre></div>
+<!--The plot in 
+Figure \@ref(fig:hist-pit-ar1) gives us an indication of model _adequacy_ in Model 1. A histogram of PIT must look like a uniform distribution; departures indicate outlying observations and possible lack of fit.
+
+
+-->
+<p>The custom function <code>model.selection.criteria()</code> (see Section <a href="resources.html#custom-functions">14.3</a>) allows us to print the DIC, WAIC and PSBF values from a model. For example, we can obtain these for the AR(1) with level plus noise model (Model 1) as shown below.</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="chapter4.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model.selection.criteria</span>(model.ar1, <span class="at">plot.PIT =</span> <span class="cn">FALSE</span>, <span class="at">n.train =</span> n.train)</span>
+<span id="cb119-2"><a href="chapter4.html#cb119-2" aria-hidden="true" tabindex="-1"></a><span class="do">##        DIC WAIC   PsBF</span></span>
+<span id="cb119-3"><a href="chapter4.html#cb119-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1,] 368.9  371 -186.1</span></span></code></pre></div>
+<p><code>R-INLA</code> outputs the marginal likelihood on the logarithmic scale by default; for example the marginal likelihood from Model 1 is:</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="chapter4.html#cb120-1" aria-hidden="true" tabindex="-1"></a>model.ar1<span class="sc">$</span>mlik</span>
+<span id="cb120-2"><a href="chapter4.html#cb120-2" aria-hidden="true" tabindex="-1"></a><span class="do">##                                         [,1]</span></span>
+<span id="cb120-3"><a href="chapter4.html#cb120-3" aria-hidden="true" tabindex="-1"></a><span class="do">## log marginal-likelihood (integration) -211.2</span></span>
+<span id="cb120-4"><a href="chapter4.html#cb120-4" aria-hidden="true" tabindex="-1"></a><span class="do">## log marginal-likelihood (Gaussian)    -211.2</span></span></code></pre></div>
+<p>From Table <a href="chapter4.html#tab:dic-mape-mae-table">4.1</a>, we see that the criteria are quite similar for four models. The DIC criterion suggests that either the AR(1) with trend plus noise model seems to give the best fit to the data, while the other models are also competitive.</p>
+</div>
+<div id="out-of-sample-comparisons" class="section level3 unnumbered hasAnchor">
+<h3>Out-of-sample comparisons<a href="chapter4.html#out-of-sample-comparisons" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We defined out-of-sample criteria such as MAPE and MAE in Chapter
+<a href="chapter3.html#chapter3">3</a>; see <a href="chapter3.html#eq:mape">(3.27)</a> and <a href="chapter3.html#eq:mae">(3.28)</a>. The codes to compute MAE and MAPE can be accessed from the custom functions; see Section <a href="resources.html#custom-functions">14.3</a>.
+The out-of-sample validation based on forecasting the hold-out data for the AR(1) with level plus noise model (Model 1) is shown below. These criteria can be similarly computed for the other models.</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="chapter4.html#cb121-1" aria-hidden="true" tabindex="-1"></a>yfore.ar1 <span class="ot">&lt;-</span> <span class="fu">tail</span>(model.ar1<span class="sc">$</span>summary.fitted.values)<span class="sc">$</span>mean</span>
+<span id="cb121-2"><a href="chapter4.html#cb121-2" aria-hidden="true" tabindex="-1"></a>yhold <span class="ot">&lt;-</span> test.data<span class="sc">$</span>log.tbf</span>
+<span id="cb121-3"><a href="chapter4.html#cb121-3" aria-hidden="true" tabindex="-1"></a>efore.ar1 <span class="ot">&lt;-</span> yhold <span class="sc">-</span> yfore.ar1 <span class="co"># forecast errors</span></span>
+<span id="cb121-4"><a href="chapter4.html#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mape</span>(yhold, yfore.ar1, <span class="st">&quot;MAPE from AR(1) with level plus noise model is&quot;</span>)</span>
+<span id="cb121-5"><a href="chapter4.html#cb121-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;MAPE from AR(1) with level plus noise model is 14.25&quot;</span></span>
+<span id="cb121-6"><a href="chapter4.html#cb121-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mae</span>(yhold, yfore.ar1, <span class="st">&quot;MAE from AR(1) with level plus noise model is&quot;</span>)</span>
+<span id="cb121-7"><a href="chapter4.html#cb121-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;MAE from AR(1) with level plus noise model is 1.807&quot;</span></span></code></pre></div>
+<p>The MAPE and MAE values from Table <a href="chapter4.html#tab:dic-mape-mae-table">4.1</a> are lowest for the random walk plus noise model (Model 2), with the
+AR(1) with trend plus noise model being a close second.</p>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:dic-mape-mae-table">TABLE 4.1: </span>DIC, MAPE, and MAE values from Models M1–M4.
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
+Model
+</th>
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
+DIC
+</th>
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
+MAPE
+</th>
+<th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;">
+MAE
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+AR(1) with level plus noise
+</td>
+<td style="text-align:center;">
+368.9
+</td>
+<td style="text-align:center;">
+14.25
+</td>
+<td style="text-align:center;">
+1.807
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Random walk plus noise
+</td>
+<td style="text-align:center;">
+370.1
+</td>
+<td style="text-align:center;">
+10.82
+</td>
+<td style="text-align:center;">
+1.344
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+AR(1) with trend (no level alpha) and noise
+</td>
+<td style="text-align:center;">
+368.5
+</td>
+<td style="text-align:center;">
+12.40
+</td>
+<td style="text-align:center;">
+1.551
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+AR(2) plus noise
+</td>
+<td style="text-align:center;">
+368.7
+</td>
+<td style="text-align:center;">
+14.04
+</td>
+<td style="text-align:center;">
+1.778
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-musa1979software" class="csl-entry">
+Musa, John D. 1979. <span>“Software Reliability Data.”</span> <em>IEEE Comput. Soc. Repository</em>.
+</div>
+<div id="ref-singpurwalla1992non" class="csl-entry">
+Singpurwalla, Nozer D., and Refik Soyer. 1992. <span>“Non-Homogeneous Autoregressive Processes for Tracking (Software) Reliability Growth, and Their <span>B</span>ayesian Analysis.”</span> <em>Journal of the Royal Statistical Society: Series B (Methodological)</em> 54 (1): 145–56.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chapter3.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chapter5.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"split_by": "chapter",
+"split_bib": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

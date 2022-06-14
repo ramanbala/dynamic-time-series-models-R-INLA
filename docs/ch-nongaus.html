@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Non-Gaussian Continuous Responses | Dynamic Time Series Models using R-INLA: An Applied Perspective</title>
+  <meta name="description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Non-Gaussian Continuous Responses | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA/" />
+  <meta property="og:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+  <meta property="og:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="github-repo" content="ramanbala/dynamic-time-series-models-R-INLA" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Non-Gaussian Continuous Responses | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  
+  <meta name="twitter:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="twitter:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+
+<meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
+
+
+<meta name="date" content="2022-06-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chapter6.html"/>
+<link rel="next" href="ch-binary.html"/>
+<script src="libs/header-attrs/header-attrs.js"></script>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+<script src="libs/kePrint/kePrint.js"></script>
+<link href="libs/lightable/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a></li>
+
+<li class="divider"></li>
+<li><a href="index.html#preface">Preface<span></span></a>
+<ul>
+<li><a href="index.html#why-read-this-book">Why read this book?<span></span></a></li>
+<li><a href="index.html#structure-of-the-book">Structure of the book<span></span></a></li>
+<li><a href="index.html#software-information-and-conventions">Software information and conventions<span></span></a></li>
+<li><a href="index.html#acknowledgments">Acknowledgments<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="chapter1.html"><a href="chapter1.html"><i class="fa fa-check"></i><b>1</b> Bayesian Analysis<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="chapter1.html"><a href="chapter1.html#intro-ch1"><i class="fa fa-check"></i><b>1.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="1.2" data-path="chapter1.html"><a href="chapter1.html#bayes-framework"><i class="fa fa-check"></i><b>1.2</b> Bayesian framework<span></span></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="chapter1.html"><a href="chapter1.html#bayesian-model-comparison"><i class="fa fa-check"></i><b>1.2.1</b> Bayesian model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="chapter1.html"><a href="chapter1.html#bayes-ts"><i class="fa fa-check"></i><b>1.3</b> Bayesian analysis of time series<span></span></a></li>
+<li class="chapter" data-level="1.4" data-path="chapter1.html"><a href="chapter1.html#dlms"><i class="fa fa-check"></i><b>1.4</b> Gaussian dynamic linear models (DLMs)<span></span></a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="chapter1.html"><a href="chapter1.html#constant-level-plus-noise-model"><i class="fa fa-check"></i><b>1.4.1</b> Constant level plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.2" data-path="chapter1.html"><a href="chapter1.html#local-level-model"><i class="fa fa-check"></i><b>1.4.2</b> Local level model<span></span></a></li>
+<li class="chapter" data-level="1.4.3" data-path="chapter1.html"><a href="chapter1.html#gaussian-dlm-framework-for-univariate-time-series"><i class="fa fa-check"></i><b>1.4.3</b> Gaussian DLM framework for univariate time series<span></span></a></li>
+<li class="chapter" data-level="1.4.4" data-path="chapter1.html"><a href="chapter1.html#ar1-plus-noise-model"><i class="fa fa-check"></i><b>1.4.4</b> AR(1) plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.5" data-path="chapter1.html"><a href="chapter1.html#dlm-for-vector-valued-time-series"><i class="fa fa-check"></i><b>1.4.5</b> DLM for vector-valued time series<span></span></a></li>
+<li class="chapter" data-level="1.4.6" data-path="chapter1.html"><a href="chapter1.html#kalman-filtering-and-smoothing"><i class="fa fa-check"></i><b>1.4.6</b> Kalman filtering and smoothing<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="chapter1.html"><a href="chapter1.html#beyonddlm"><i class="fa fa-check"></i><b>1.5</b> Beyond basic Gaussian DLMs<span></span></a></li>
+<li><a href="chapter1.html#chapter-1-appendix">Chapter 1 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter1.html#conditional-distributions">Conditional distributions<span></span></a></li>
+<li><a href="chapter1.html#exponential-family-of-distributions">Exponential family of distributions<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter2.html"><a href="chapter2.html"><i class="fa fa-check"></i><b>2</b> A Review of INLA<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="chapter2.html"><a href="chapter2.html#intro-ch2"><i class="fa fa-check"></i><b>2.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="2.2" data-path="chapter2.html"><a href="chapter2.html#laplace"><i class="fa fa-check"></i><b>2.2</b> Laplace approximation<span></span></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="chapter2.html"><a href="chapter2.html#simplaplace"><i class="fa fa-check"></i><b>2.2.1</b> Simplified Laplace approximation<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="chapter2.html"><a href="chapter2.html#inlats"><i class="fa fa-check"></i><b>2.3</b> INLA structure for time series<span></span></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="chapter2.html"><a href="chapter2.html#inla-steps"><i class="fa fa-check"></i><b>2.3.1</b> INLA steps<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="chapter2.html"><a href="chapter2.html#forecast"><i class="fa fa-check"></i><b>2.4</b> Forecasting in INLA<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="chapter2.html"><a href="chapter2.html#marglik"><i class="fa fa-check"></i><b>2.5</b> Marginal likelihood computation in INLA<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="chapter2.html"><a href="chapter2.html#rinlapkg"><i class="fa fa-check"></i><b>2.6</b> <code>R-INLA</code> package – some basics<span></span></a></li>
+<li><a href="chapter2.html#chapter-2-appendix">Chapter 2 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter2.html#gaussian-markov-random-field-gmrf">Gaussian Markov Random Field (GMRF)<span></span></a></li>
+<li><a href="chapter2.html#kullback-leibler-divergence">Kullback-Leibler divergence<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter3.html"><a href="chapter3.html"><i class="fa fa-check"></i><b>3</b> Details of R-INLA for Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="chapter3.html"><a href="chapter3.html#intro-ch3"><i class="fa fa-check"></i><b>3.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="3.2" data-path="chapter3.html"><a href="chapter3.html#ch3-rw1noise"><i class="fa fa-check"></i><b>3.2</b> Random walk plus noise model<span></span></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="chapter3.html"><a href="chapter3.html#inlaformula"><i class="fa fa-check"></i><b>3.2.1</b> <code>R-INLA</code> model formula<span></span></a></li>
+<li class="chapter" data-level="3.2.2" data-path="chapter3.html"><a href="chapter3.html#inlaexec"><i class="fa fa-check"></i><b>3.2.2</b> Model execution<span></span></a></li>
+<li class="chapter" data-level="3.2.3" data-path="chapter3.html"><a href="chapter3.html#inlaprior"><i class="fa fa-check"></i><b>3.2.3</b> Prior specifications for hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.4" data-path="chapter3.html"><a href="chapter3.html#inlaposterior"><i class="fa fa-check"></i><b>3.2.4</b> Posterior distributions of hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.5" data-path="chapter3.html"><a href="chapter3.html#fittedvalues"><i class="fa fa-check"></i><b>3.2.5</b> Fitted values for latent states and responses<span></span></a></li>
+<li class="chapter" data-level="3.2.6" data-path="chapter3.html"><a href="chapter3.html#filterestimate"><i class="fa fa-check"></i><b>3.2.6</b> Filtering and smoothing in DLM<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="chapter3.html"><a href="chapter3.html#ch3-ar1levelnoise"><i class="fa fa-check"></i><b>3.3</b> AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="chapter3.html"><a href="chapter3.html#ch3-high-lags"><i class="fa fa-check"></i><b>3.4</b> Dynamic linear models with higher order AR lags<span></span></a>
+<ul>
+<li><a href="chapter3.html#arp-with-level-plus-noise-model">AR<span class="math inline">\((p)\)</span> with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="chapter3.html"><a href="chapter3.html#ch3-rwdrift"><i class="fa fa-check"></i><b>3.5</b> Random walk with drift plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.6" data-path="chapter3.html"><a href="chapter3.html#ch3-rwtvdrift"><i class="fa fa-check"></i><b>3.6</b> Second-order polynomial model<span></span></a></li>
+<li class="chapter" data-level="3.7" data-path="chapter3.html"><a href="chapter3.html#forecasting"><i class="fa fa-check"></i><b>3.7</b> Forecasting states and observations<span></span></a></li>
+<li class="chapter" data-level="3.8" data-path="chapter3.html"><a href="chapter3.html#modsel"><i class="fa fa-check"></i><b>3.8</b> Model comparisons<span></span></a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="chapter3.html"><a href="chapter3.html#modsel-insamp-ch3"><i class="fa fa-check"></i><b>3.8.1</b> In-sample model comparisons<span></span></a></li>
+<li class="chapter" data-level="3.8.2" data-path="chapter3.html"><a href="chapter3.html#modsel-outsamp-ch3"><i class="fa fa-check"></i><b>3.8.2</b> Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="chapter3.html"><a href="chapter3.html#nondefault-priors"><i class="fa fa-check"></i><b>3.9</b> Non-default prior specifications<span></span></a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="chapter3.html"><a href="chapter3.html#custom-priors"><i class="fa fa-check"></i><b>3.9.1</b> Custom prior specifications<span></span></a></li>
+<li class="chapter" data-level="3.9.2" data-path="chapter3.html"><a href="chapter3.html#pc-priors"><i class="fa fa-check"></i><b>3.9.2</b> Penalized complexity (PC) priors<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="chapter3.html"><a href="chapter3.html#post-sampling"><i class="fa fa-check"></i><b>3.10</b> Posterior sampling of latent effects and hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.11" data-path="chapter3.html"><a href="chapter3.html#postpred-samples"><i class="fa fa-check"></i><b>3.11</b> Posterior predictive samples of unknown observations<span></span></a></li>
+<li><a href="chapter3.html#chapter-3-appendix">Chapter 3 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter3.html#sampling-properties-of-time-series">Sampling properties of time series<span></span></a></li>
+<li><a href="chapter3.html#autoregressive-models">Autoregressive models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter4.html"><a href="chapter4.html"><i class="fa fa-check"></i><b>4</b> Modeling Univariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="chapter4.html"><a href="chapter4.html#intro-ch4"><i class="fa fa-check"></i><b>4.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="4.2" data-path="chapter4.html"><a href="chapter4.html#dat-analysis"><i class="fa fa-check"></i><b>4.2</b> Example: A software engineering example – Musa data<span></span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="chapter4.html"><a href="chapter4.html#ch4-model1"><i class="fa fa-check"></i><b>4.2.1</b> Model 1. AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.2" data-path="chapter4.html"><a href="chapter4.html#ch4-model2"><i class="fa fa-check"></i><b>4.2.2</b> Model 2. Random walk plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.3" data-path="chapter4.html"><a href="chapter4.html#ch4-model3"><i class="fa fa-check"></i><b>4.2.3</b> Model 3. AR(1) with trend plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.4" data-path="chapter4.html"><a href="chapter4.html#ch4-model4"><i class="fa fa-check"></i><b>4.2.4</b> Model 4. AR(2) with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chapter4.html"><a href="chapter4.html#forecasting-musa"><i class="fa fa-check"></i><b>4.3</b> Forecasting future states and responses<span></span></a></li>
+<li class="chapter" data-level="4.4" data-path="chapter4.html"><a href="chapter4.html#modsel-ch4"><i class="fa fa-check"></i><b>4.4</b> Model comparisons<span></span></a>
+<ul>
+<li><a href="chapter4.html#in-sample-comparisons">In-sample comparisons<span></span></a></li>
+<li><a href="chapter4.html#out-of-sample-comparisons">Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter5.html"><a href="chapter5.html"><i class="fa fa-check"></i><b>5</b> Time Series Regression Models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="chapter5.html"><a href="chapter5.html#intro-ch5"><i class="fa fa-check"></i><b>5.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="5.2" data-path="chapter5.html"><a href="chapter5.html#ch5-strdecomp"><i class="fa fa-check"></i><b>5.2</b> Structural models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="chapter5.html"><a href="chapter5.html#hotelcost"><i class="fa fa-check"></i><b>5.2.1</b> Example: Monthly average cost of nightly hotel stay<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="chapter5.html"><a href="chapter5.html#ch5-exogpreds"><i class="fa fa-check"></i><b>5.3</b> Models with exogenous predictors<span></span></a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter5.html"><a href="chapter5.html#hourly-traffic"><i class="fa fa-check"></i><b>5.3.1</b> Example: Hourly traffic volumes<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="chapter5.html"><a href="chapter5.html#ar1c"><i class="fa fa-check"></i><b>5.4</b> Latent AR(1) model with covariates plus noise<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Hierarchical Dynamic Models for Panel Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#intro-ch6"><i class="fa fa-check"></i><b>6.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#homog-state"><i class="fa fa-check"></i><b>6.2</b> Models with homogenous state evolution<span></span></a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="chapter6.html"><a href="chapter6.html#simul1-panelts"><i class="fa fa-check"></i><b>6.2.1</b> Example: Simulated homogeneous panel time series with the same level<span></span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="chapter6.html"><a href="chapter6.html#simul2-panelts"><i class="fa fa-check"></i><b>6.2.2</b> Example: Simulated homogeneous panel time series with different levels<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#ridesource-hdlm"><i class="fa fa-check"></i><b>6.3</b> Example: Ridesourcing in NYC<span></span></a>
+<ul>
+<li><a href="chapter6.html#description-of-variables">Description of variables<span></span></a></li>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#hmod.H1"><i class="fa fa-check"></i><b>6.3.1</b> Model H1. Dynamic intercept and exogenous predictors<span></span></a></li>
+<li class="chapter" data-level="6.3.2" data-path="chapter6.html"><a href="chapter6.html#hmod.H2"><i class="fa fa-check"></i><b>6.3.2</b> Model H2. Dynamic intercept and Taxi usage<span></span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="chapter6.html"><a href="chapter6.html#hmod.H3"><i class="fa fa-check"></i><b>6.3.3</b> Model H3. Taxi usage varies by time and zone<span></span></a></li>
+<li class="chapter" data-level="6.3.4" data-path="chapter6.html"><a href="chapter6.html#hmod.H4"><i class="fa fa-check"></i><b>6.3.4</b> Model H4. Fixed intercept, Taxi usage varies over time and zones<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="chapter6.html"><a href="chapter6.html#model-comparison"><i class="fa fa-check"></i><b>6.4</b> Model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-nongaus.html"><a href="ch-nongaus.html"><i class="fa fa-check"></i><b>7</b> Non-Gaussian Continuous Responses<span></span></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#intro-nongaus"><i class="fa fa-check"></i><b>7.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="7.2" data-path="ch-nongaus.html"><a href="ch-nongaus.html#gamma-model"><i class="fa fa-check"></i><b>7.2</b> Gamma state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#vix"><i class="fa fa-check"></i><b>7.2.1</b> Example: Volatility index (VIX) time series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="ch-nongaus.html"><a href="ch-nongaus.html#weibull-model"><i class="fa fa-check"></i><b>7.3</b> Weibull state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#forecasting-from-weibull-models"><i class="fa fa-check"></i><b>7.3.1</b> Forecasting from Weibull models<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="ch-nongaus.html"><a href="ch-nongaus.html#beta-model"><i class="fa fa-check"></i><b>7.4</b> Beta state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#crest"><i class="fa fa-check"></i><b>7.4.1</b> Example: Crest market share<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ch-binary.html"><a href="ch-binary.html"><i class="fa fa-check"></i><b>8</b> Modeling Categorical Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="ch-binary.html"><a href="ch-binary.html#intro-ch-binary"><i class="fa fa-check"></i><b>8.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="8.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-model"><i class="fa fa-check"></i><b>8.2</b> Binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-bin"><i class="fa fa-check"></i><b>8.2.1</b> Example: Simulated single binomial response series<span></span></a></li>
+<li class="chapter" data-level="8.2.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-weekly-shopping"><i class="fa fa-check"></i><b>8.2.2</b> Example: Weekly shopping trips for a single household<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="ch-binary.html"><a href="ch-binary.html#hbin"><i class="fa fa-check"></i><b>8.3</b> Modeling multiple binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-hbin"><i class="fa fa-check"></i><b>8.3.1</b> Example: Dynamic aggregated model for multiple binomial response time series<span></span></a></li>
+<li class="chapter" data-level="8.3.2" data-path="ch-binary.html"><a href="ch-binary.html#hbin-weekly-shopping"><i class="fa fa-check"></i><b>8.3.2</b> Example: Weekly shopping trips for multiple households<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="ch-binary.html"><a href="ch-binary.html#cat-models"><i class="fa fa-check"></i><b>8.4</b> Multinomial time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-mn-p"><i class="fa fa-check"></i><b>8.4.1</b> Example: Simulated categorical time series<span></span></a></li>
+<li><a href="ch-binary.html#model-d4-dynamic-coefficient-for-c_jt">Model D4: Dynamic coefficient for <span class="math inline">\(C_{j,t}\)</span><span></span></a></li>
+</ul></li>
+<li><a href="ch-binary.html#chapter-8-appendix">Chapter 8 – Appendix<span></span></a>
+<ul>
+<li><a href="ch-binary.html#poisson-trick-for-multinomial-models">Poisson-trick for multinomial models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-count.html"><a href="ch-count.html"><i class="fa fa-check"></i><b>9</b> Modeling Count Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="ch-count.html"><a href="ch-count.html#intro-ch-count"><i class="fa fa-check"></i><b>9.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="9.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts"><i class="fa fa-check"></i><b>9.2</b> Univariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="ch-count.html"><a href="ch-count.html#uvcounts-simpois"><i class="fa fa-check"></i><b>9.2.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.2.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts-crashct"><i class="fa fa-check"></i><b>9.2.2</b> Example: Modeling crash counts in CT<span></span></a></li>
+<li class="chapter" data-level="9.2.3" data-path="ch-count.html"><a href="ch-count.html#uvcounts-bikerental"><i class="fa fa-check"></i><b>9.2.3</b> Example: Daily bike rentals in Washington D.C.<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="ch-count.html"><a href="ch-count.html#hieruvcounts"><i class="fa fa-check"></i><b>9.3</b> Hierarchical modeling of univariate count time series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="ch-count.html"><a href="ch-count.html#simul1-hcount"><i class="fa fa-check"></i><b>9.3.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.3.2" data-path="ch-count.html"><a href="ch-count.html#tnc-hcount"><i class="fa fa-check"></i><b>9.3.2</b> Example: Modeling daily TNC usage in NYC<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="ch-sv.html"><a href="ch-sv.html"><i class="fa fa-check"></i><b>10</b> Modeling Stochastic Volatility<span></span></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="ch-sv.html"><a href="ch-sv.html#ch-sv-intro"><i class="fa fa-check"></i><b>10.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="10.2" data-path="ch-sv.html"><a href="ch-sv.html#sv-uv"><i class="fa fa-check"></i><b>10.2</b> Univariate SV models<span></span></a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="ch-sv.html"><a href="ch-sv.html#simul-svnormal"><i class="fa fa-check"></i><b>10.2.1</b> Example: Simulated SV data with standard normal errors<span></span></a></li>
+<li class="chapter" data-level="10.2.2" data-path="ch-sv.html"><a href="ch-sv.html#simul-svt5"><i class="fa fa-check"></i><b>10.2.2</b> Example: Simulated SV data with Student-<span class="math inline">\(t_{\nu}\)</span> errors<span></span></a></li>
+<li class="chapter" data-level="10.2.3" data-path="ch-sv.html"><a href="ch-sv.html#stockrets"><i class="fa fa-check"></i><b>10.2.3</b> Example: IBM stock returns<span></span></a></li>
+<li class="chapter" data-level="10.2.4" data-path="ch-sv.html"><a href="ch-sv.html#nysestockrets"><i class="fa fa-check"></i><b>10.2.4</b> Example: NYSE returns<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="ch-st.html"><a href="ch-st.html"><i class="fa fa-check"></i><b>11</b> Spatio-temporal Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="ch-st.html"><a href="ch-st.html#ch-st-intro"><i class="fa fa-check"></i><b>11.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="11.2" data-path="ch-st.html"><a href="ch-st.html#st-process"><i class="fa fa-check"></i><b>11.2</b> Spatio-temporal process<span></span></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-st.html"><a href="ch-st.html#dyn-areal-model"><i class="fa fa-check"></i><b>11.3</b> Dynamic spatial models for areal data<span></span></a></li>
+<li class="chapter" data-level="11.4" data-path="ch-st.html"><a href="ch-st.html#st-tnc-example"><i class="fa fa-check"></i><b>11.4</b> Example: Monthly TNC usage in NYC taxi zones<span></span></a>
+<ul>
+<li><a href="ch-st.html#data-preprocessing">Data preprocessing<span></span></a></li>
+<li class="chapter" data-level="11.4.1" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh"><i class="fa fa-check"></i><b>11.4.1</b> Model 1. Knorr-Held additive effects model<span></span></a></li>
+<li class="chapter" data-level="11.4.2" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh-inter"><i class="fa fa-check"></i><b>11.4.2</b> Knorr-Held models with space-time interactions<span></span></a></li>
+<li><a href="ch-st.html#model-kh3.-knorr-held-model-with-interaction-between-epsilon_i-and-gamma_t">Model KH3. Knorr-Held model with interaction between <span class="math inline">\(\epsilon_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+<li><a href="ch-st.html#model-kh4.-knorr-held-model-with-interaction-between-nu_i-and-gamma_t">Model KH4. Knorr-Held model with interaction between <span class="math inline">\(\nu_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chmvdlm.html"><a href="chmvdlm.html"><i class="fa fa-check"></i><b>12</b> Multivariate Gaussian Dynamic Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="chmvdlm.html"><a href="chmvdlm.html#intro-chmvdlm"><i class="fa fa-check"></i><b>12.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="12.2" data-path="chmvdlm.html"><a href="chmvdlm.html#MVDiagWPhi"><i class="fa fa-check"></i><b>12.2</b> Model with diagonal <span class="math inline">\(\boldsymbol W\)</span> and <span class="math inline">\(\boldsymbol \Phi\)</span> matrices<span></span></a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="chmvdlm.html"><a href="chmvdlm.html#V-setup"><i class="fa fa-check"></i><b>12.2.1</b> Description of the setup for <span class="math inline">\(\boldsymbol V\)</span><span></span></a></li>
+<li class="chapter" data-level="12.2.2" data-path="chmvdlm.html"><a href="chmvdlm.html#simbivar1"><i class="fa fa-check"></i><b>12.2.2</b> Example: Simulated bivariate AR(1) series<span></span></a></li>
+<li class="chapter" data-level="12.2.3" data-path="chmvdlm.html"><a href="chmvdlm.html#tnctaxi-onezone"><i class="fa fa-check"></i><b>12.2.3</b> Example: Ridesourcing data in NYC for a single taxi zone<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="chmvdlm.html"><a href="chmvdlm.html#MVICCWPhi"><i class="fa fa-check"></i><b>12.3</b> Model with equicorrelated <span class="math inline">\(\boldsymbol{w}_t\)</span> and diagonal <span class="math inline">\(\boldsymbol \Phi\)</span><span></span></a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simtrivar1"><i class="fa fa-check"></i><b>12.3.1</b> Example: Simulated trivariate series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chmvdlm.html"><a href="chmvdlm.html#rgenericmv"><i class="fa fa-check"></i><b>12.4</b> Fitting multivariate models using <code>rgeneric</code><span></span></a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simulgen"><i class="fa fa-check"></i><b>12.4.1</b> Example: Simulated bivariate VAR(1) series<span></span></a></li>
+</ul></li>
+<li><a href="chmvdlm.html#chapter-12-appendix">Chapter 12 – Appendix<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="ch-hmv.html"><a href="ch-hmv.html"><i class="fa fa-check"></i><b>13</b> Hierarchical Multivariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="ch-hmv.html"><a href="ch-hmv.html#intro-ch-hmv"><i class="fa fa-check"></i><b>13.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="13.2" data-path="ch-hmv.html"><a href="ch-hmv.html#mvhdlm"><i class="fa fa-check"></i><b>13.2</b> Multivariate hierarchical dynamic linear model<span></span></a>
+<ul>
+<li><a href="ch-hmv.html#response-and-predictor-variables">Response and predictor variables<span></span></a></li>
+<li><a href="ch-hmv.html#model-setup">Model setup<span></span></a></li>
+<li class="chapter" data-level="13.2.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-hmv"><i class="fa fa-check"></i><b>13.2.1</b> Example: Analysis of TNC and Taxi as responses<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="ch-hmv.html"><a href="ch-hmv.html#lcmcounts"><i class="fa fa-check"></i><b>13.3</b> Level correlated models for multivariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-daily"><i class="fa fa-check"></i><b>13.3.1</b> Example: TNC and Taxi counts based on daily data<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>14</b> Resources for the User<span></span></a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="resources.html"><a href="resources.html#intro-resources"><i class="fa fa-check"></i><b>14.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="14.2" data-path="resources.html"><a href="resources.html#package-list"><i class="fa fa-check"></i><b>14.2</b> Packages used in the book<span></span></a></li>
+<li class="chapter" data-level="14.3" data-path="resources.html"><a href="resources.html#custom-functions"><i class="fa fa-check"></i><b>14.3</b> Custom functions used in the book<span></span></a>
+<ul>
+<li><a href="resources.html#basic-plotting-functions">Basic plotting functions<span></span></a></li>
+<li><a href="resources.html#functions-for-forecast-evaluation">Functions for forecast evaluation<span></span></a></li>
+<li><a href="resources.html#function-for-model-comparison">Function for model comparison<span></span></a></li>
+<li><a href="resources.html#function-for-the-filtering-algorithm-in-dlm">Function for the filtering algorithm in DLM<span></span></a></li>
+<li class="chapter" data-level="14.3.1" data-path="resources.html"><a href="resources.html#rgeneric-fn"><i class="fa fa-check"></i><b>14.3.1</b> <code>rgeneric()</code> function for DLM-VAR model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="resources.html"><a href="resources.html#items-often-used"><i class="fa fa-check"></i><b>14.4</b> Often used <code>R-INLA</code> items<span></span></a>
+<ul>
+<li><a href="resources.html#control-options">Control options<span></span></a></li>
+<li><a href="resources.html#options-for-computing-marginals">Options for computing marginals<span></span></a></li>
+<li><a href="resources.html#random-effect-specifications">Random effect specifications<span></span></a></li>
+<li><a href="resources.html#prior-specifications">Prior specifications<span></span></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ch-nongaus" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Non-Gaussian Continuous Responses<a href="ch-nongaus.html#ch-nongaus" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="intro-nongaus" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Introduction<a href="ch-nongaus.html#intro-nongaus" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this chapter, we describe state space models for non-Gaussian time series.
+We describe a gamma state space model in Section <a href="ch-nongaus.html#gamma-model">7.2</a>, and consider a Weibull state space model in Section <a href="ch-nongaus.html#weibull-model">7.3</a>. In Section <a href="ch-nongaus.html#beta-model">7.4</a>, we present a beta state space model for time series of proportions.</p>
+<p>The custom functions must first be sourced by the user.</p>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="ch-nongaus.html#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;functions_custom.R&quot;</span>)</span></code></pre></div>
+<p>The list of packages used in this chapter are as follows.</p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="ch-nongaus.html#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(INLA)</span>
+<span id="cb179-2"><a href="ch-nongaus.html#cb179-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa)</span>
+<span id="cb179-3"><a href="ch-nongaus.html#cb179-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb179-4"><a href="ch-nongaus.html#cb179-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb179-5"><a href="ch-nongaus.html#cb179-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<p>We analyze the following data</p>
+<ol style="list-style-type: decimal">
+<li><p>Volatility index (VIX) times series</p></li>
+<li><p>Crest market share time series.</p></li>
+</ol>
+</div>
+<div id="gamma-model" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Gamma state space model<a href="ch-nongaus.html#gamma-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let <span class="math inline">\(Y_t\sim \text{Gamma}(\tau,\tau/\mu_t)\)</span> where <span class="math inline">\(\tau&gt;0\)</span>, and <span class="math inline">\(\mu_t&gt;0\)</span>.
+This parametrization implies that</p>
+<p><span class="math display">\[\begin{align*}
+E[Y_t|\tau,\mu_t]=\mu_t,
+\end{align*}\]</span>
+and</p>
+<p><span class="math display">\[\begin{align*}
+\mbox{Var}[Y_t|\tau,\mu_t]=\mu_t^{2}/\tau.
+\end{align*}\]</span>
+Thus, the precision parameter <span class="math inline">\(\tau&gt;0\)</span> is static, whereas the
+mean <span class="math inline">\(\mu_t\)</span> is time-varying. We assume that</p>
+<p><span class="math display" id="eq:nongaus-1">\[\begin{align}
+\eta_t=\log(\mu_t)=\alpha + \boldsymbol f&#39;_t \boldsymbol x_t  \tag{7.1}
+\end{align}\]</span>
+and</p>
+<p><span class="math display" id="eq:nongaus-2">\[\begin{align}
+\boldsymbol x_t=\boldsymbol G \boldsymbol x_{t-1}+\boldsymbol w_t,  \tag{7.2}
+\end{align}\]</span>
+where <span class="math inline">\(\alpha\)</span> is an intercept, <span class="math inline">\(\boldsymbol x_t\)</span> is an <span class="math inline">\(h\)</span>-dimensional state vector,
+<span class="math inline">\(\boldsymbol f_t\)</span> is an <span class="math inline">\(h\)</span>-dimensional covariate
+vector, <span class="math inline">\(\boldsymbol G\)</span> is an <span class="math inline">\(h\times h\)</span> transition matrix, and
+<span class="math inline">\(\boldsymbol w_t\sim N(\boldsymbol 0,\boldsymbol W)\)</span>. Note that if we do not have any exogenous predictors,
+then <span class="math inline">\(\eta_t=\log(\mu_t)=\alpha+x_t\)</span>, where <span class="math inline">\(x_t\)</span> is a scalar
+and
+the state equation will reduce to</p>
+<p><span class="math display" id="eq:nongaus-3">\[\begin{align}
+x_t = G\,x_{t-1}+w_t.  \tag{7.3}
+\end{align}\]</span></p>
+<div id="vix" class="section level3 hasAnchor" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> Example: Volatility index (VIX) time series<a href="ch-nongaus.html#vix" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We use the monthly VIX data
+for a period of 5 years from October 2012 to October 2017
+<span class="citation">(<a href="#ref-aktekin2020family" role="doc-biblioref">Aktekin, Polson, and Soyer 2020</a>)</span>; as noted in this paper, “VIX is the ticker symbol for the Chicago Board
+Options Exchange volatility index, which shows the market’s expectation of a 30-day volatility. It is constructed using the implied volatilities of a wide range of S&amp;P500 index options.” Figure <a href="ch-nongaus.html#fig:ts-VIX">7.1</a> shows a time series plot of the VIX values.</p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="ch-nongaus.html#cb180-1" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;VIX.csv&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb180-2"><a href="ch-nongaus.html#cb180-2" aria-hidden="true" tabindex="-1"></a>vix <span class="ot">&lt;-</span> index[, <span class="dv">1</span>]</span>
+<span id="cb180-3"><a href="ch-nongaus.html#cb180-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(index)</span>
+<span id="cb180-4"><a href="ch-nongaus.html#cb180-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tsline</span>(</span>
+<span id="cb180-5"><a href="ch-nongaus.html#cb180-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>(vix),</span>
+<span id="cb180-6"><a href="ch-nongaus.html#cb180-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;VIX&quot;</span>,</span>
+<span id="cb180-7"><a href="ch-nongaus.html#cb180-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>,</span>
+<span id="cb180-8"><a href="ch-nongaus.html#cb180-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">line.color =</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb180-9"><a href="ch-nongaus.html#cb180-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">line.size =</span> <span class="fl">0.6</span></span>
+<span id="cb180-10"><a href="ch-nongaus.html#cb180-10" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb180-11"><a href="ch-nongaus.html#cb180-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">9</span>, <span class="dv">30</span>) <span class="sc">+</span></span>
+<span id="cb180-12"><a href="ch-nongaus.html#cb180-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb180-13"><a href="ch-nongaus.html#cb180-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">13</span>, <span class="dv">25</span>, <span class="dv">37</span>, <span class="dv">49</span>, <span class="dv">60</span>),</span>
+<span id="cb180-14"><a href="ch-nongaus.html#cb180-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;2012&quot;</span>, <span class="st">&quot;2013&quot;</span>, <span class="st">&quot;2014&quot;</span>, <span class="st">&quot;2015&quot;</span>, <span class="st">&quot;2016&quot;</span>, <span class="st">&quot;2017&quot;</span>)</span>
+<span id="cb180-15"><a href="ch-nongaus.html#cb180-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="figure"><span id="fig:ts-VIX"></span>
+<img src="gitbook_version_files/figure-html/ts-VIX-1.png" alt="Monthly time series of VIX. The x-axis labels show the years for the data series." width="672" />
+<p class="caption">
+FIGURE 7.1: Monthly time series of VIX. The x-axis labels show the years for the data series.
+</p>
+</div>
+<p><strong>Model G1</strong></p>
+<p>We first consider a model without regressors to explain the VIX time series. Specifically, assuming that
+<span class="math inline">\(\boldsymbol f&#39;_t\)</span> is <span class="math inline">\(1\)</span>, so that <span class="math inline">\(x_t\)</span> denotes a random state,
+we write this model as</p>
+<p><span class="math display" id="eq:modelG1">\[\begin{align}
+Y_t | \mu_t, \tau &amp; \sim \text{Gamma}(\tau,\tau/\mu_t), \notag \\
+\eta_t &amp; = \log(\mu_t) = \alpha + x_t,  \notag \\
+x_t &amp; =  \phi x_{t-1} + w_t.    \tag{7.4}
+\end{align}\]</span>
+The formula and code for fitting the model are shown below. Figure <a href="ch-nongaus.html#fig:fit-no-reg">7.2</a> shows the observed and fitted VIX values from the fitted Model G1.</p>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="ch-nongaus.html#cb181-1" aria-hidden="true" tabindex="-1"></a>id.x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(vix)</span>
+<span id="cb181-2"><a href="ch-nongaus.html#cb181-2" aria-hidden="true" tabindex="-1"></a>vix.data <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(vix, id.x)</span>
+<span id="cb181-3"><a href="ch-nongaus.html#cb181-3" aria-hidden="true" tabindex="-1"></a>formula.vix.G1 <span class="ot">&lt;-</span>  vix <span class="sc">~</span>  <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.x, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>)</span>
+<span id="cb181-4"><a href="ch-nongaus.html#cb181-4" aria-hidden="true" tabindex="-1"></a>model.vix.G1 <span class="ot">&lt;-</span>  <span class="fu">inla</span>(</span>
+<span id="cb181-5"><a href="ch-nongaus.html#cb181-5" aria-hidden="true" tabindex="-1"></a>  formula.vix.G1,</span>
+<span id="cb181-6"><a href="ch-nongaus.html#cb181-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> vix.data,</span>
+<span id="cb181-7"><a href="ch-nongaus.html#cb181-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>,</span>
+<span id="cb181-8"><a href="ch-nongaus.html#cb181-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb181-9"><a href="ch-nongaus.html#cb181-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb181-10"><a href="ch-nongaus.html#cb181-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb181-11"><a href="ch-nongaus.html#cb181-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb181-12"><a href="ch-nongaus.html#cb181-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb181-13"><a href="ch-nongaus.html#cb181-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb181-14"><a href="ch-nongaus.html#cb181-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb181-15"><a href="ch-nongaus.html#cb181-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb181-16"><a href="ch-nongaus.html#cb181-16" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.vix.G1)</span></span>
+<span id="cb181-17"><a href="ch-nongaus.html#cb181-17" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.vix.G1<span class="sc">$</span>summary.fixed[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb181-18"><a href="ch-nongaus.html#cb181-18" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean  sd    0.025q 0.5q 0.975q</span></span>
+<span id="cb181-19"><a href="ch-nongaus.html#cb181-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept 2.654 0.102 2.418  2.66 2.845</span></span>
+<span id="cb181-20"><a href="ch-nongaus.html#cb181-20" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.vix.G1<span class="sc">$</span>summary.hyperpar[,(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb181-21"><a href="ch-nongaus.html#cb181-21" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                              mean   sd    </span></span>
+<span id="cb181-22"><a href="ch-nongaus.html#cb181-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision parameter for Gamma obs 47.137 11.941</span></span>
+<span id="cb181-23"><a href="ch-nongaus.html#cb181-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.x                42.556 24.436</span></span>
+<span id="cb181-24"><a href="ch-nongaus.html#cb181-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.x                       0.897  0.073</span></span></code></pre></div>
+<div class="figure"><span id="fig:fit-no-reg"></span>
+<img src="gitbook_version_files/figure-html/fit-no-reg-1.png" alt="Observed (red) and fitted (blue) VIX values from the model without regressors (Model G1)." width="672" />
+<p class="caption">
+FIGURE 7.2: Observed (red) and fitted (blue) VIX values from the model without regressors (Model G1).
+</p>
+</div>
+<p>Note that the summary for the precision parameter <span class="math inline">\(\tau\)</span> is given by “Precision parameter for Gamma obs” in <code>model.vix.G1$summary.hyperpar</code>. We can also obtain samples from the posterior distribution of <span class="math inline">\(\tau\)</span> using <code>inla.hyperpar.sample()</code>.</p>
+<p><strong>Model G2</strong></p>
+<p>As an alternative model, we can consider including another volatility index, VXN, as a regressor in the model. As noted by
+<span class="citation">Aktekin, Polson, and Soyer (<a href="#ref-aktekin2020family" role="doc-biblioref">2020</a>)</span>, “VXN is a measure of market expectations of 30-day volatility for the Nasdaq-100 market index, as implied by the price of near-term options on this index.”
+Figure <a href="ch-nongaus.html#fig:ts-VIX-VXN">7.3</a>
+shows the overlay plot of the time series VIX and VXN, which suggests that the two indexes are positively correlated.</p>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="ch-nongaus.html#cb182-1" aria-hidden="true" tabindex="-1"></a>vxn <span class="ot">&lt;-</span> index[, <span class="dv">2</span>]</span>
+<span id="cb182-2"><a href="ch-nongaus.html#cb182-2" aria-hidden="true" tabindex="-1"></a>plot.df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">cbind.data.frame</span>(</span>
+<span id="cb182-3"><a href="ch-nongaus.html#cb182-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">time =</span> id.x,</span>
+<span id="cb182-4"><a href="ch-nongaus.html#cb182-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vix.obs =</span> vix.data<span class="sc">$</span>vix,</span>
+<span id="cb182-5"><a href="ch-nongaus.html#cb182-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">vxn =</span> vxn</span>
+<span id="cb182-6"><a href="ch-nongaus.html#cb182-6" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb182-7"><a href="ch-nongaus.html#cb182-7" aria-hidden="true" tabindex="-1"></a><span class="fu">multiline.plot</span>(</span>
+<span id="cb182-8"><a href="ch-nongaus.html#cb182-8" aria-hidden="true" tabindex="-1"></a>  plot.df,</span>
+<span id="cb182-9"><a href="ch-nongaus.html#cb182-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb182-10"><a href="ch-nongaus.html#cb182-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>,</span>
+<span id="cb182-11"><a href="ch-nongaus.html#cb182-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;VIX&quot;</span>,</span>
+<span id="cb182-12"><a href="ch-nongaus.html#cb182-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">line.size =</span> <span class="fl">0.8</span>,</span>
+<span id="cb182-13"><a href="ch-nongaus.html#cb182-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">line.color =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>)</span>
+<span id="cb182-14"><a href="ch-nongaus.html#cb182-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="figure"><span id="fig:ts-VIX-VXN"></span>
+<img src="gitbook_version_files/figure-html/ts-VIX-VXN-1.png" alt="Monthly time series of VIX (red) and VXN (black)." width="672" />
+<p class="caption">
+FIGURE 7.3: Monthly time series of VIX (red) and VXN (black).
+</p>
+</div>
+<p>Model G2 can be represented as</p>
+<p><span class="math display" id="eq:modelG2">\[\begin{align}
+Y_t | \mu_t, \tau &amp; \sim \text{Gamma}(\tau,\tau/\mu_t), \notag \\
+\eta_t &amp; =\alpha+\beta_t Z_t, \notag \\
+\beta_t &amp;=  \phi \beta_{t-1} + w_t.   \tag{7.5}
+\end{align}\]</span>
+Here, <span class="math inline">\(\boldsymbol f_t\)</span> is the VXN variable <span class="math inline">\(Z_t\)</span>.
+The results from this model are shown below, while observed and fitted VIX values are shown in Figure <a href="ch-nongaus.html#fig:fit-vxn">7.4</a>.</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="ch-nongaus.html#cb183-1" aria-hidden="true" tabindex="-1"></a>id.vxn <span class="ot">&lt;-</span> id.x</span>
+<span id="cb183-2"><a href="ch-nongaus.html#cb183-2" aria-hidden="true" tabindex="-1"></a>formula.vix.G2 <span class="ot">&lt;-</span> vix <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.vxn, vxn, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>)</span>
+<span id="cb183-3"><a href="ch-nongaus.html#cb183-3" aria-hidden="true" tabindex="-1"></a>model.vix.G2 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb183-4"><a href="ch-nongaus.html#cb183-4" aria-hidden="true" tabindex="-1"></a>  formula.vix.G2,</span>
+<span id="cb183-5"><a href="ch-nongaus.html#cb183-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> vix.data,</span>
+<span id="cb183-6"><a href="ch-nongaus.html#cb183-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>,</span>
+<span id="cb183-7"><a href="ch-nongaus.html#cb183-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb183-8"><a href="ch-nongaus.html#cb183-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb183-9"><a href="ch-nongaus.html#cb183-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb183-10"><a href="ch-nongaus.html#cb183-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb183-11"><a href="ch-nongaus.html#cb183-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb183-12"><a href="ch-nongaus.html#cb183-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb183-13"><a href="ch-nongaus.html#cb183-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb183-14"><a href="ch-nongaus.html#cb183-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb183-15"><a href="ch-nongaus.html#cb183-15" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.vix.G2)</span></span>
+<span id="cb183-16"><a href="ch-nongaus.html#cb183-16" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.vix.G2<span class="sc">$</span>summary.fixed[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span></code></pre></div>
+<pre><code>##   name      mean  sd    0.025q 0.5q  0.975q
+## 1 Intercept 1.835 0.061 1.715  1.834 1.956</code></pre>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="ch-nongaus.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.vix.G2<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span></code></pre></div>
+<pre><code>##   name                              mean     sd     
+## 1 Precision parameter for Gamma obs  373.738 112.922
+## 2 Precision for id.vxn              1651.985 932.790
+## 3 Rho for id.vxn                       0.994   0.004</code></pre>
+<div class="figure"><span id="fig:fit-vxn"></span>
+<img src="gitbook_version_files/figure-html/fit-vxn-1.png" alt="Observed (red) and fitted (blue) VIX values from model with VXN as a dynamic regressor (Model G2)." width="672" />
+<p class="caption">
+FIGURE 7.4: Observed (red) and fitted (blue) VIX values from model with VXN as a dynamic regressor (Model G2).
+</p>
+</div>
+<p><strong>Model G3</strong></p>
+<p>As a third example, we fit a model with a dynamic intercept term and a fixed effect corresponding to the regressor VXN:</p>
+<p><span class="math display" id="eq:modelG3">\[\begin{align}
+Y_t | \mu_t, \tau &amp; \sim \text{Gamma}(\tau,\tau/\mu_t), \notag \\
+\eta_t &amp; =\alpha+ \beta Z_t + x_t,  \notag \\
+x_t &amp;=  \phi x_{t-1} + w_t;    \tag{7.6}
+\end{align}\]</span>
+here, <span class="math inline">\(\boldsymbol f_t\)</span> is <span class="math inline">\(1\)</span>.
+The code and the results from this model fit are given below.</p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="ch-nongaus.html#cb187-1" aria-hidden="true" tabindex="-1"></a>formula.vix.G3 <span class="ot">&lt;-</span>  vix <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> vxn <span class="sc">+</span> <span class="fu">f</span>(id.x, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>)</span>
+<span id="cb187-2"><a href="ch-nongaus.html#cb187-2" aria-hidden="true" tabindex="-1"></a>model.vix.G3 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb187-3"><a href="ch-nongaus.html#cb187-3" aria-hidden="true" tabindex="-1"></a>  formula.vix.G3,</span>
+<span id="cb187-4"><a href="ch-nongaus.html#cb187-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> vix.data,</span>
+<span id="cb187-5"><a href="ch-nongaus.html#cb187-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gamma&quot;</span>,</span>
+<span id="cb187-6"><a href="ch-nongaus.html#cb187-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb187-7"><a href="ch-nongaus.html#cb187-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb187-8"><a href="ch-nongaus.html#cb187-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb187-9"><a href="ch-nongaus.html#cb187-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb187-10"><a href="ch-nongaus.html#cb187-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb187-11"><a href="ch-nongaus.html#cb187-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb187-12"><a href="ch-nongaus.html#cb187-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb187-13"><a href="ch-nongaus.html#cb187-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb187-14"><a href="ch-nongaus.html#cb187-14" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.vix.G3)</span></span>
+<span id="cb187-15"><a href="ch-nongaus.html#cb187-15" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.vix.G3<span class="sc">$</span>summary.fixed[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb187-16"><a href="ch-nongaus.html#cb187-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean  sd    0.025q 0.5q  0.975q</span></span>
+<span id="cb187-17"><a href="ch-nongaus.html#cb187-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept 1.767 0.079 1.606  1.768 1.923 </span></span>
+<span id="cb187-18"><a href="ch-nongaus.html#cb187-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 vxn       0.053 0.003 0.047  0.053 0.060</span></span>
+<span id="cb187-19"><a href="ch-nongaus.html#cb187-19" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.vix.G3<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb187-20"><a href="ch-nongaus.html#cb187-20" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                              mean    sd     </span></span>
+<span id="cb187-21"><a href="ch-nongaus.html#cb187-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision parameter for Gamma obs 390.501 133.029</span></span>
+<span id="cb187-22"><a href="ch-nongaus.html#cb187-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.x                 97.510  41.649</span></span>
+<span id="cb187-23"><a href="ch-nongaus.html#cb187-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.x                        0.882   0.068</span></span></code></pre></div>
+<div class="figure"><span id="fig:fit-vxn-vary"></span>
+<img src="gitbook_version_files/figure-html/fit-vxn-vary-1.png" alt="Observed (red) and fitted (blue) VIX values from a dynamic intercept and fixed VXN (Model G3)." width="672" />
+<p class="caption">
+FIGURE 7.5: Observed (red) and fitted (blue) VIX values from a dynamic intercept and fixed VXN (Model G3).
+</p>
+</div>
+<p>In Table <a href="ch-nongaus.html#tab:table-gamma">7.1</a>, we present a comparison of the three models. Based on the marginal likelihood as well as the DIC and WAIC, we see that Model G2 with a dynamic covariate effect does slightly better in terms of fit than Model G3, which has a dynamic intercept term but a static covariate effect.</p>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:table-gamma">TABLE 7.1: </span>Comparison of Models G1, G2, and G3.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Model
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+DIC
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+WAIC
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+PsBF
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Marginal likelihood
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Model G1
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(277.208\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(280.61\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-142.295\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-155.076\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model G2
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(156.997\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(155.313\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-81.417\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-104.236\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model G3
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(157.677\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(154.716\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-82.49\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-112.027\)</span>
+</td>
+</tr>
+</tbody>
+</table>
+<p>As an alternative observation model for the VIX volatility index, we can consider a Weibull model, as discussed in the next section.</p>
+</div>
+</div>
+<div id="weibull-model" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Weibull state space model<a href="ch-nongaus.html#weibull-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We can define a state space model for Weibull distributed observations.
+Let <span class="math inline">\(Y_t \sim \text{Weibull}(\gamma_w, \lambda_t)\)</span>, where <span class="math inline">\(\gamma_w &gt; 0\)</span> is the static Weibull shape parameter and <span class="math inline">\(\lambda_t &gt; 0\)</span> is the dynamic scale parameter. <code>R-INLA</code> uses two different parameterizations for the Weibull density. The parameterization referred to as “variant 0” uses the following form of the Weibull density</p>
+<p><span class="math display">\[\begin{align*}
+p(y_t|\gamma_w, \lambda_t)=\gamma_w\lambda_t y_t^{\gamma_w-1} e^{-\lambda_t y_t^{\gamma_w}}.
+\end{align*}\]</span></p>
+<p>The alternative parameterization referred to as “variant 1” uses the density</p>
+<p><span class="math display">\[\begin{align*}
+p(y_t|\gamma_w, \lambda_t)=\gamma_w\lambda_t^{\gamma_w} y_t^{\gamma_w-1} e^{-(\lambda_t y_t)^{\gamma_w}}.
+\end{align*}\]</span></p>
+<p>For both parameterizations, the linear predictor is defined as</p>
+<p><span class="math display" id="eq:nongaug-4">\[\begin{align}
+\eta_t=\log(\lambda_t) &amp;= \alpha + \boldsymbol f&#39;_t  \boldsymbol x_t, \mbox{ with}, \notag \\
+\boldsymbol x_t &amp;= \boldsymbol G  \boldsymbol x_{t-1}+ \boldsymbol w_t,  \tag{7.7}
+\end{align}\]</span>
+where <span class="math inline">\(\boldsymbol x_t\)</span> is an <span class="math inline">\(h\)</span>-dimensional state vector,
+<span class="math inline">\(\boldsymbol f_t\)</span> is a <span class="math inline">\(h\times 1\)</span> covariate vector,
+<span class="math inline">\(\boldsymbol G\)</span> is an <span class="math inline">\(h\times h\)</span> transition matrix, and
+<span class="math inline">\(\boldsymbol w_t \sim N(\boldsymbol 0,\boldsymbol W)\)</span>.</p>
+<p><strong>Model W1</strong></p>
+<p>We first fit a model with a dynamic intercept, but without any regressors. The model has the same structure as Model G1. The observed and fitted VIX values are shown in Figure <a href="ch-nongaus.html#fig:fit-no-reg-w">7.6</a>. The choice of model variant is given in <code>control.family</code>.</p>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="ch-nongaus.html#cb188-1" aria-hidden="true" tabindex="-1"></a>formula.vix.W1 <span class="ot">&lt;-</span> vix <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.x, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>)</span>
+<span id="cb188-2"><a href="ch-nongaus.html#cb188-2" aria-hidden="true" tabindex="-1"></a>model.vix.W1 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb188-3"><a href="ch-nongaus.html#cb188-3" aria-hidden="true" tabindex="-1"></a>  formula.vix.W1,</span>
+<span id="cb188-4"><a href="ch-nongaus.html#cb188-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> vix.data,</span>
+<span id="cb188-5"><a href="ch-nongaus.html#cb188-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;weibull&quot;</span>,</span>
+<span id="cb188-6"><a href="ch-nongaus.html#cb188-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.family =</span> <span class="fu">list</span>(<span class="at">variant =</span> <span class="dv">0</span>),</span>
+<span id="cb188-7"><a href="ch-nongaus.html#cb188-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>),</span>
+<span id="cb188-8"><a href="ch-nongaus.html#cb188-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb188-9"><a href="ch-nongaus.html#cb188-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb188-10"><a href="ch-nongaus.html#cb188-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb188-11"><a href="ch-nongaus.html#cb188-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb188-12"><a href="ch-nongaus.html#cb188-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb188-13"><a href="ch-nongaus.html#cb188-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb188-14"><a href="ch-nongaus.html#cb188-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb188-15"><a href="ch-nongaus.html#cb188-15" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.vix.W1)</span></span>
+<span id="cb188-16"><a href="ch-nongaus.html#cb188-16" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.vix.W1<span class="sc">$</span>summary.fixed[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb188-17"><a href="ch-nongaus.html#cb188-17" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean   sd    0.025q 0.5q   0.975q</span></span>
+<span id="cb188-18"><a href="ch-nongaus.html#cb188-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept -22.65 2.723 -30.6  -21.88 -19.2</span></span>
+<span id="cb188-19"><a href="ch-nongaus.html#cb188-19" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.vix.W1<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb188-20"><a href="ch-nongaus.html#cb188-20" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                        mean  sd   </span></span>
+<span id="cb188-21"><a href="ch-nongaus.html#cb188-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 alpha parameter for weibull 9.182 1.039</span></span>
+<span id="cb188-22"><a href="ch-nongaus.html#cb188-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.x          0.282 0.108</span></span>
+<span id="cb188-23"><a href="ch-nongaus.html#cb188-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.x                0.849 0.088</span></span></code></pre></div>
+<p>Note that <span class="math inline">\(\gamma_w\)</span> in our notation corresponds to “alpha parameter for Weibull” in the <code>inla()</code> output.
+For obtaining fitted values, the standard procedure of using <code>model.vix.W1$summary.fitted.values$mean</code> will lead to incorrect fits. The suggested procedure to obtain fits for the Weibull family is to use <code>inla.posterior.sample()</code> as shown below. Discussion on the function <code>fun.pred()</code> follows after the code.</p>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="ch-nongaus.html#cb189-1" aria-hidden="true" tabindex="-1"></a>post.sample.W1 <span class="ot">&lt;-</span></span>
+<span id="cb189-2"><a href="ch-nongaus.html#cb189-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inla.posterior.sample</span>(<span class="at">n =</span> <span class="dv">1000</span>, model.vix.W1, <span class="at">seed =</span> <span class="dv">123457</span>)</span>
+<span id="cb189-3"><a href="ch-nongaus.html#cb189-3" aria-hidden="true" tabindex="-1"></a>fun.pred <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb189-4"><a href="ch-nongaus.html#cb189-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">gamma</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> x<span class="sc">$</span>hyperpar[<span class="dv">1</span>]) <span class="sc">/</span> </span>
+<span id="cb189-5"><a href="ch-nongaus.html#cb189-5" aria-hidden="true" tabindex="-1"></a>           (<span class="fu">exp</span>(x<span class="sc">$</span>latent[<span class="dv">1</span><span class="sc">:</span>n]) <span class="sc">^</span> (<span class="dv">1</span> <span class="sc">/</span> x<span class="sc">$</span>hyperpar[<span class="dv">1</span>])))</span>
+<span id="cb189-6"><a href="ch-nongaus.html#cb189-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb189-7"><a href="ch-nongaus.html#cb189-7" aria-hidden="true" tabindex="-1"></a>fits <span class="ot">&lt;-</span> post.sample.W1 <span class="sc">%&gt;%</span></span>
+<span id="cb189-8"><a href="ch-nongaus.html#cb189-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(<span class="cf">function</span>(x)</span>
+<span id="cb189-9"><a href="ch-nongaus.html#cb189-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fun.pred</span>(x))</span>
+<span id="cb189-10"><a href="ch-nongaus.html#cb189-10" aria-hidden="true" tabindex="-1"></a>fit.vix.W1 <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(fits)</span>
+<span id="cb189-11"><a href="ch-nongaus.html#cb189-11" aria-hidden="true" tabindex="-1"></a>plot.df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">cbind.data.frame</span>(</span>
+<span id="cb189-12"><a href="ch-nongaus.html#cb189-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">time =</span> id.x,</span>
+<span id="cb189-13"><a href="ch-nongaus.html#cb189-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">vix.obs =</span> vix.data<span class="sc">$</span>vix,</span>
+<span id="cb189-14"><a href="ch-nongaus.html#cb189-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">vix.fit =</span> fit.vix.W1</span>
+<span id="cb189-15"><a href="ch-nongaus.html#cb189-15" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb189-16"><a href="ch-nongaus.html#cb189-16" aria-hidden="true" tabindex="-1"></a><span class="fu">multiline.plot</span>(</span>
+<span id="cb189-17"><a href="ch-nongaus.html#cb189-17" aria-hidden="true" tabindex="-1"></a>  plot.df,</span>
+<span id="cb189-18"><a href="ch-nongaus.html#cb189-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb189-19"><a href="ch-nongaus.html#cb189-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>,</span>
+<span id="cb189-20"><a href="ch-nongaus.html#cb189-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;VIX&quot;</span>,</span>
+<span id="cb189-21"><a href="ch-nongaus.html#cb189-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">line.size =</span> <span class="fl">0.8</span>,</span>
+<span id="cb189-22"><a href="ch-nongaus.html#cb189-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">line.color =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb189-23"><a href="ch-nongaus.html#cb189-23" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="figure"><span id="fig:fit-no-reg-w"></span>
+<img src="gitbook_version_files/figure-html/fit-no-reg-w-1.png" alt="Observed (red) and fitted (blue) values from the model without regressors (Model W1)." width="672" />
+<p class="caption">
+FIGURE 7.6: Observed (red) and fitted (blue) values from the model without regressors (Model W1).
+</p>
+</div>
+<p>Since we have used the parameterization <code>variant=0</code> in Model W1, the fitted values are obtained using the transformation</p>
+<p><span class="math display">\[\begin{align*}
+E(y_t|\gamma_w, \lambda_t)=\lambda_t^{-1/\gamma_w}\Gamma(1+1/\gamma_w).
+\end{align*}\]</span></p>
+<p>If the parameterization “variant=1” is used, similar results can be obtained for fitted values via the transformation</p>
+<p><span class="math display">\[\begin{align*}
+E(y_t|\gamma_w, \lambda_t)=\lambda_t^{-1}\Gamma(1+1/\gamma_w).
+\end{align*}\]</span></p>
+<p><strong>Model W2</strong></p>
+<p>The Weibull analog of Model G2 (model with VXN as regressor with a dynamic coefficient) is shown below. For illustrative purposes, we ran this model using <code>variant=1</code>.</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="ch-nongaus.html#cb190-1" aria-hidden="true" tabindex="-1"></a>id.vxn <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(vxn)</span>
+<span id="cb190-2"><a href="ch-nongaus.html#cb190-2" aria-hidden="true" tabindex="-1"></a>vix.data <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(vix.data, id.vxn, vxn)</span>
+<span id="cb190-3"><a href="ch-nongaus.html#cb190-3" aria-hidden="true" tabindex="-1"></a>formula.vix.W2 <span class="ot">=</span> vix <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.vxn,vxn, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>)</span>
+<span id="cb190-4"><a href="ch-nongaus.html#cb190-4" aria-hidden="true" tabindex="-1"></a>model.vix.W2 <span class="ot">=</span> <span class="fu">inla</span>(</span>
+<span id="cb190-5"><a href="ch-nongaus.html#cb190-5" aria-hidden="true" tabindex="-1"></a>  formula.vix.W2,</span>
+<span id="cb190-6"><a href="ch-nongaus.html#cb190-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> vix.data,</span>
+<span id="cb190-7"><a href="ch-nongaus.html#cb190-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;weibull&quot;</span>,</span>
+<span id="cb190-8"><a href="ch-nongaus.html#cb190-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.family =</span> <span class="fu">list</span>(<span class="at">variant =</span> <span class="dv">1</span>),</span>
+<span id="cb190-9"><a href="ch-nongaus.html#cb190-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>),</span>
+<span id="cb190-10"><a href="ch-nongaus.html#cb190-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb190-11"><a href="ch-nongaus.html#cb190-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb190-12"><a href="ch-nongaus.html#cb190-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb190-13"><a href="ch-nongaus.html#cb190-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb190-14"><a href="ch-nongaus.html#cb190-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb190-15"><a href="ch-nongaus.html#cb190-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb190-16"><a href="ch-nongaus.html#cb190-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb190-17"><a href="ch-nongaus.html#cb190-17" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.vix.W2)</span></span>
+<span id="cb190-18"><a href="ch-nongaus.html#cb190-18" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.vix.W2<span class="sc">$</span>summary.fixed[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb190-19"><a href="ch-nongaus.html#cb190-19" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean   sd    0.025q 0.5q   0.975q</span></span>
+<span id="cb190-20"><a href="ch-nongaus.html#cb190-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept -1.833 0.061 -1.956 -1.832 -1.714</span></span>
+<span id="cb190-21"><a href="ch-nongaus.html#cb190-21" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.vix.W2<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb190-22"><a href="ch-nongaus.html#cb190-22" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                        mean     sd     </span></span>
+<span id="cb190-23"><a href="ch-nongaus.html#cb190-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 alpha parameter for weibull   25.050   3.866</span></span>
+<span id="cb190-24"><a href="ch-nongaus.html#cb190-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.vxn        1533.827 891.956</span></span>
+<span id="cb190-25"><a href="ch-nongaus.html#cb190-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.vxn                 0.992   0.006</span></span></code></pre></div>
+<div id="forecasting-from-weibull-models" class="section level3 hasAnchor" number="7.3.1">
+<h3><span class="header-section-number">7.3.1</span> Forecasting from Weibull models<a href="ch-nongaus.html#forecasting-from-weibull-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>As in the computation of fitted values, evaluation of forecasts from the Weibull state space model requires use of the mean of the Weibull model with scale parameter <span class="math inline">\(\lambda_t\)</span> and shape parameter <span class="math inline">\(\gamma_w\)</span>. For both parameterizations, INLA uses the linear predictor <span class="math inline">\(\eta_t=\log(\lambda_t)\)</span>.</p>
+<p>For example, in Model W1 we have</p>
+<p><span class="math display" id="eq:W1fore">\[\begin{align}
+Y_t | \lambda_t, \gamma_w &amp; \sim \text{Weibull}(\lambda_t, \gamma_w), \notag \\
+\eta_t &amp; = \log(\lambda_t) = \alpha + x_t, \notag \\
+x_t &amp; =  \phi x_{t-1} + w_t.   \tag{7.8}
+\end{align}\]</span>
+It follows from the above that</p>
+<p><span class="math display">\[\begin{align*}
+x_t|x_{t-1},\phi,\sigma^2_w\sim N(\phi x_{t-1},\sigma^2_w).
+\end{align*}\]</span></p>
+<p>After observing data from <span class="math inline">\(n\)</span> periods, i.e., <span class="math inline">\(\boldsymbol y^{n}=(y_1,\ldots,y_n)\)</span>, we have
+posterior distributions of <span class="math inline">\(\alpha,\,\sigma^2_w,\,\phi\)</span> and <span class="math inline">\(\,x_n\)</span>. To predict
+the next observation <span class="math inline">\(y_{n+1}\)</span>, we need the posterior mean of <span class="math inline">\(y_{n+1}\)</span> given
+<span class="math inline">\(\boldsymbol y^{n}\)</span>, i.e.,</p>
+<p><span class="math display">\[\begin{align*}
+E(y_{n+1}|\boldsymbol y^{n}) =E\Bigl[E(y_{n+1}|\alpha,\,\gamma_w,\sigma^2_w,\,\phi,
+x_{n+1})\Bigr],
+\end{align*}\]</span>
+where the outside expectation is taken with respect to the joint
+posterior distribution of <span class="math inline">\(\alpha,\,\gamma_w,\sigma^2_w,\,\phi\)</span> and
+<span class="math inline">\(x_{n+1}\)</span>, and</p>
+<p><span class="math display">\[\begin{align*}
+E(y_{n+1}|\alpha,\,\sigma^2_w,\,\phi,\text{ }x_{n+1}) =
+\begin{cases}
+\lambda^{-1/\gamma_w}_{n+1}\,\Gamma(1+1/\gamma_w)\text{, for variant}=0&amp;\\
+\lambda^{-1}_{n+1}\,\,\,\,\,\Gamma(1+1/\gamma_w)\text{, for variant}=1.&amp;
+\end{cases}
+\end{align*}\]</span></p>
+<p>We can evaluate <span class="math inline">\(E(y_{n+1}|\boldsymbol y^{n})\)</span> by a Monte Carlo average based on
+<span class="math inline">\(M\)</span> samples from the posterior distribution of <span class="math inline">\(\alpha,\,\gamma_w,\sigma^2_w,\,\phi\)</span>,
+and <span class="math inline">\(x_{n+1}\)</span>, for large <span class="math inline">\(M\)</span>.
+Specifically, for each realization of <span class="math inline">\((x_n,\phi,\sigma^2_w)\)</span>, we draw samples
+of <span class="math inline">\(x_{n+1}\)</span> from <span class="math inline">\(N(\phi x_n,\sigma^2_w)\)</span>, and
+for each realization of <span class="math inline">\((x_{n+1},\alpha)\)</span>, we obtain samples of
+<span class="math inline">\(\eta_{n+1}=\alpha+x_{n+1}\)</span> and <span class="math inline">\(\lambda_{n+1}=e^{\eta_{n+1}}\)</span>. Finally, for
+each realization of <span class="math inline">\((\lambda_{n+1},\gamma_w)\)</span> we evaluate
+<span class="math inline">\(E(y_{n+1}|\alpha,\,\sigma^2_w,\,\phi, x_{n+1})\)</span>, and use the Monte Carlo average as our
+prediction. Similarly, predictions for <span class="math inline">\(y_{n+2},\ldots,y_{n+L}\)</span> will require use of the
+conditional distribution <span class="math inline">\(x_t|x_{t-1},\phi,\sigma^2_w\)</span> for <span class="math inline">\(t=n+2,\ldots,n+L\)</span>
+in a sequential manner. We show the code for forecasting under Model W1.</p>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="ch-nongaus.html#cb191-1" aria-hidden="true" tabindex="-1"></a>mean <span class="ot">&lt;-</span></span>
+<span id="cb191-2"><a href="ch-nongaus.html#cb191-2" aria-hidden="true" tabindex="-1"></a>  post.sample.W1[[<span class="dv">1</span>]]<span class="sc">$</span>hyperpar[<span class="st">&#39;Rho for id.x&#39;</span>] <span class="sc">*</span></span>
+<span id="cb191-3"><a href="ch-nongaus.html#cb191-3" aria-hidden="true" tabindex="-1"></a>  post.sample.W1[[<span class="dv">1</span>]]<span class="sc">$</span>latent[<span class="dv">2</span> <span class="sc">*</span> n]</span>
+<span id="cb191-4"><a href="ch-nongaus.html#cb191-4" aria-hidden="true" tabindex="-1"></a>sigma2.w <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> post.sample.W1[[<span class="dv">1</span>]]<span class="sc">$</span>hyperpar[<span class="st">&#39;Precision for id.x&#39;</span>]</span>
+<span id="cb191-5"><a href="ch-nongaus.html#cb191-5" aria-hidden="true" tabindex="-1"></a>x.np1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">500</span>, <span class="at">mean =</span> mean, <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma2.w))</span>
+<span id="cb191-6"><a href="ch-nongaus.html#cb191-6" aria-hidden="true" tabindex="-1"></a>eta.np1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">tail</span>(post.sample.W1[[<span class="dv">1</span>]]<span class="sc">$</span>latent, <span class="dv">1</span>)) <span class="sc">+</span> x.np1</span>
+<span id="cb191-7"><a href="ch-nongaus.html#cb191-7" aria-hidden="true" tabindex="-1"></a>lambda.np1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(eta.np1)</span>
+<span id="cb191-8"><a href="ch-nongaus.html#cb191-8" aria-hidden="true" tabindex="-1"></a>gamma.w <span class="ot">&lt;-</span></span>
+<span id="cb191-9"><a href="ch-nongaus.html#cb191-9" aria-hidden="true" tabindex="-1"></a>  post.sample.W1[[<span class="dv">1</span>]]<span class="sc">$</span>hyperpar[<span class="st">&#39;alpha parameter for weibull&#39;</span>]</span>
+<span id="cb191-10"><a href="ch-nongaus.html#cb191-10" aria-hidden="true" tabindex="-1"></a>y.np1 <span class="ot">&lt;-</span> <span class="fu">gamma</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> gamma.w) <span class="sc">/</span></span>
+<span id="cb191-11"><a href="ch-nongaus.html#cb191-11" aria-hidden="true" tabindex="-1"></a>  (lambda.np1 <span class="sc">^</span> (<span class="dv">1</span> <span class="sc">/</span> gamma.w))</span>
+<span id="cb191-12"><a href="ch-nongaus.html#cb191-12" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(y.np1)</span>
+<span id="cb191-13"><a href="ch-nongaus.html#cb191-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 12.17</span></span></code></pre></div>
+</div>
+</div>
+<div id="beta-model" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> Beta state space model<a href="ch-nongaus.html#beta-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let <span class="math inline">\(Y_t \sim \text{Beta}(\tau\gamma_t,\tau(1-\gamma_t))\)</span>, where <span class="math inline">\(\,0&lt;\gamma_t&lt;1\)</span>.
+Note that <span class="math inline">\(E(Y_t|\gamma_t)=\gamma_t\)</span>, and
+<span class="math inline">\(Var(Y_t|\gamma_t,\tau)=\gamma_t(1-\gamma_t)/(\tau+1)\)</span>, implying that <span class="math inline">\(\tau\)</span> is
+a precision parameter.
+We assume that</p>
+<p><span class="math display">\[\begin{align}
+\eta_t &amp;=\log(\gamma_t/(1-\gamma_t))= \alpha+ \boldsymbol f&#39;_t \boldsymbol x_t,  \notag \\
+\boldsymbol x_t &amp;= \boldsymbol G \boldsymbol x_{t-1}+ \boldsymbol w_t,
+\end{align}\]</span>
+where <span class="math inline">\(\alpha\)</span> is an intercept term, <span class="math inline">\(\boldsymbol x_t\)</span> is an <span class="math inline">\(h\)</span>-dimensional state vector, <span class="math inline">\(\boldsymbol f_t\)</span> is an <span class="math inline">\(h\)</span>-dimensional covariate
+vector, <span class="math inline">\(\boldsymbol G\)</span> is an <span class="math inline">\(h\times h\)</span> transition matrix, and
+<span class="math inline">\(\boldsymbol w_t \sim N(\boldsymbol 0,\boldsymbol W)\)</span>.</p>
+<div id="crest" class="section level3 hasAnchor" number="7.4.1">
+<h3><span class="header-section-number">7.4.1</span> Example: Crest market share<a href="ch-nongaus.html#crest" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We consider weekly market share data for Crest used by <span class="citation">Wichern and Jones (<a href="#ref-wichernjones" role="doc-biblioref">1977</a>)</span> for intervention analysis.
+Historically, Crest toothpaste was introduced nationally in 1956 when Colgate was enjoying a
+significant portion of the market share. This dominance of Colgate continued until 1960, and Crest’s market share during this period was relatively stable, but in August 1, 1960, the American Dental Association
+(ADA) endorsed Crest as an “important aid in any program of dental hygiene.”
+In what follows, we first show a time series plot of Crest’s market share in Figure <a href="ch-nongaus.html#fig:ts-crest">7.7</a>, where the ADA endorsement date of August 1, 1960, is presented by a vertical dashed line at <span class="math inline">\(t=135\)</span>. As shown in this plot, there is a clear jump in Crest’s market following the endorsement, suggesting nonstationarity in the data.</p>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="ch-nongaus.html#cb192-1" aria-hidden="true" tabindex="-1"></a>mshare <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;TPASTE.csv&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb192-2"><a href="ch-nongaus.html#cb192-2" aria-hidden="true" tabindex="-1"></a>crestms <span class="ot">&lt;-</span> mshare[, <span class="dv">1</span>]</span>
+<span id="cb192-3"><a href="ch-nongaus.html#cb192-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tsline</span>(crestms,</span>
+<span id="cb192-4"><a href="ch-nongaus.html#cb192-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&quot;market share&quot;</span>,</span>
+<span id="cb192-5"><a href="ch-nongaus.html#cb192-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;week&quot;</span>,</span>
+<span id="cb192-6"><a href="ch-nongaus.html#cb192-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">line.color =</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb192-7"><a href="ch-nongaus.html#cb192-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">line.size =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb192-8"><a href="ch-nongaus.html#cb192-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">135</span>, <span class="at">linetype=</span><span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:ts-crest"></span>
+<img src="gitbook_version_files/figure-html/ts-crest-1.png" alt="Weekly market share of Crest toothpaste. The vertical line (black) denotes Aug 1, 1960." width="672" />
+<p class="caption">
+FIGURE 7.7: Weekly market share of Crest toothpaste. The vertical line (black) denotes Aug 1, 1960.
+</p>
+</div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="ch-nongaus.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="co"># abline(v = 135, col = &quot;blue&quot;, lty = 2)</span></span></code></pre></div>
+<p>As in the previous section, if we do not have any regressors, then
+<span class="math inline">\(\eta_t=\alpha+x_t\)</span> will be a scalar, and the state equation will reduce to</p>
+<p><span class="math display">\[\begin{align}
+x_t= G x_{t-1}+ w_t,
+\end{align}\]</span>
+where <span class="math inline">\(G\)</span> is a scalar and and <span class="math inline">\(w_t\)</span> is a univariate white noise process.</p>
+<p><strong>Model B1</strong></p>
+<p>We first consider the model without any regressors, i.e.,</p>
+<p><span class="math display" id="eq:modelB1">\[\begin{align}
+\eta_t &amp; =\alpha+x_t,  \notag\\
+x_t &amp;=  \phi x_{t-1} + w_t.   \tag{7.9}
+\end{align}\]</span>
+We estimate the model using the code below and show the plot of fitted versus the observed values in Figure <a href="ch-nongaus.html#fig:fit-crest-B1">7.8</a>.</p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="ch-nongaus.html#cb194-1" aria-hidden="true" tabindex="-1"></a>id.x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(crestms)</span>
+<span id="cb194-2"><a href="ch-nongaus.html#cb194-2" aria-hidden="true" tabindex="-1"></a>crest.data <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(mshare, id.x)</span>
+<span id="cb194-3"><a href="ch-nongaus.html#cb194-3" aria-hidden="true" tabindex="-1"></a>formula.crest.B1 <span class="ot">=</span> crestms <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.x, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>)</span>
+<span id="cb194-4"><a href="ch-nongaus.html#cb194-4" aria-hidden="true" tabindex="-1"></a>model.crest.B1 <span class="ot">=</span> <span class="fu">inla</span>(</span>
+<span id="cb194-5"><a href="ch-nongaus.html#cb194-5" aria-hidden="true" tabindex="-1"></a>  formula.crest.B1,</span>
+<span id="cb194-6"><a href="ch-nongaus.html#cb194-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> crest.data,</span>
+<span id="cb194-7"><a href="ch-nongaus.html#cb194-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;beta&quot;</span>,</span>
+<span id="cb194-8"><a href="ch-nongaus.html#cb194-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="dv">1</span>,</span>
+<span id="cb194-9"><a href="ch-nongaus.html#cb194-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb194-10"><a href="ch-nongaus.html#cb194-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb194-11"><a href="ch-nongaus.html#cb194-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb194-12"><a href="ch-nongaus.html#cb194-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb194-13"><a href="ch-nongaus.html#cb194-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb194-14"><a href="ch-nongaus.html#cb194-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb194-15"><a href="ch-nongaus.html#cb194-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb194-16"><a href="ch-nongaus.html#cb194-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb194-17"><a href="ch-nongaus.html#cb194-17" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.crest.B1)</span></span>
+<span id="cb194-18"><a href="ch-nongaus.html#cb194-18" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.crest.B1<span class="sc">$</span>summary.fixed[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb194-19"><a href="ch-nongaus.html#cb194-19" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean   sd   0.025q 0.5q   0.975q</span></span>
+<span id="cb194-20"><a href="ch-nongaus.html#cb194-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept -1.159 0.46 -2.106 -1.162 -0.191</span></span>
+<span id="cb194-21"><a href="ch-nongaus.html#cb194-21" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.crest.B1<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb194-22"><a href="ch-nongaus.html#cb194-22" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                             mean   sd    </span></span>
+<span id="cb194-23"><a href="ch-nongaus.html#cb194-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 precision parameter for beta obs 114.87 11.897</span></span>
+<span id="cb194-24"><a href="ch-nongaus.html#cb194-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.x                 2.56  1.236</span></span>
+<span id="cb194-25"><a href="ch-nongaus.html#cb194-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.x                       0.99  0.005</span></span></code></pre></div>
+<div class="figure"><span id="fig:fit-crest-B1"></span>
+<img src="gitbook_version_files/figure-html/fit-crest-B1-1.png" alt="Observed (red) and fitted (blue) values from Model B1 for the Crest data." width="672" />
+<p class="caption">
+FIGURE 7.8: Observed (red) and fitted (blue) values from Model B1 for the Crest data.
+</p>
+</div>
+<p><strong>Model B2</strong></p>
+<p>Next, we bring in three regressors, the market share for Colgate (<em>colgms</em>), unit price for Crest (crestpr), and unit price for Colgate (<em>colgpr</em>). We treat them all as fixed, but include a dynamic intercept term, i.e.,</p>
+<p><span class="math display" id="eq:modelB2">\[\begin{align}
+\eta_t &amp; =\alpha+\beta_1 Z_{1t}+\beta_2 Z_{2t}+\beta_3 Z_{3t}+x_t, \notag \\
+x_t &amp;=  \phi x_{t-1} + w_t.  \tag{7.10}
+\end{align}\]</span></p>
+<p>The plot of the actual versus fitted series is shown in Figure <a href="ch-nongaus.html#fig:fit-crest-B2">7.9</a>.</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="ch-nongaus.html#cb195-1" aria-hidden="true" tabindex="-1"></a>colgms <span class="ot">&lt;-</span> mshare[, <span class="dv">2</span>]</span>
+<span id="cb195-2"><a href="ch-nongaus.html#cb195-2" aria-hidden="true" tabindex="-1"></a>crestpr <span class="ot">&lt;-</span> mshare[, <span class="dv">3</span>]</span>
+<span id="cb195-3"><a href="ch-nongaus.html#cb195-3" aria-hidden="true" tabindex="-1"></a>colgpr <span class="ot">&lt;-</span> mshare[, <span class="dv">4</span>]</span>
+<span id="cb195-4"><a href="ch-nongaus.html#cb195-4" aria-hidden="true" tabindex="-1"></a>formula.crest.B2 <span class="ot">&lt;-</span></span>
+<span id="cb195-5"><a href="ch-nongaus.html#cb195-5" aria-hidden="true" tabindex="-1"></a>  crestms <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> colgms <span class="sc">+</span> crestpr <span class="sc">+</span> colgpr <span class="sc">+</span> <span class="fu">f</span>(id.x, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>)</span>
+<span id="cb195-6"><a href="ch-nongaus.html#cb195-6" aria-hidden="true" tabindex="-1"></a>model.crest.B2 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb195-7"><a href="ch-nongaus.html#cb195-7" aria-hidden="true" tabindex="-1"></a>  formula.crest.B2,</span>
+<span id="cb195-8"><a href="ch-nongaus.html#cb195-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> crest.data,</span>
+<span id="cb195-9"><a href="ch-nongaus.html#cb195-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;beta&quot;</span>,</span>
+<span id="cb195-10"><a href="ch-nongaus.html#cb195-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="dv">1</span>,</span>
+<span id="cb195-11"><a href="ch-nongaus.html#cb195-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb195-12"><a href="ch-nongaus.html#cb195-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb195-13"><a href="ch-nongaus.html#cb195-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb195-14"><a href="ch-nongaus.html#cb195-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb195-15"><a href="ch-nongaus.html#cb195-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb195-16"><a href="ch-nongaus.html#cb195-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb195-17"><a href="ch-nongaus.html#cb195-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb195-18"><a href="ch-nongaus.html#cb195-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb195-19"><a href="ch-nongaus.html#cb195-19" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.crest.B2)</span></span>
+<span id="cb195-20"><a href="ch-nongaus.html#cb195-20" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.crest.B2<span class="sc">$</span>summary.fixed[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb195-21"><a href="ch-nongaus.html#cb195-21" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean   sd    0.025q 0.5q   0.975q</span></span>
+<span id="cb195-22"><a href="ch-nongaus.html#cb195-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept  2.371 0.779  0.818  2.378  3.881</span></span>
+<span id="cb195-23"><a href="ch-nongaus.html#cb195-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 colgms    -2.593 0.315 -3.212 -2.593 -1.976</span></span>
+<span id="cb195-24"><a href="ch-nongaus.html#cb195-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 crestpr   -0.887 0.241 -1.360 -0.887 -0.413</span></span>
+<span id="cb195-25"><a href="ch-nongaus.html#cb195-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 colgpr    -0.515 0.286 -1.077 -0.516  0.047</span></span>
+<span id="cb195-26"><a href="ch-nongaus.html#cb195-26" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.crest.B2<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb195-27"><a href="ch-nongaus.html#cb195-27" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                             mean    sd    </span></span>
+<span id="cb195-28"><a href="ch-nongaus.html#cb195-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 precision parameter for beta obs 135.576 13.737</span></span>
+<span id="cb195-29"><a href="ch-nongaus.html#cb195-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.x                 6.954  3.184</span></span>
+<span id="cb195-30"><a href="ch-nongaus.html#cb195-30" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.x                       0.985  0.007</span></span></code></pre></div>
+<p>The signs for the coefficients of <em>colgms</em> and <em>crestpr</em> are negative, as expected. While the sign of <em>colgpr</em> being negative is not as easy to explain, we note that this coefficient is not significantly different than zero.</p>
+<div class="figure"><span id="fig:fit-crest-B2"></span>
+<img src="gitbook_version_files/figure-html/fit-crest-B2-1.png" alt="Observed (red) and fitted (blue) values from Model B2 for the Crest data." width="672" />
+<p class="caption">
+FIGURE 7.9: Observed (red) and fitted (blue) values from Model B2 for the Crest data.
+</p>
+</div>
+<p><strong>Model B3</strong></p>
+<p>Our third model will have dynamic coefficients for all three covariates. Specifically, we have</p>
+<p><span class="math display" id="eq:modelB3">\[\begin{align}
+\eta_t &amp; =\alpha+\beta_{1t} Z_{1t}+\beta_{2t} Z_{2t}+\beta_{3t} Z_{3t}, \notag \\
+\beta_{1t} &amp;=  \phi_1 \beta_{1,t-1} + w_{1t}, \notag \\
+\beta_{2t} &amp;=  \phi_2 \beta_{2,t-1} + w_{2t}, \notag\\
+\beta_{3t} &amp;=  \phi_3 \beta_{3,t-1} + w_{3t}. \tag{7.11}
+\end{align}\]</span>
+We show a plot of actual versus fitted observations in Figure <a href="ch-nongaus.html#fig:fit-crest-B3">7.10</a>.</p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="ch-nongaus.html#cb196-1" aria-hidden="true" tabindex="-1"></a>id.colgms <span class="ot">&lt;-</span> id.crestpr <span class="ot">&lt;-</span> id.colgpr <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(crestms)</span>
+<span id="cb196-2"><a href="ch-nongaus.html#cb196-2" aria-hidden="true" tabindex="-1"></a>formula.crest.B3 <span class="ot">&lt;-</span></span>
+<span id="cb196-3"><a href="ch-nongaus.html#cb196-3" aria-hidden="true" tabindex="-1"></a>  crestms <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.colgms, colgms, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb196-4"><a href="ch-nongaus.html#cb196-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.crestpr, crestpr, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb196-5"><a href="ch-nongaus.html#cb196-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.colgpr, colgpr, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>)</span>
+<span id="cb196-6"><a href="ch-nongaus.html#cb196-6" aria-hidden="true" tabindex="-1"></a>model.crest.B3 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb196-7"><a href="ch-nongaus.html#cb196-7" aria-hidden="true" tabindex="-1"></a>  formula.crest.B3,</span>
+<span id="cb196-8"><a href="ch-nongaus.html#cb196-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> crest.data,</span>
+<span id="cb196-9"><a href="ch-nongaus.html#cb196-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;beta&quot;</span>,</span>
+<span id="cb196-10"><a href="ch-nongaus.html#cb196-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="dv">1</span>,</span>
+<span id="cb196-11"><a href="ch-nongaus.html#cb196-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb196-12"><a href="ch-nongaus.html#cb196-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb196-13"><a href="ch-nongaus.html#cb196-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb196-14"><a href="ch-nongaus.html#cb196-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb196-15"><a href="ch-nongaus.html#cb196-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb196-16"><a href="ch-nongaus.html#cb196-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb196-17"><a href="ch-nongaus.html#cb196-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb196-18"><a href="ch-nongaus.html#cb196-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb196-19"><a href="ch-nongaus.html#cb196-19" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.crest.B3)</span></span>
+<span id="cb196-20"><a href="ch-nongaus.html#cb196-20" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.crest.B3<span class="sc">$</span>summary.fixed[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb196-21"><a href="ch-nongaus.html#cb196-21" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean  sd    0.025q 0.5q  0.975q</span></span>
+<span id="cb196-22"><a href="ch-nongaus.html#cb196-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept 0.138 0.527 -0.837 0.129 1.191</span></span>
+<span id="cb196-23"><a href="ch-nongaus.html#cb196-23" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.crest.B3<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb196-24"><a href="ch-nongaus.html#cb196-24" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                             mean      sd       </span></span>
+<span id="cb196-25"><a href="ch-nongaus.html#cb196-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 precision parameter for beta obs   116.106    12.072</span></span>
+<span id="cb196-26"><a href="ch-nongaus.html#cb196-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.colgms          22971.649 23826.284</span></span>
+<span id="cb196-27"><a href="ch-nongaus.html#cb196-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.colgms                    0.031     0.674</span></span>
+<span id="cb196-28"><a href="ch-nongaus.html#cb196-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Precision for id.crestpr             5.214     3.632</span></span>
+<span id="cb196-29"><a href="ch-nongaus.html#cb196-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 Rho for id.crestpr                   0.995     0.003</span></span>
+<span id="cb196-30"><a href="ch-nongaus.html#cb196-30" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 Precision for id.colgpr          22648.905 21768.024</span></span>
+<span id="cb196-31"><a href="ch-nongaus.html#cb196-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 7 Rho for id.colgpr                    0.047     0.674</span></span></code></pre></div>
+<div class="figure"><span id="fig:fit-crest-B3"></span>
+<img src="gitbook_version_files/figure-html/fit-crest-B3-1.png" alt="Observed (red) and fitted (blue) values from Model B3 for the Crest data." width="672" />
+<p class="caption">
+FIGURE 7.10: Observed (red) and fitted (blue) values from Model B3 for the Crest data.
+</p>
+</div>
+<p><strong>Model B4</strong></p>
+<p>We can also try fitting a standard static beta regression model as a benchmark, i.e.,</p>
+<p><span class="math display" id="eq:modelB4">\[\begin{align}
+\eta_t &amp; =\alpha+\beta_1 Z_{1t}+\beta_2 Z_{2t}+\beta_3 Z_{3t}. \tag{7.12}
+\end{align}\]</span>
+The fit of the model is shown in Figure <a href="ch-nongaus.html#fig:fit-crest-B4">7.11</a>.</p>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="ch-nongaus.html#cb197-1" aria-hidden="true" tabindex="-1"></a>formula.crest.B4 <span class="ot">&lt;-</span> crestms <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> colgms <span class="sc">+</span> crestpr <span class="sc">+</span> colgpr</span>
+<span id="cb197-2"><a href="ch-nongaus.html#cb197-2" aria-hidden="true" tabindex="-1"></a>model.crest.B4 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb197-3"><a href="ch-nongaus.html#cb197-3" aria-hidden="true" tabindex="-1"></a>  formula.crest.B4,</span>
+<span id="cb197-4"><a href="ch-nongaus.html#cb197-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> crest.data,</span>
+<span id="cb197-5"><a href="ch-nongaus.html#cb197-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;beta&quot;</span>,</span>
+<span id="cb197-6"><a href="ch-nongaus.html#cb197-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="dv">1</span>,</span>
+<span id="cb197-7"><a href="ch-nongaus.html#cb197-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb197-8"><a href="ch-nongaus.html#cb197-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb197-9"><a href="ch-nongaus.html#cb197-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb197-10"><a href="ch-nongaus.html#cb197-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb197-11"><a href="ch-nongaus.html#cb197-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb197-12"><a href="ch-nongaus.html#cb197-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb197-13"><a href="ch-nongaus.html#cb197-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb197-14"><a href="ch-nongaus.html#cb197-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb197-15"><a href="ch-nongaus.html#cb197-15" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.crest.B4)</span></span>
+<span id="cb197-16"><a href="ch-nongaus.html#cb197-16" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.crest.B4<span class="sc">$</span>summary.fixed[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb197-17"><a href="ch-nongaus.html#cb197-17" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean   sd    0.025q 0.5q   0.975q</span></span>
+<span id="cb197-18"><a href="ch-nongaus.html#cb197-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept  6.285 0.395  5.509  6.286  7.059</span></span>
+<span id="cb197-19"><a href="ch-nongaus.html#cb197-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 colgms    -4.196 0.411 -5.004 -4.196 -3.390</span></span>
+<span id="cb197-20"><a href="ch-nongaus.html#cb197-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 crestpr   -2.649 0.245 -3.130 -2.649 -2.168</span></span>
+<span id="cb197-21"><a href="ch-nongaus.html#cb197-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 colgpr    -0.485 0.252 -0.979 -0.485  0.009</span></span>
+<span id="cb197-22"><a href="ch-nongaus.html#cb197-22" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.crest.B4<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb197-23"><a href="ch-nongaus.html#cb197-23" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                             mean  sd   </span></span>
+<span id="cb197-24"><a href="ch-nongaus.html#cb197-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 precision parameter for beta obs 44.45 3.763</span></span></code></pre></div>
+<div class="figure"><span id="fig:fit-crest-B4"></span>
+<img src="gitbook_version_files/figure-html/fit-crest-B4-1.png" alt="Observed and fitted values from Model B4 for the Crest data." width="672" />
+<p class="caption">
+FIGURE 7.11: Observed and fitted values from Model B4 for the Crest data.
+</p>
+</div>
+<p>We present a comparison of all the models in Table <a href="ch-nongaus.html#tab:table-beta">7.2</a>.
+Note that among the four models, Model B2, where we have static regression coefficients and a dynamic intercept, gives the best fit.</p>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:table-beta">TABLE 7.2: </span>Comparison of Models B1, B2, B3, and B4.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Model
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+DIC
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+WAIC
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+PsBF
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Marginal Likelihood
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Model B1
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-994.35\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-996.223\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(495.744\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(446.508\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model B2
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-1052.07\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-1054.711\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(525.875\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(469.797\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model B3
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-998.985\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-1001.029\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(498.292\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(449.91\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model B4
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-771.608\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-772.073\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(386.034\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(368.948\)</span>
+</td>
+</tr>
+</tbody>
+</table>
+<!--
+
+# References
+
+Aktekin, T., Polson, N. G. & Soyer, R. (2018).Sequential Bayesian analysis of multivariate Poisson count data. Journal of Bayesian Analysis, Vol. 13, pp. 385-409.
+
+Aktekin, T., Polson, N. G. & Soyer, R. (2020). A Family of Multivariate Non-Gaussian Time Series Models, Journal of Time Series Analysis, Vol. 41, pp. 691-721.
+
+
+Wichern, D. W. and Jones, R. H. (1977). Assessing the Impact of Market Disturbances Using Intervention Analysis. Management Science, Vol. 24, No. 3, pp. 329-337.
+-->
+
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-aktekin2020family" class="csl-entry">
+Aktekin, Tevfik, Nicholas G. Polson, and Refik Soyer. 2020. <span>“A Family of Multivariate Non-<span>G</span>aussian Time Series Models.”</span> <em>Journal of Time Series Analysis</em> 41 (5): 691–721.
+</div>
+<div id="ref-wichernjones" class="csl-entry">
+Wichern, D. W., and R. H. Jones. 1977. <span>“Assessing the Impact of Market Disturbances Using Intervention Analysis.”</span> <em>Management Science</em> 24 (3): 329–37.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chapter6.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ch-binary.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"split_by": "chapter",
+"split_bib": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 1 Bayesian Analysis | Dynamic Time Series Models using R-INLA: An Applied Perspective</title>
+  <meta name="description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 1 Bayesian Analysis | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA/" />
+  <meta property="og:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+  <meta property="og:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="github-repo" content="ramanbala/dynamic-time-series-models-R-INLA" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 1 Bayesian Analysis | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  
+  <meta name="twitter:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="twitter:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+
+<meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
+
+
+<meta name="date" content="2022-06-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="chapter2.html"/>
+<script src="libs/header-attrs/header-attrs.js"></script>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+<script src="libs/kePrint/kePrint.js"></script>
+<link href="libs/lightable/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a></li>
+
+<li class="divider"></li>
+<li><a href="index.html#preface">Preface<span></span></a>
+<ul>
+<li><a href="index.html#why-read-this-book">Why read this book?<span></span></a></li>
+<li><a href="index.html#structure-of-the-book">Structure of the book<span></span></a></li>
+<li><a href="index.html#software-information-and-conventions">Software information and conventions<span></span></a></li>
+<li><a href="index.html#acknowledgments">Acknowledgments<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="chapter1.html"><a href="chapter1.html"><i class="fa fa-check"></i><b>1</b> Bayesian Analysis<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="chapter1.html"><a href="chapter1.html#intro-ch1"><i class="fa fa-check"></i><b>1.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="1.2" data-path="chapter1.html"><a href="chapter1.html#bayes-framework"><i class="fa fa-check"></i><b>1.2</b> Bayesian framework<span></span></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="chapter1.html"><a href="chapter1.html#bayesian-model-comparison"><i class="fa fa-check"></i><b>1.2.1</b> Bayesian model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="chapter1.html"><a href="chapter1.html#bayes-ts"><i class="fa fa-check"></i><b>1.3</b> Bayesian analysis of time series<span></span></a></li>
+<li class="chapter" data-level="1.4" data-path="chapter1.html"><a href="chapter1.html#dlms"><i class="fa fa-check"></i><b>1.4</b> Gaussian dynamic linear models (DLMs)<span></span></a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="chapter1.html"><a href="chapter1.html#constant-level-plus-noise-model"><i class="fa fa-check"></i><b>1.4.1</b> Constant level plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.2" data-path="chapter1.html"><a href="chapter1.html#local-level-model"><i class="fa fa-check"></i><b>1.4.2</b> Local level model<span></span></a></li>
+<li class="chapter" data-level="1.4.3" data-path="chapter1.html"><a href="chapter1.html#gaussian-dlm-framework-for-univariate-time-series"><i class="fa fa-check"></i><b>1.4.3</b> Gaussian DLM framework for univariate time series<span></span></a></li>
+<li class="chapter" data-level="1.4.4" data-path="chapter1.html"><a href="chapter1.html#ar1-plus-noise-model"><i class="fa fa-check"></i><b>1.4.4</b> AR(1) plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.5" data-path="chapter1.html"><a href="chapter1.html#dlm-for-vector-valued-time-series"><i class="fa fa-check"></i><b>1.4.5</b> DLM for vector-valued time series<span></span></a></li>
+<li class="chapter" data-level="1.4.6" data-path="chapter1.html"><a href="chapter1.html#kalman-filtering-and-smoothing"><i class="fa fa-check"></i><b>1.4.6</b> Kalman filtering and smoothing<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="chapter1.html"><a href="chapter1.html#beyonddlm"><i class="fa fa-check"></i><b>1.5</b> Beyond basic Gaussian DLMs<span></span></a></li>
+<li><a href="chapter1.html#chapter-1-appendix">Chapter 1 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter1.html#conditional-distributions">Conditional distributions<span></span></a></li>
+<li><a href="chapter1.html#exponential-family-of-distributions">Exponential family of distributions<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter2.html"><a href="chapter2.html"><i class="fa fa-check"></i><b>2</b> A Review of INLA<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="chapter2.html"><a href="chapter2.html#intro-ch2"><i class="fa fa-check"></i><b>2.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="2.2" data-path="chapter2.html"><a href="chapter2.html#laplace"><i class="fa fa-check"></i><b>2.2</b> Laplace approximation<span></span></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="chapter2.html"><a href="chapter2.html#simplaplace"><i class="fa fa-check"></i><b>2.2.1</b> Simplified Laplace approximation<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="chapter2.html"><a href="chapter2.html#inlats"><i class="fa fa-check"></i><b>2.3</b> INLA structure for time series<span></span></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="chapter2.html"><a href="chapter2.html#inla-steps"><i class="fa fa-check"></i><b>2.3.1</b> INLA steps<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="chapter2.html"><a href="chapter2.html#forecast"><i class="fa fa-check"></i><b>2.4</b> Forecasting in INLA<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="chapter2.html"><a href="chapter2.html#marglik"><i class="fa fa-check"></i><b>2.5</b> Marginal likelihood computation in INLA<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="chapter2.html"><a href="chapter2.html#rinlapkg"><i class="fa fa-check"></i><b>2.6</b> <code>R-INLA</code> package – some basics<span></span></a></li>
+<li><a href="chapter2.html#chapter-2-appendix">Chapter 2 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter2.html#gaussian-markov-random-field-gmrf">Gaussian Markov Random Field (GMRF)<span></span></a></li>
+<li><a href="chapter2.html#kullback-leibler-divergence">Kullback-Leibler divergence<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter3.html"><a href="chapter3.html"><i class="fa fa-check"></i><b>3</b> Details of R-INLA for Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="chapter3.html"><a href="chapter3.html#intro-ch3"><i class="fa fa-check"></i><b>3.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="3.2" data-path="chapter3.html"><a href="chapter3.html#ch3-rw1noise"><i class="fa fa-check"></i><b>3.2</b> Random walk plus noise model<span></span></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="chapter3.html"><a href="chapter3.html#inlaformula"><i class="fa fa-check"></i><b>3.2.1</b> <code>R-INLA</code> model formula<span></span></a></li>
+<li class="chapter" data-level="3.2.2" data-path="chapter3.html"><a href="chapter3.html#inlaexec"><i class="fa fa-check"></i><b>3.2.2</b> Model execution<span></span></a></li>
+<li class="chapter" data-level="3.2.3" data-path="chapter3.html"><a href="chapter3.html#inlaprior"><i class="fa fa-check"></i><b>3.2.3</b> Prior specifications for hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.4" data-path="chapter3.html"><a href="chapter3.html#inlaposterior"><i class="fa fa-check"></i><b>3.2.4</b> Posterior distributions of hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.5" data-path="chapter3.html"><a href="chapter3.html#fittedvalues"><i class="fa fa-check"></i><b>3.2.5</b> Fitted values for latent states and responses<span></span></a></li>
+<li class="chapter" data-level="3.2.6" data-path="chapter3.html"><a href="chapter3.html#filterestimate"><i class="fa fa-check"></i><b>3.2.6</b> Filtering and smoothing in DLM<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="chapter3.html"><a href="chapter3.html#ch3-ar1levelnoise"><i class="fa fa-check"></i><b>3.3</b> AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="chapter3.html"><a href="chapter3.html#ch3-high-lags"><i class="fa fa-check"></i><b>3.4</b> Dynamic linear models with higher order AR lags<span></span></a>
+<ul>
+<li><a href="chapter3.html#arp-with-level-plus-noise-model">AR<span class="math inline">\((p)\)</span> with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="chapter3.html"><a href="chapter3.html#ch3-rwdrift"><i class="fa fa-check"></i><b>3.5</b> Random walk with drift plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.6" data-path="chapter3.html"><a href="chapter3.html#ch3-rwtvdrift"><i class="fa fa-check"></i><b>3.6</b> Second-order polynomial model<span></span></a></li>
+<li class="chapter" data-level="3.7" data-path="chapter3.html"><a href="chapter3.html#forecasting"><i class="fa fa-check"></i><b>3.7</b> Forecasting states and observations<span></span></a></li>
+<li class="chapter" data-level="3.8" data-path="chapter3.html"><a href="chapter3.html#modsel"><i class="fa fa-check"></i><b>3.8</b> Model comparisons<span></span></a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="chapter3.html"><a href="chapter3.html#modsel-insamp-ch3"><i class="fa fa-check"></i><b>3.8.1</b> In-sample model comparisons<span></span></a></li>
+<li class="chapter" data-level="3.8.2" data-path="chapter3.html"><a href="chapter3.html#modsel-outsamp-ch3"><i class="fa fa-check"></i><b>3.8.2</b> Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="chapter3.html"><a href="chapter3.html#nondefault-priors"><i class="fa fa-check"></i><b>3.9</b> Non-default prior specifications<span></span></a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="chapter3.html"><a href="chapter3.html#custom-priors"><i class="fa fa-check"></i><b>3.9.1</b> Custom prior specifications<span></span></a></li>
+<li class="chapter" data-level="3.9.2" data-path="chapter3.html"><a href="chapter3.html#pc-priors"><i class="fa fa-check"></i><b>3.9.2</b> Penalized complexity (PC) priors<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="chapter3.html"><a href="chapter3.html#post-sampling"><i class="fa fa-check"></i><b>3.10</b> Posterior sampling of latent effects and hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.11" data-path="chapter3.html"><a href="chapter3.html#postpred-samples"><i class="fa fa-check"></i><b>3.11</b> Posterior predictive samples of unknown observations<span></span></a></li>
+<li><a href="chapter3.html#chapter-3-appendix">Chapter 3 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter3.html#sampling-properties-of-time-series">Sampling properties of time series<span></span></a></li>
+<li><a href="chapter3.html#autoregressive-models">Autoregressive models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter4.html"><a href="chapter4.html"><i class="fa fa-check"></i><b>4</b> Modeling Univariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="chapter4.html"><a href="chapter4.html#intro-ch4"><i class="fa fa-check"></i><b>4.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="4.2" data-path="chapter4.html"><a href="chapter4.html#dat-analysis"><i class="fa fa-check"></i><b>4.2</b> Example: A software engineering example – Musa data<span></span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="chapter4.html"><a href="chapter4.html#ch4-model1"><i class="fa fa-check"></i><b>4.2.1</b> Model 1. AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.2" data-path="chapter4.html"><a href="chapter4.html#ch4-model2"><i class="fa fa-check"></i><b>4.2.2</b> Model 2. Random walk plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.3" data-path="chapter4.html"><a href="chapter4.html#ch4-model3"><i class="fa fa-check"></i><b>4.2.3</b> Model 3. AR(1) with trend plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.4" data-path="chapter4.html"><a href="chapter4.html#ch4-model4"><i class="fa fa-check"></i><b>4.2.4</b> Model 4. AR(2) with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chapter4.html"><a href="chapter4.html#forecasting-musa"><i class="fa fa-check"></i><b>4.3</b> Forecasting future states and responses<span></span></a></li>
+<li class="chapter" data-level="4.4" data-path="chapter4.html"><a href="chapter4.html#modsel-ch4"><i class="fa fa-check"></i><b>4.4</b> Model comparisons<span></span></a>
+<ul>
+<li><a href="chapter4.html#in-sample-comparisons">In-sample comparisons<span></span></a></li>
+<li><a href="chapter4.html#out-of-sample-comparisons">Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter5.html"><a href="chapter5.html"><i class="fa fa-check"></i><b>5</b> Time Series Regression Models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="chapter5.html"><a href="chapter5.html#intro-ch5"><i class="fa fa-check"></i><b>5.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="5.2" data-path="chapter5.html"><a href="chapter5.html#ch5-strdecomp"><i class="fa fa-check"></i><b>5.2</b> Structural models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="chapter5.html"><a href="chapter5.html#hotelcost"><i class="fa fa-check"></i><b>5.2.1</b> Example: Monthly average cost of nightly hotel stay<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="chapter5.html"><a href="chapter5.html#ch5-exogpreds"><i class="fa fa-check"></i><b>5.3</b> Models with exogenous predictors<span></span></a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter5.html"><a href="chapter5.html#hourly-traffic"><i class="fa fa-check"></i><b>5.3.1</b> Example: Hourly traffic volumes<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="chapter5.html"><a href="chapter5.html#ar1c"><i class="fa fa-check"></i><b>5.4</b> Latent AR(1) model with covariates plus noise<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Hierarchical Dynamic Models for Panel Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#intro-ch6"><i class="fa fa-check"></i><b>6.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#homog-state"><i class="fa fa-check"></i><b>6.2</b> Models with homogenous state evolution<span></span></a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="chapter6.html"><a href="chapter6.html#simul1-panelts"><i class="fa fa-check"></i><b>6.2.1</b> Example: Simulated homogeneous panel time series with the same level<span></span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="chapter6.html"><a href="chapter6.html#simul2-panelts"><i class="fa fa-check"></i><b>6.2.2</b> Example: Simulated homogeneous panel time series with different levels<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#ridesource-hdlm"><i class="fa fa-check"></i><b>6.3</b> Example: Ridesourcing in NYC<span></span></a>
+<ul>
+<li><a href="chapter6.html#description-of-variables">Description of variables<span></span></a></li>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#hmod.H1"><i class="fa fa-check"></i><b>6.3.1</b> Model H1. Dynamic intercept and exogenous predictors<span></span></a></li>
+<li class="chapter" data-level="6.3.2" data-path="chapter6.html"><a href="chapter6.html#hmod.H2"><i class="fa fa-check"></i><b>6.3.2</b> Model H2. Dynamic intercept and Taxi usage<span></span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="chapter6.html"><a href="chapter6.html#hmod.H3"><i class="fa fa-check"></i><b>6.3.3</b> Model H3. Taxi usage varies by time and zone<span></span></a></li>
+<li class="chapter" data-level="6.3.4" data-path="chapter6.html"><a href="chapter6.html#hmod.H4"><i class="fa fa-check"></i><b>6.3.4</b> Model H4. Fixed intercept, Taxi usage varies over time and zones<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="chapter6.html"><a href="chapter6.html#model-comparison"><i class="fa fa-check"></i><b>6.4</b> Model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-nongaus.html"><a href="ch-nongaus.html"><i class="fa fa-check"></i><b>7</b> Non-Gaussian Continuous Responses<span></span></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#intro-nongaus"><i class="fa fa-check"></i><b>7.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="7.2" data-path="ch-nongaus.html"><a href="ch-nongaus.html#gamma-model"><i class="fa fa-check"></i><b>7.2</b> Gamma state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#vix"><i class="fa fa-check"></i><b>7.2.1</b> Example: Volatility index (VIX) time series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="ch-nongaus.html"><a href="ch-nongaus.html#weibull-model"><i class="fa fa-check"></i><b>7.3</b> Weibull state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#forecasting-from-weibull-models"><i class="fa fa-check"></i><b>7.3.1</b> Forecasting from Weibull models<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="ch-nongaus.html"><a href="ch-nongaus.html#beta-model"><i class="fa fa-check"></i><b>7.4</b> Beta state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#crest"><i class="fa fa-check"></i><b>7.4.1</b> Example: Crest market share<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ch-binary.html"><a href="ch-binary.html"><i class="fa fa-check"></i><b>8</b> Modeling Categorical Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="ch-binary.html"><a href="ch-binary.html#intro-ch-binary"><i class="fa fa-check"></i><b>8.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="8.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-model"><i class="fa fa-check"></i><b>8.2</b> Binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-bin"><i class="fa fa-check"></i><b>8.2.1</b> Example: Simulated single binomial response series<span></span></a></li>
+<li class="chapter" data-level="8.2.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-weekly-shopping"><i class="fa fa-check"></i><b>8.2.2</b> Example: Weekly shopping trips for a single household<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="ch-binary.html"><a href="ch-binary.html#hbin"><i class="fa fa-check"></i><b>8.3</b> Modeling multiple binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-hbin"><i class="fa fa-check"></i><b>8.3.1</b> Example: Dynamic aggregated model for multiple binomial response time series<span></span></a></li>
+<li class="chapter" data-level="8.3.2" data-path="ch-binary.html"><a href="ch-binary.html#hbin-weekly-shopping"><i class="fa fa-check"></i><b>8.3.2</b> Example: Weekly shopping trips for multiple households<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="ch-binary.html"><a href="ch-binary.html#cat-models"><i class="fa fa-check"></i><b>8.4</b> Multinomial time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-mn-p"><i class="fa fa-check"></i><b>8.4.1</b> Example: Simulated categorical time series<span></span></a></li>
+<li><a href="ch-binary.html#model-d4-dynamic-coefficient-for-c_jt">Model D4: Dynamic coefficient for <span class="math inline">\(C_{j,t}\)</span><span></span></a></li>
+</ul></li>
+<li><a href="ch-binary.html#chapter-8-appendix">Chapter 8 – Appendix<span></span></a>
+<ul>
+<li><a href="ch-binary.html#poisson-trick-for-multinomial-models">Poisson-trick for multinomial models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-count.html"><a href="ch-count.html"><i class="fa fa-check"></i><b>9</b> Modeling Count Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="ch-count.html"><a href="ch-count.html#intro-ch-count"><i class="fa fa-check"></i><b>9.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="9.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts"><i class="fa fa-check"></i><b>9.2</b> Univariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="ch-count.html"><a href="ch-count.html#uvcounts-simpois"><i class="fa fa-check"></i><b>9.2.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.2.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts-crashct"><i class="fa fa-check"></i><b>9.2.2</b> Example: Modeling crash counts in CT<span></span></a></li>
+<li class="chapter" data-level="9.2.3" data-path="ch-count.html"><a href="ch-count.html#uvcounts-bikerental"><i class="fa fa-check"></i><b>9.2.3</b> Example: Daily bike rentals in Washington D.C.<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="ch-count.html"><a href="ch-count.html#hieruvcounts"><i class="fa fa-check"></i><b>9.3</b> Hierarchical modeling of univariate count time series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="ch-count.html"><a href="ch-count.html#simul1-hcount"><i class="fa fa-check"></i><b>9.3.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.3.2" data-path="ch-count.html"><a href="ch-count.html#tnc-hcount"><i class="fa fa-check"></i><b>9.3.2</b> Example: Modeling daily TNC usage in NYC<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="ch-sv.html"><a href="ch-sv.html"><i class="fa fa-check"></i><b>10</b> Modeling Stochastic Volatility<span></span></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="ch-sv.html"><a href="ch-sv.html#ch-sv-intro"><i class="fa fa-check"></i><b>10.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="10.2" data-path="ch-sv.html"><a href="ch-sv.html#sv-uv"><i class="fa fa-check"></i><b>10.2</b> Univariate SV models<span></span></a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="ch-sv.html"><a href="ch-sv.html#simul-svnormal"><i class="fa fa-check"></i><b>10.2.1</b> Example: Simulated SV data with standard normal errors<span></span></a></li>
+<li class="chapter" data-level="10.2.2" data-path="ch-sv.html"><a href="ch-sv.html#simul-svt5"><i class="fa fa-check"></i><b>10.2.2</b> Example: Simulated SV data with Student-<span class="math inline">\(t_{\nu}\)</span> errors<span></span></a></li>
+<li class="chapter" data-level="10.2.3" data-path="ch-sv.html"><a href="ch-sv.html#stockrets"><i class="fa fa-check"></i><b>10.2.3</b> Example: IBM stock returns<span></span></a></li>
+<li class="chapter" data-level="10.2.4" data-path="ch-sv.html"><a href="ch-sv.html#nysestockrets"><i class="fa fa-check"></i><b>10.2.4</b> Example: NYSE returns<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="ch-st.html"><a href="ch-st.html"><i class="fa fa-check"></i><b>11</b> Spatio-temporal Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="ch-st.html"><a href="ch-st.html#ch-st-intro"><i class="fa fa-check"></i><b>11.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="11.2" data-path="ch-st.html"><a href="ch-st.html#st-process"><i class="fa fa-check"></i><b>11.2</b> Spatio-temporal process<span></span></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-st.html"><a href="ch-st.html#dyn-areal-model"><i class="fa fa-check"></i><b>11.3</b> Dynamic spatial models for areal data<span></span></a></li>
+<li class="chapter" data-level="11.4" data-path="ch-st.html"><a href="ch-st.html#st-tnc-example"><i class="fa fa-check"></i><b>11.4</b> Example: Monthly TNC usage in NYC taxi zones<span></span></a>
+<ul>
+<li><a href="ch-st.html#data-preprocessing">Data preprocessing<span></span></a></li>
+<li class="chapter" data-level="11.4.1" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh"><i class="fa fa-check"></i><b>11.4.1</b> Model 1. Knorr-Held additive effects model<span></span></a></li>
+<li class="chapter" data-level="11.4.2" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh-inter"><i class="fa fa-check"></i><b>11.4.2</b> Knorr-Held models with space-time interactions<span></span></a></li>
+<li><a href="ch-st.html#model-kh3.-knorr-held-model-with-interaction-between-epsilon_i-and-gamma_t">Model KH3. Knorr-Held model with interaction between <span class="math inline">\(\epsilon_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+<li><a href="ch-st.html#model-kh4.-knorr-held-model-with-interaction-between-nu_i-and-gamma_t">Model KH4. Knorr-Held model with interaction between <span class="math inline">\(\nu_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chmvdlm.html"><a href="chmvdlm.html"><i class="fa fa-check"></i><b>12</b> Multivariate Gaussian Dynamic Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="chmvdlm.html"><a href="chmvdlm.html#intro-chmvdlm"><i class="fa fa-check"></i><b>12.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="12.2" data-path="chmvdlm.html"><a href="chmvdlm.html#MVDiagWPhi"><i class="fa fa-check"></i><b>12.2</b> Model with diagonal <span class="math inline">\(\boldsymbol W\)</span> and <span class="math inline">\(\boldsymbol \Phi\)</span> matrices<span></span></a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="chmvdlm.html"><a href="chmvdlm.html#V-setup"><i class="fa fa-check"></i><b>12.2.1</b> Description of the setup for <span class="math inline">\(\boldsymbol V\)</span><span></span></a></li>
+<li class="chapter" data-level="12.2.2" data-path="chmvdlm.html"><a href="chmvdlm.html#simbivar1"><i class="fa fa-check"></i><b>12.2.2</b> Example: Simulated bivariate AR(1) series<span></span></a></li>
+<li class="chapter" data-level="12.2.3" data-path="chmvdlm.html"><a href="chmvdlm.html#tnctaxi-onezone"><i class="fa fa-check"></i><b>12.2.3</b> Example: Ridesourcing data in NYC for a single taxi zone<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="chmvdlm.html"><a href="chmvdlm.html#MVICCWPhi"><i class="fa fa-check"></i><b>12.3</b> Model with equicorrelated <span class="math inline">\(\boldsymbol{w}_t\)</span> and diagonal <span class="math inline">\(\boldsymbol \Phi\)</span><span></span></a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simtrivar1"><i class="fa fa-check"></i><b>12.3.1</b> Example: Simulated trivariate series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chmvdlm.html"><a href="chmvdlm.html#rgenericmv"><i class="fa fa-check"></i><b>12.4</b> Fitting multivariate models using <code>rgeneric</code><span></span></a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simulgen"><i class="fa fa-check"></i><b>12.4.1</b> Example: Simulated bivariate VAR(1) series<span></span></a></li>
+</ul></li>
+<li><a href="chmvdlm.html#chapter-12-appendix">Chapter 12 – Appendix<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="ch-hmv.html"><a href="ch-hmv.html"><i class="fa fa-check"></i><b>13</b> Hierarchical Multivariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="ch-hmv.html"><a href="ch-hmv.html#intro-ch-hmv"><i class="fa fa-check"></i><b>13.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="13.2" data-path="ch-hmv.html"><a href="ch-hmv.html#mvhdlm"><i class="fa fa-check"></i><b>13.2</b> Multivariate hierarchical dynamic linear model<span></span></a>
+<ul>
+<li><a href="ch-hmv.html#response-and-predictor-variables">Response and predictor variables<span></span></a></li>
+<li><a href="ch-hmv.html#model-setup">Model setup<span></span></a></li>
+<li class="chapter" data-level="13.2.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-hmv"><i class="fa fa-check"></i><b>13.2.1</b> Example: Analysis of TNC and Taxi as responses<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="ch-hmv.html"><a href="ch-hmv.html#lcmcounts"><i class="fa fa-check"></i><b>13.3</b> Level correlated models for multivariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-daily"><i class="fa fa-check"></i><b>13.3.1</b> Example: TNC and Taxi counts based on daily data<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>14</b> Resources for the User<span></span></a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="resources.html"><a href="resources.html#intro-resources"><i class="fa fa-check"></i><b>14.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="14.2" data-path="resources.html"><a href="resources.html#package-list"><i class="fa fa-check"></i><b>14.2</b> Packages used in the book<span></span></a></li>
+<li class="chapter" data-level="14.3" data-path="resources.html"><a href="resources.html#custom-functions"><i class="fa fa-check"></i><b>14.3</b> Custom functions used in the book<span></span></a>
+<ul>
+<li><a href="resources.html#basic-plotting-functions">Basic plotting functions<span></span></a></li>
+<li><a href="resources.html#functions-for-forecast-evaluation">Functions for forecast evaluation<span></span></a></li>
+<li><a href="resources.html#function-for-model-comparison">Function for model comparison<span></span></a></li>
+<li><a href="resources.html#function-for-the-filtering-algorithm-in-dlm">Function for the filtering algorithm in DLM<span></span></a></li>
+<li class="chapter" data-level="14.3.1" data-path="resources.html"><a href="resources.html#rgeneric-fn"><i class="fa fa-check"></i><b>14.3.1</b> <code>rgeneric()</code> function for DLM-VAR model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="resources.html"><a href="resources.html#items-often-used"><i class="fa fa-check"></i><b>14.4</b> Often used <code>R-INLA</code> items<span></span></a>
+<ul>
+<li><a href="resources.html#control-options">Control options<span></span></a></li>
+<li><a href="resources.html#options-for-computing-marginals">Options for computing marginals<span></span></a></li>
+<li><a href="resources.html#random-effect-specifications">Random effect specifications<span></span></a></li>
+<li><a href="resources.html#prior-specifications">Prior specifications<span></span></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chapter1" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Bayesian Analysis<a href="chapter1.html#chapter1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="intro-ch1" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Introduction<a href="chapter1.html#intro-ch1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This chapter gives a brief introduction to Bayesian framework in statistical analysis. In the Bayesian approach, the posterior probability distributions of parameters (which are treated as random quantities) have a central role. Based on the likelihood function of the parameters, given data, and a prior distribution on the parameters, the posterior distribution is obtained via an application of Bayes’ theorem. In many complex modeling situations, including most time series analyses, closed-form expressions for the posterior distributions are rarely available. One exception of course, is the Gaussian Dynamic Linear Model (DLM), for which Kalman filtering and smoothing equations offer closed form expressions for the posterior distribution of the unknown state variable. To handle complex situations, sampling based Bayesian approaches can be used for posterior inference and prediction, see <span class="citation">Tanner and Wong (<a href="#ref-TannerWong87" role="doc-biblioref">1987</a>)</span>, <span class="citation">Gelfand and Smith (<a href="#ref-GelfandSmith90" role="doc-biblioref">1990</a>)</span>, and <span class="citation">D. Gamerman and Lopes (<a href="#ref-GamermanLopes" role="doc-biblioref">2006</a>)</span>. General solutions via Markov Chain Monte Carlo (MCMC) methods have been provided to practitioners by software such as R, WinBUGS <span class="citation">(<a href="#ref-lunn2000winbugs" role="doc-biblioref">Lunn et al. 2000</a>)</span>, STAN,<a href="resources.html#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> or JAGS <span class="citation">(<a href="#ref-plummer2003jags" role="doc-biblioref">Plummer et al. 2003</a>)</span>.
+While MCMC is an asymptotically exact method for posterior analysis, it does not scale well and can be slow in targeting random samples from the joint posterior of the parameters, especially in high dimensions and complex data situations. The computational complexity can be high even under distributed (parallel) computing environments. Under limited sampling, convergence of the MCMC algorithms may become an issue, and one cannot have much confidence in the accuracy of the results.</p>
+<p>An alternative to MCMC for large, complex problems is provided by <em>variational inference</em> <span class="citation">(<a href="#ref-blei2017variational" role="doc-biblioref">Blei, Kucukelbir, and McAuliffe 2017</a>)</span>. See <span class="citation">Korobilis and Koop (<a href="#ref-koop2018variational" role="doc-biblioref">2018</a>)</span> for a discussion of variational Bayesian (VB) inference for state-space models, and
+<span class="citation">L. R. Berry and West (<a href="#ref-berry2020bayesian" role="doc-biblioref">2020</a>)</span> for use of VB in modeling time series of multivariate counts. Application of VB methods may not be straightforward for many practitioners due to limited availability of software at the current time.</p>
+<p>The Integrated Nested Laplace Approximation (INLA) <span class="citation">(<a href="#ref-rue09" role="doc-biblioref">Rue, Martino, and Chopin 2009</a>)</span> provides a fast alternative to MCMC methods for Bayesian modeling in complex problems when exact, closed form solutions are not available.
+Research on the use of INLA within <code>R</code> has been prolific in recent years, with several books and articles describing how to use <code>R-INLA</code> in different settings. In this book, we describe the use of <code>R-INLA</code> for state space modeling of time series data. The use of dynamic models for handling a variety of time series will be of interest to a wide audience of academics and practitioners who work with data that are observed over time.
+<span class="citation">Ruiz-Cárdenas, Krainski, and Rue (<a href="#ref-ruiz2012direct" role="doc-biblioref">2012</a>)</span> describe the use of <code>R-INLA</code> for Dynamic Linear Models (DLMs).</p>
+<p>Section <a href="chapter1.html#bayes-framework">1.2</a> gives a brief review of the Bayesian framework.
+In Section <a href="chapter1.html#bayes-ts">1.3</a>, we review the setting for a Bayesian analysis of time series data.
+Section <a href="chapter1.html#dlms">1.4</a> introduces Gaussian DLMs, while Section <a href="chapter1.html#beyonddlm">1.5</a> gives an overview of hierarchical Gaussian and non-Gaussian models.</p>
+</div>
+<div id="bayes-framework" class="section level2 hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> Bayesian framework<a href="chapter1.html#bayes-framework" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As noted by <span class="citation">Lindley (<a href="#ref-lindley1983theory" role="doc-biblioref">1983</a>)</span>, the Bayesian approach is based on the premise that <em>“the only satisfactory description of uncertainty is by means of probability.”</em> This suggests that uncertainty about any unknown quantity, observed or unobserved (such as parameters), should be described probabilistically, and uncertainties must be combined using the rules of probability.</p>
+<p>To introduce some notation, we let <span class="math inline">\(Y\)</span> be a random variable, i.e., the observable random quantity, with realization <span class="math inline">\(y\)</span>, and <span class="math inline">\(\Theta\)</span> denote an unknown (latent) parameter. The unobserved random quantity <span class="math inline">\(\Theta\)</span> can be a scalar or a vector. Suppose that a probability model is specified with a p.d.f. (or p.m.f.) <span class="math inline">\(p(y|\Theta)\)</span>. For example, if <span class="math inline">\(Y \sim N(\mu, \sigma^2)\)</span>, then <span class="math inline">\(\Theta =(\mu, \sigma^2)\)</span> and if <span class="math inline">\(Y \sim Poisson(\lambda)\)</span>, then <span class="math inline">\(\Theta = \lambda\)</span>.
+In Chapter <a href="chapter1.html#chapter1">1</a> – Appendix, we give a brief review of conditional distributions.
+Before observing any data, uncertainty about the unknown quantity <span class="math inline">\(\Theta\)</span> is described by <span class="math inline">\(\pi(\Theta)\)</span> which is referred to as the <em>prior distribution</em> of <span class="math inline">\(\Theta\)</span> as it reflects our
+<em>a priori</em> knowledge/belief about <span class="math inline">\(\Theta\)</span>. After we observe the data, <span class="math inline">\(\boldsymbol y^n=(y_{1},\ldots, y_{n})&#39;\)</span>, we update our prior beliefs about <span class="math inline">\(\Theta\)</span> to the
+posterior distribution
+<span class="math inline">\(\pi(\Theta |\boldsymbol y^n)\)</span> using the calculus of probability, i.e., via Bayes’ theorem as</p>
+<p><span class="math display" id="eq:bayesthm">\[\begin{align}
+\pi(\Theta |\boldsymbol y^n) \propto \pi(\Theta) L(\boldsymbol y^n|\Theta),
+\tag{1.1}
+\end{align}\]</span>
+where <span class="math inline">\(L(\boldsymbol y^n|\Theta)\)</span> is the <em>likelihood function</em>. The likelihood
+<span class="math inline">\(L(\boldsymbol y^n|\Theta)\)</span> is obtained by evaluating the joint p.d.f. of <span class="math inline">\((Y_{1}, \ldots, Y_{n})\)</span> at the observed data <span class="math inline">\(\boldsymbol y^n\)</span> for different values of <span class="math inline">\(\Theta\)</span>. Thus, it is a function of <span class="math inline">\(\Theta\)</span> and can be interpreted as a scale of comparative support given by the observed data <span class="math inline">\(\boldsymbol y^n\)</span> to various possible values of <span class="math inline">\(\Theta\)</span>. To reflect this, we find it more convenient to write the likelihood function as <span class="math inline">\(L(\Theta; \boldsymbol y^n)\)</span> and to define the log likelihood by <span class="math inline">\(\ell(\Theta; \boldsymbol y^n)\)</span>.</p>
+<p>The <em>likelihood principle</em> states that the totality of information about <span class="math inline">\(\Theta\)</span> provided by <span class="math inline">\(\boldsymbol y^n\)</span> is in the likelihood function, and plays an important role in the Bayesian framework. As a result, all inference about <span class="math inline">\(\Theta\)</span> will be based on the posterior distribution which considers only the observed data <span class="math inline">\(\boldsymbol y^n\)</span>, but all possible values of <span class="math inline">\(\Theta\)</span>.
+The constant of integration for <a href="chapter1.html#eq:bayesthm">(1.1)</a> is given by</p>
+<p><span class="math display" id="eq:margdist">\[\begin{align}
+m(\boldsymbol y^n) = \int L(\Theta; \boldsymbol y^n) \pi(\Theta) d \Theta,
+\tag{1.2}
+\end{align}\]</span>
+which is referred to as the <em>marginal likelihood</em> since it does not depend on <span class="math inline">\(\Theta\)</span>. Computation of the marginal likelihood
+follows from the rules of probability since</p>
+<p><span class="math display" id="eq:priorpred">\[\begin{align}
+p(\boldsymbol y^n)=\int p(\boldsymbol y^n|\Theta) \pi(\Theta) d \Theta,
+\tag{1.3}
+\end{align}\]</span>
+where <span class="math inline">\(p(\boldsymbol y^n|\Theta)=\prod_{j=1}^{n} p(y_j|\Theta)\)</span>.
+To evaluate the marginal likelihood <span class="math inline">\(m(\boldsymbol y^n)\)</span>, we replace <span class="math inline">\(p(\boldsymbol y^n|\Theta)\)</span> by <span class="math inline">\(L(\Theta; \boldsymbol y^n)\)</span> in <a href="chapter1.html#eq:priorpred">(1.3)</a>, once data become available. Prior to observing <span class="math inline">\(\boldsymbol y^n\)</span>, <span class="math inline">\(p(\boldsymbol y^n)\)</span> is referred to as the <em>prior predictive distribution</em> of <span class="math inline">\((Y_{1}, \ldots, Y_{n})\)</span>.</p>
+<p>Once the posterior distribution <span class="math inline">\(\pi(\Theta |\boldsymbol y^n)\)</span> is available, the posterior predictive distribution of a future (new) observation
+<span class="math inline">\(\boldsymbol y^\ast\)</span> is given by</p>
+<p><span class="math display" id="eq:preddist">\[\begin{align}
+p(\boldsymbol y^\ast|\boldsymbol y^n) = \int p(\boldsymbol y^\ast|\Theta) \pi(\Theta|\boldsymbol y^n) d \Theta.
+\tag{1.4}
+\end{align}\]</span>
+As noted by <span class="citation">Ebrahimi, Soofi, and Soyer (<a href="#ref-ebrahimi2010sample" role="doc-biblioref">2010</a>)</span>, the concept of prediction,
+which is usually an afterthought in classical statistics, arises naturally in the Bayesian approach as a consequence of using rules of probability. The predictive distribution is an essential component of the Bayesian approach in time series analysis.</p>
+<div id="bayesian-model-comparison" class="section level3 hasAnchor" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Bayesian model comparison<a href="chapter1.html#bayesian-model-comparison" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="marginal-likelihood" class="section level4 unnumbered hasAnchor">
+<h4>Marginal likelihood<a href="chapter1.html#marginal-likelihood" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>We defined the marginal distribution of the data <span class="math inline">\({\boldsymbol y^n}\)</span> in <a href="chapter1.html#eq:margdist">(1.2)</a>. This concept plays a useful role in Bayesian model comparison when we must select from a set of models, <span class="math inline">\(M_1,\ldots, M_K\)</span>. Let <span class="math inline">\(\ell(\boldsymbol{\Theta}; {\boldsymbol y^n}, M_k)\)</span> denote the log likelihood under model <span class="math inline">\(M_k\)</span> of <span class="math inline">\(\boldsymbol{\Theta}\)</span> given the data <span class="math inline">\({\boldsymbol y^n}\)</span>, and let <span class="math inline">\(\pi(\boldsymbol{\Theta} \vert M_k)\)</span> denote the prior distribution of <span class="math inline">\(\boldsymbol{\Theta}\)</span> under model <span class="math inline">\(M_k\)</span>. Each model may have its own set of parameters. Then, the marginal likelihood of model <span class="math inline">\({M_k}\)</span> is</p>
+<p><span class="math display" id="eq:marglik">\[\begin{align}
+m({\boldsymbol y^n} \vert M_k) = \int L(\boldsymbol{\Theta}; {\boldsymbol y^n}, M_k) \pi(\boldsymbol{\Theta} \vert M_k) d\boldsymbol{\Theta}.
+\tag{1.5}
+\end{align}\]</span>
+The marginal likelihood is useful in many Bayesian modeling steps, such as in the acceptance ratio computation in the Metropolis-Hastings algorithm, in Bayesian model selection and model averaging, etc. However, in most cases, <span class="math inline">\(p({\boldsymbol y^n} \vert M_k)\)</span>
+cannot be obtained analytically. Many methods have been proposed including those by <span class="citation">Tierney and Kadane (<a href="#ref-tierney1986accurate" role="doc-biblioref">1986</a>)</span> (via the Laplace approximation),
+<span class="citation">Newton and Raftery (<a href="#ref-newton1994approximate" role="doc-biblioref">1994</a>)</span> (harmonic mean estimator), <span class="citation">Chib (<a href="#ref-chib1995marginal" role="doc-biblioref">1995</a>)</span> (via MCMC),
+<span class="citation">Marin et al. (<a href="#ref-marin2012approximate" role="doc-biblioref">2012</a>)</span> (using approximate Bayesian computation, ABC),
+<span class="citation">Jordan et al. (<a href="#ref-jordan1998introduction" role="doc-biblioref">1998</a>)</span> (variational methods), or <span class="citation">Rue, Martino, and Chopin (<a href="#ref-rue09" role="doc-biblioref">2009</a>)</span> (INLA).</p>
+</div>
+<div id="bayes-factors" class="section level4 unnumbered hasAnchor">
+<h4>Bayes factors<a href="chapter1.html#bayes-factors" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Consider two candidate models <span class="math inline">\(M_1\)</span> and <span class="math inline">\(M_2\)</span> to describe the given data <span class="math inline">\(\boldsymbol y^n\)</span>. Using posterior model probabilities <span class="math inline">\(\pi(M_k \vert \boldsymbol y^n)\)</span> for <span class="math inline">\(k=1,2\)</span>, we can write the <em>posterior odds</em> as</p>
+<p><span class="math display" id="eq:bf">\[\begin{align}
+\frac{\pi(M_1 \vert \boldsymbol y^n)}{\pi(M_2 \vert \boldsymbol y^n)} =
+\frac{m(\boldsymbol y^n; M_1)}{m(\boldsymbol y^n; M_2)} \times
+\frac{\pi(M_1)}{\pi(M_2)},
+\tag{1.6}
+\end{align}\]</span>
+where <span class="math inline">\(m(\boldsymbol y^n; M_k)\)</span> and <span class="math inline">\(\pi(M_k)\)</span> denote the marginal likelihood and prior probability for model <span class="math inline">\(M_k\)</span>, respectively. The first term on the right side of <a href="chapter1.html#eq:bf">(1.6)</a> is
+known as the <em>Bayes factor</em> (BF) in favor of model <span class="math inline">\(M_1\)</span> when it is compared to <span class="math inline">\(M_2\)</span> <span class="citation">(<a href="#ref-kass1995bayes" role="doc-biblioref">Kass and Raftery 1995</a>)</span>, i.e.,</p>
+<p><span class="math display">\[\begin{align}
+{\rm BF}_{12}=\frac{m(\boldsymbol y^n; M_1)}{m(\boldsymbol y^n; M_2)}.
+\end{align}\]</span>
+The BF can be interpreted as the summary of support provided by the data to one model as opposed to an alternative one. It can also be used for Bayesian hypothesis testing as originally suggested by <span class="citation">Jeffreys (<a href="#ref-jeffreys1935some" role="doc-biblioref">1935</a>)</span>.</p>
+<p>Since the marginal likelihood cannot be obtained analytically for many models, an alternative quantity based on the predictive density is</p>
+<p><span class="math display" id="eq:MLIK">\[\begin{align}
+p(y_j|\boldsymbol y_{(-j)},M_k)=\int
+p(y_j|\boldsymbol \Theta_k,M_k)\,p(\boldsymbol \Theta_k|\boldsymbol y_{(-j)},M_k)d\boldsymbol \Theta_k,
+\tag{1.7}
+\end{align}\]</span>
+where, for <span class="math inline">\(j=1,\ldots, n\)</span>, <span class="math inline">\(\boldsymbol y_{(-j)}=\{y_\ell|\ell=1,\ldots,n;\,\ell\neq j\}\)</span> and <span class="math inline">\(\Theta_k\)</span> denotes the parameters associated with model <span class="math inline">\(M_k\)</span>. The above density evaluated at data point <span class="math inline">\(y_j\)</span> is referred to as the <em>conditional predictive ordinate</em> (CPO).
+The pseudo likelihood obtained as the product of individual CPO’s, i.e.,</p>
+<p><span class="math display" id="eq:CVMLIK">\[\begin{align}
+\widehat{m}(\boldsymbol y^n)=\prod_{j=1}^{n} p(y_j|\boldsymbol y_{(-j)},M_k)
+\tag{1.8}
+\end{align}\]</span>
+is called the <em>cross validation marginal likelihood</em>.
+Evaluation of the cross validation marginal likelihood typically requires
+Markov chain Monte Carlo (MCMC) simulation. <span class="citation">Gelfand and Dey (<a href="#ref-gelfand1994bayesian" role="doc-biblioref">1994</a>)</span> discuss how <span class="math inline">\(p(y_j|\boldsymbol y_{(-j)},M_k)\)</span> can be approximated using posterior samples from the MCMC output. Once the cross validation marginal likelihood is approximated, the <em>pseudo Bayes factor</em>
+(PsBF) can be obtained to compare any two models.</p>
+</div>
+<div id="information-criteria" class="section level4 unnumbered hasAnchor">
+<h4>Information criteria<a href="chapter1.html#information-criteria" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>As noted by <span class="citation">Kass and Raftery (<a href="#ref-kass1995bayes" role="doc-biblioref">1995</a>)</span>, the BF can be approximated using the
+<em>Schwarz criterion</em>, which is also known as the <em>Bayesian information criterion</em> (BIC). In the above, we can write the logarithm of the Bayes factor as</p>
+<p><span class="math display">\[\begin{align*}
+\log {\rm BF}_{12}=\log\, m({\boldsymbol y^n}; M_1)-\log\,m({\boldsymbol y^n}; M_2).
+\end{align*}\]</span>
+For large sample size <span class="math inline">\(n\)</span>, it is possible to show that</p>
+<p><span class="math display">\[\begin{align*}
+\log\, m({\boldsymbol y^n}; M_k)\approx
+\log\, L_k({\boldsymbol y^n};\widehat{\boldsymbol \Theta}_k) -(r_k/2)\,\log(n),
+\end{align*}\]</span>
+where <span class="math inline">\(L_k({\boldsymbol y^n};\widehat{\boldsymbol \Theta}_k)\)</span> is the likelihood for model <span class="math inline">\(M_k\)</span> evaluated at the maximum likelihood estimator <span class="math inline">\(\widehat{\boldsymbol \Theta}_k\)</span>
+(or the posterior mode) of <span class="math inline">\(\boldsymbol \Theta_k\)</span>, while <span class="math inline">\(r_k\)</span> is the number of parameters for model <span class="math inline">\(M_k\)</span>.
+In the above, <span class="math inline">\(-2 \log\, m({\boldsymbol y^n}; M_k)\)</span> is known as the BIC for model <span class="math inline">\(M_k\)</span>, i.e.,</p>
+<p><span class="math display">\[\begin{align*}
+{\rm BIC}_k=-2 \log\,L_k({\boldsymbol y^n};\widehat{\boldsymbol \Theta}_k) +r_k\,\log(n).
+\end{align*}\]</span>
+A smaller value of <span class="math inline">\({\rm BIC}_k\)</span> implies more support for the model <span class="math inline">\(M_k\)</span>. We can approximate BF using BIC as</p>
+<p><span class="math display">\[\begin{align*}
+{\rm BF}_{12}\approx \exp\big[-\frac{1}{2}({\rm BIC}_1- {\rm BIC}_2)\big].
+\end{align*}\]</span></p>
+<p>Especially for hierarchical Bayesian models, it is not easy to evaluate BIC since the “effective” number of parameters in the model will not be known. For this purpose, the <em>deviance information criterion</em> (DIC)
+was proposed by
+<span class="citation">Spiegelhalter et al. (<a href="#ref-spiegelhalter2002bayesian" role="doc-biblioref">2002</a>)</span>.
+For a generic parameter vector <span class="math inline">\(\boldsymbol \Theta\)</span>, the DIC is defined as</p>
+<p><span class="math display" id="eq:DIC">\[\begin{align}
+{\rm DIC} &amp;=  \overline{D}+r_D, \text{ where},  \notag \\
+D &amp;=  -2 \log\,L(\boldsymbol \Theta; \boldsymbol y^n ), \,\,\, \overline{D}=E_{\Theta|\boldsymbol y^n}(D), \text{ and } \notag \\
+r_D &amp;= \overline{D}-D(\widehat{\boldsymbol \Theta}),
+\tag{1.9}
+\end{align}\]</span>
+where <span class="math inline">\(\widehat{\boldsymbol \Theta}\)</span> is the posterior mean,
+<span class="math inline">\(\overline{D}\)</span> represents the ``goodness of the fit” of the model, while the term <span class="math inline">\(r_D\)</span> represents a complexity penalty as reflected by the
+<em>effective number of parameters</em> of the model. The unknown effective number of parameters of the model is
+estimated as the difference between the posterior mean of the deviance and the deviance
+evaluated at the posterior mean of <span class="math inline">\(\boldsymbol \Theta\)</span>.</p>
+<p>An alternative to <span class="math inline">\(DIC\)</span> is the <em>Watanabe Akaike information criterion</em> (WAIC) which is defined as (see <span class="citation">Watanabe and Opper (<a href="#ref-watanabe2010asymptotic" role="doc-biblioref">2010</a>)</span> and <span class="citation">Gelman, Hwang, and Vehtari (<a href="#ref-gelman2014understanding" role="doc-biblioref">2014</a>)</span>)</p>
+<p><span class="math display" id="eq:waic">\[\begin{align}
+{\rm WAIC} = \mbox{lppd} + p_{{\rm WAIC}},
+\tag{1.10}
+\end{align}\]</span>
+where <span class="math inline">\(\mbox{lppd}\)</span> is the log pointwise posterior density given by</p>
+<p><span class="math display">\[\begin{align*}
+\mbox{lppd} =\sum_{j=1}^n \log \left(\int p(y_j|\Theta_k)\pi(\Theta_k|\boldsymbol y^n)d\Theta_k \right).
+\end{align*}\]</span>
+The <span class="math inline">\(\mbox{lppd}\)</span> is evaluated using draws <span class="math inline">\(\Theta_k^s, s=1,\ldots,S\)</span> from the posterior distribution of <span class="math inline">\(\Theta_k\)</span> as</p>
+<p><span class="math display">\[\begin{align*}
+\sum_{j=1}^n \log\left(\frac{1}{S}\sum_{s=1}^S p(y_j|\Theta_k^s)\right),
+\end{align*}\]</span>
+and <span class="math inline">\(p_{{\rm WAIC}}\)</span> is a correction term for the effective number of parameters to adjust for overfitting,</p>
+<p><span class="math display">\[\begin{align*}
+p_{{\rm WAIC}} = 2\sum_{j=1}^n\left(\log(E_{post} p(y_j|\Theta_k)) - E_{post}(\log p(y_j|\Theta_k))\right),
+\end{align*}\]</span>
+which can be computed from draws <span class="math inline">\(\Theta_k^s, s=1,\ldots,S\)</span> as</p>
+<p><span class="math display">\[\begin{align*}
+2\sum_{j=1}^n\left(\log \left(\frac{1}{S}\sum_{s=1}^S p(y_j|\Theta_k^s)\right) - \frac{1}{S}\sum_{s=1}^{S}\log p(y_j|\Theta_k^s)\right).
+\end{align*}\]</span></p>
+</div>
+<div id="model-averaging" class="section level4 unnumbered hasAnchor">
+<h4>Model averaging<a href="chapter1.html#model-averaging" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>An alternative approach for predicting the future values of the response variable <span class="math inline">\(Y\)</span> is to take into account model uncertainty and use Bayesian model averaging.</p>
+<p>Assume that we have <span class="math inline">\(K\)</span> possible models <span class="math inline">\(M_k,~k=1,\ldots,K\)</span> with prior model probabilities
+<span class="math inline">\(p(M_k)\)</span> such that <span class="math inline">\(\sum_{k=1}^K p(M_k)=1\)</span>. Typically, under model <span class="math inline">\(M_k\)</span>, we have unknown parameter(s) <span class="math inline">\(\boldsymbol{\Theta}_k\)</span>, and we denote the model for <span class="math inline">\(Y\)</span> by <span class="math inline">\(p(y|\boldsymbol{\Theta}_k,M_k)\)</span>. Priors for
+<span class="math inline">\(\boldsymbol{\Theta}_k\)</span> given <span class="math inline">\(M_k\)</span> are denoted as <span class="math inline">\(p(\boldsymbol{\Theta}_k|M_k)\)</span>, for <span class="math inline">\(k=1,\ldots,K\)</span>.</p>
+<p>If <span class="math inline">\(\boldsymbol{y}^n\)</span> denotes the observed data, then <span class="math inline">\(p(y^*|\boldsymbol{y}^n)\)</span>, the posterior predictive distribution for a future value of <span class="math inline">\(Y,\)</span> is given by</p>
+<p><span class="math display" id="eq:bma">\[\begin{align}
+p(y^*|\boldsymbol{y}^n)=\sum_{k=1}^K p(y^*|\boldsymbol{y}^n,M_k) p(M_k|\boldsymbol{y}^n),
+\tag{1.11}
+\end{align}\]</span>
+which is a weighted average of the posterior predictive distributions under each of the models. This is known as Bayesian model averaging (BMA). In <a href="chapter1.html#eq:bma">(1.11)</a>, the weights are given by the posterior
+model probabilities</p>
+<p><span class="math display">\[\begin{align}
+p(M_k|\boldsymbol{y}^n)=\frac{p(\boldsymbol{y}^n|M_k)\,p(M_k)}{\sum_{j=1}^K p(\boldsymbol{y}^n|M_j)\,p(M_j)},
+\end{align}\]</span>
+where the marginal likelihood term for model <span class="math inline">\(M_k\)</span> is given by</p>
+<p><span class="math display">\[\begin{align}
+p(\boldsymbol{y}^n|M_k)=\int p(\boldsymbol{y}^n|\boldsymbol{\theta}_k,M_k)\,p(\boldsymbol{\Theta}_k|M_k)d\boldsymbol{\Theta}_k.
+\end{align}\]</span>
+Finally, <span class="math inline">\(p(y^*|\boldsymbol{y}^n,M_k)\)</span> is obtained via</p>
+<p><span class="math display">\[\begin{align}
+p(y^*|\boldsymbol{y}^n,M_k)=\int p(y^*|\boldsymbol{\Theta}_k,M_k)\,p(\boldsymbol{\Theta}_k|\boldsymbol{y}^n,M_k)d\boldsymbol{\Theta}_k,
+\end{align}\]</span>
+where
+<span class="math display">\[\begin{align}
+p(\boldsymbol{\Theta}_k|\boldsymbol{y}^n,M_k)\propto p(\boldsymbol{y}^n|\boldsymbol{\Theta}_k,M_k)p(\boldsymbol{\Theta}_k|M_k).
+\end{align}\]</span></p>
+</div>
+</div>
+</div>
+<div id="bayes-ts" class="section level2 hasAnchor" number="1.3">
+<h2><span class="header-section-number">1.3</span> Bayesian analysis of time series<a href="chapter1.html#bayes-ts" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In many applications, we are interested in modeling a time series of observations <span class="math inline">\(y_t,~ t=1,\ldots,n\)</span>, based on available information. The information might consist only of observed values of <span class="math inline">\(y_t\)</span>, or it may include a set of past and current observations on exogenous predictors in addition to the past history of <span class="math inline">\(y_t\)</span>.
+The observations <span class="math inline">\(\boldsymbol y^n=(y_1,y_2,\ldots,y_n)&#39;\)</span>, collected at discrete time points <span class="math inline">\(t=1,\ldots,n\)</span>, is a realization of the discrete time stochastic process <span class="math inline">\(\{Y_t\}\)</span>.</p>
+<p>The most important feature of the time series is possible serial correlation among the observations. Describing such correlation is the essence of time series modeling. As noted by <span class="citation">Cox et al. (<a href="#ref-cox1981statistical" role="doc-biblioref">1981</a>)</span>, such correlation is typically described by using either the <em>observation driven</em> or the <em>parameter driven</em> modeling strategies. The former includes models such as Autoregressive Moving Average (ARMA) processes and Markov chains, whereas the latter involves latent structure models such as the state-space models where the correlation is created by the time dependence among latent factors. The parameter driven models, due to their dynamic latent structure, are capable of capturing <em>nonstationary</em> behavior in the means and variances.</p>
+<p>In our development, we will be dealing with Bayesian analysis of both the observation driven and parameter driven processes. The Bayesian approach to time series modeling is still driven by the notion of “describing uncertainty via probability” and adherence to the rules of probability and the likelihood principle. Typical Bayesian analysis of a time series model will still involve deriving posterior and predictive distributions of unknown quantities in the specified model.
+Due to the temporal dependence in time series data and the potential dynamic structure of model parameters, our inferences and predictions need to be performed sequentially. Sequential processing can be handled adequately in the Bayesian paradigm as will be discussed in what follows.</p>
+<p>To be able to consider both the observation and parameter driven models, we will decompose our generic parameter vector <span class="math inline">\(\Theta\)</span> into static and dynamic parameters denoted by <span class="math inline">\(\boldsymbol \theta\)</span> and <span class="math inline">\(\boldsymbol x^n=(x_1,\ldots,x_n)&#39;\)</span>, respectively. Thus, we define <span class="math inline">\(\Theta=(\boldsymbol \theta,\boldsymbol x^n)\)</span>. At time <span class="math inline">\(t\)</span>, we denote the observed data by <span class="math inline">\(\boldsymbol y^t=(y_1,y_2,\ldots,y_t)&#39;\)</span> and the posterior distribution of <span class="math inline">\(\Theta\)</span> by <span class="math inline">\(\pi(\Theta|\boldsymbol y^t)\)</span>. It can be shown via Bayes’ theorem, that</p>
+<p><span class="math display" id="eq:seqBayes">\[\begin{align}
+\pi(\Theta|\boldsymbol y^t)\propto \pi(\Theta|\boldsymbol y^{t-1}) L(\Theta;y_t, \boldsymbol y^{t-1}),
+\tag{1.12}
+\end{align}\]</span>
+where <span class="math inline">\(\pi(\Theta|\boldsymbol y^{t-1})\)</span> is the posterior distribution of <span class="math inline">\(\Theta\)</span> at time <span class="math inline">\((t-1)\)</span>
+which can be considered as the prior of <span class="math inline">\(\Theta\)</span> before observing <span class="math inline">\(y_t\)</span>. The likelihood term
+<span class="math inline">\(L(\Theta;y_t, \boldsymbol y^{t-1})\)</span> is obtained by evaluating <span class="math inline">\(p(y_t|\Theta, \boldsymbol y^{t-1})\)</span> at the observed value <span class="math inline">\(y_t\)</span> at time <span class="math inline">\(t\)</span>. It is important to note that, for observation driven models, <span class="math inline">\(p(y_t|\Theta, \boldsymbol y^{t-1})\neq p(y_t|\Theta)\)</span>.
+Given <span class="math inline">\(\boldsymbol y^t\)</span>, the predictive distribution of <span class="math inline">\(Y_{t+1}\)</span> is given by</p>
+<p><span class="math display" id="eq:seqpred">\[\begin{align}
+p(y_{t+1}|\boldsymbol y^t)=\int p( y^{t+1}|\Theta,\boldsymbol y^t) \pi(\Theta|{\boldsymbol y^t}) d \Theta.
+\tag{1.13}
+\end{align}\]</span>
+The marginal posterior distribution of the entire latent vector <span class="math inline">\(\boldsymbol x^n\)</span> given <span class="math inline">\(\boldsymbol y^t\)</span> is obtained by marginalization of the posterior distribution of <span class="math inline">\(\Theta\)</span> as</p>
+<p><span class="math display">\[\begin{align*}
+\pi(\boldsymbol x^n|\boldsymbol y^t)=\int \pi(\boldsymbol x^n,\boldsymbol \theta|\boldsymbol y^t) d \boldsymbol \theta.
+\end{align*}\]</span>
+The posterior distributions of the components of <span class="math inline">\(\boldsymbol x^n\)</span>, i.e., <span class="math inline">\(\pi(x_\tau|\boldsymbol y^t), \tau=1,\ldots,n\)</span> can be obtained similarly. The distribution of the current latent component <span class="math inline">\(x_t\)</span>, i.e., <span class="math inline">\(\pi(x_t|\boldsymbol y^t)\)</span> is referred to as the <em>filtering distribution</em>. The remaining marginals for <span class="math inline">\(x_\tau\)</span>, where <span class="math inline">\(\tau &lt; t\)</span> and <span class="math inline">\(\tau &gt; t\)</span> are known as the <em>smoothing distributions</em> and <em>forecast distributions</em>, respectively.</p>
+<p>In sequential analysis of time series data, often the interest is centered around the filtering distribution of <span class="math inline">\(x_t\)</span> which can be obtained from the sequential updating of <span class="math inline">\(x_t\)</span> and <span class="math inline">\(\boldsymbol \theta\)</span> as</p>
+<p><span class="math display">\[\begin{align*}
+\pi(x_t, \boldsymbol \theta|\boldsymbol y^t)\propto \pi(x_t, \boldsymbol \theta|\boldsymbol y^{t-1}) L(x_t, \boldsymbol \theta;y_t, \boldsymbol y^{t-1}).
+\end{align*}\]</span>
+The marginal posterior distribution of <span class="math inline">\(x_t\)</span> obtained from <span class="math inline">\(\pi(x_t, \boldsymbol \theta|\boldsymbol y^{t-1})\)</span>, i.e., <span class="math inline">\(\pi(x_t|\boldsymbol y^{t-1})\)</span>, is the forecast distribution of <span class="math inline">\(x_t\)</span>.</p>
+</div>
+<div id="dlms" class="section level2 hasAnchor" number="1.4">
+<h2><span class="header-section-number">1.4</span> Gaussian dynamic linear models (DLMs)<a href="chapter1.html#dlms" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this section, we introduce Gaussian dynamic linear models (DLMs) for a univariate time series. Due to their ability to capture time varying parameters, the DLMs provide a flexible modeling framework for nonstationary time series. The Gaussian DLM leads to closed form expressions for estimates and forecasts, and may be the best path if such a model is suitable for the time series. We show a few examples that are often used in practice. In Chapter <a href="chapter3.html#chapter3">3</a>, we will fit these models to data using <code>R-INLA</code> <span class="citation">(<a href="#ref-martins2013bayesian" role="doc-biblioref">Martins et al. 2013</a>)</span>.</p>
+<p>One way to model a univariate time series <span class="math inline">\(y_t\)</span> is as the sum of an unobservable (latent) level plus a random error. The latent level can either be constant over time or can randomly evolve over time according to some stochastic process.
+We start with a simple example for a univariate time series <span class="math inline">\(y_t\)</span>, the <em>constant level plus noise model</em>, followed
+by a <em>local level model</em>, also referred to as the <em>random walk plus noise model</em>. In each case, we show by simple formulas how Bayesian updating is done.
+Next, we define the DLM framework for a univariate time series <span class="math inline">\(y_t\)</span> and describe its properties, and
+present another commonly used example of DLM, the <em>AR(1) plus noise model</em>.
+We then give a brief review of a DLM for a vector-valued time series, and discuss the Kalman filtering and
+smoothing algorithms. We end the chapter with a brief look at how the DLM can be extended for non-Gaussian setups.</p>
+<div id="constant-level-plus-noise-model" class="section level3 hasAnchor" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Constant level plus noise model<a href="chapter1.html#constant-level-plus-noise-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider a simple model for a univariate Gaussian time series <span class="math inline">\(y_t\)</span>, which can be described as the sum of a constant level and a Gaussian random error <span class="citation">(<a href="#ref-ss2017" role="doc-biblioref">Shumway and Stoffer 2017</a>)</span>:</p>
+<p><span class="math display" id="eq:dlm-const">\[\begin{align}
+y_t = \alpha + v_t;~~ v_t \sim N(0, \sigma^2_v).
+\tag{1.14}
+\end{align}\]</span>
+We use this model to illustrate Bayesian updating for a time series.
+Suppose we assume that the prior distribution of the random variable <span class="math inline">\(\alpha\)</span> is normal with mean <span class="math inline">\(m_0\)</span> and
+variance <span class="math inline">\(C_0\)</span>, i.e., <span class="math inline">\(\pi(\alpha) \sim N(m_0, C_0)\)</span>, which is independent of the distribution of
+<span class="math inline">\(v_t\)</span> for all <span class="math inline">\(t\)</span>. For simplicity, we first assume that the error variance <span class="math inline">\(\sigma^2_v\)</span> is known.
+Given data <span class="math inline">\({\boldsymbol y}^n\)</span>, our objective is to update our opinion about <span class="math inline">\(\alpha\)</span> via the posterior distribution of <span class="math inline">\(\alpha\)</span> given <span class="math inline">\({\boldsymbol y}^n\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+\pi(\alpha|\boldsymbol y^n)
+\propto  L(\alpha; \sigma^2_v, \boldsymbol y^n)~\pi(\alpha),
+\end{align*}\]</span><br />
+where <span class="math inline">\(L(\alpha; \sigma^2_v, \boldsymbol y^n)\)</span> is a Gaussian likelihood.</p>
+<p>Due to the conjugacy of the normal likelihood and the normal prior for <span class="math inline">\(\alpha\)</span>, the posterior distribution of <span class="math inline">\(\alpha\)</span> given <span class="math inline">\(\boldsymbol y^n\)</span> is normal, i.e.,</p>
+<p><span class="math display">\[\begin{align*}
+&amp;  \pi(\boldsymbol \alpha|\boldsymbol y^n) \sim  N(m_n, C_n),   
+\mbox{ where}, \notag \\
+&amp;  m_n = E(\alpha|\boldsymbol y^n) = \frac{C_0}{C_0+\frac{\sigma^2_v}{n}}\overline{y} + \frac{\frac{\sigma^2_v}{n}}{C_0+\frac{\sigma^2_v}{n}} m_0,
+\mbox{ and}  \notag \\
+&amp;  C_n = Var(\alpha|\boldsymbol y^n) = \left(\frac{n}{\sigma^2_v} + \frac{1}{C_0}\right)^{-1} = \frac{\sigma^2_v C_0}{\sigma^2_v +n C_0}.
+\end{align*}\]</span>
+Note that <span class="math inline">\(m_n\)</span> is a weighted average of the sample mean <span class="math inline">\(\overline{y}=\frac{1}{n}\sum_{t=1}^n y_t\)</span> and the prior mean <span class="math inline">\(m_0\)</span>,
+where the weight is a function of <span class="math inline">\(C_0\)</span> and <span class="math inline">\(\sigma^2_v\)</span>. If <span class="math inline">\(C_0\)</span> is large, then the posterior mean <span class="math inline">\(m_n\)</span> is approximately equal to <span class="math inline">\(\overline{Y}\)</span> and <span class="math inline">\(C_n \approx \sigma^2_v/n\)</span>. The posterior precision <span class="math inline">\(1/C_n\)</span> is given by</p>
+<p><span class="math display">\[\begin{align*}
+\frac{1}{C_n}= \frac{n}{\sigma^2_v}+\frac{1}{C_0},
+\end{align*}\]</span>
+where <span class="math inline">\(n/\sigma^2_v\)</span> denotes the precision of the sample mean while <span class="math inline">\(1/C_0\)</span> is the prior precision.
+Note that the posterior precision <span class="math inline">\(1/C_n\)</span> is always larger than the prior precision <span class="math inline">\(1/C_0\)</span>.</p>
+<p>It is easy to see how the posterior distribution of <span class="math inline">\(\alpha\)</span> can be obtained sequentially over time. At time <span class="math inline">\(t=n-1\)</span>,</p>
+<p><span class="math display">\[\begin{align*}
+\pi(\alpha|\boldsymbol y^{n-1}) \sim N(m_{n-1}, C_{n-1}).
+\end{align*}\]</span>
+This distribution then plays the role of the prior for <span class="math inline">\(\alpha\)</span> which is updated, when <span class="math inline">\(y_n\)</span> is observed at time <span class="math inline">\(t=n\)</span>, to yield the posterior distribution</p>
+<p><span class="math display">\[\begin{align*}
+&amp;  \pi(\alpha|\boldsymbol y^n)\sim N(m_n, C_n), \mbox{ where}, \notag \\
+&amp;  m_n = \frac{C_{n-1}}{C_{n-1}+\sigma^2_v}y_n + \left(1-\frac{C_{n-1}}{C_{n-1}+\sigma^2_v}\right)m_{n-1}, \mbox{ and} \notag \\
+&amp;  C_n = \left(\frac{1}{\sigma^2_v}+\frac{1}{C_{n-1}}\right)^{-1}=
+\frac{\sigma^2_v C_{n-1}}{\sigma^2_v+C_{n-1}}.
+\end{align*}\]</span>
+We can obtain the predictive distribution of <span class="math inline">\(y_{n+1}\)</span> given the information up to time <span class="math inline">\(n\)</span> as</p>
+<p><span class="math display">\[\begin{align*}
+y_{n+1}| {\boldsymbol y}^n \sim N(m_n, C_n+\sigma^2_v).
+\end{align*}\]</span>
+Note that <span class="math inline">\(m_n\)</span> is the posterior mean of <span class="math inline">\(\alpha\)</span> and the one-step ahead point prediction of <span class="math inline">\(y_{n+1}\)</span>. This leads to an <em>error correction form</em> representation of the prediction as</p>
+<p><span class="math display">\[\begin{align*}
+m_n = m_{n-1} + \frac{C_{n-1}}{C_{n-1}+\sigma^2_v}(y_n - m_{n-1}).
+\end{align*}\]</span>
+Thus, <span class="math inline">\(m_n\)</span> is obtained by correcting the previous estimate <span class="math inline">\(m_{n-1}\)</span> with a weighted forecast error <span class="math inline">\(e_n = y_n - m_{n-1}\)</span>, the weight being</p>
+<p><span class="math display">\[\begin{align*}
+\frac{C_{n-1}}{C_{n-1}+\sigma^2_v} = \frac{C_0}{\sigma^2_v+n C_0}.
+\end{align*}\]</span>
+This model is too simplistic to offer a realistic fit to time series in practice. Therefore, we do not discuss this further in the book.</p>
+</div>
+<div id="local-level-model" class="section level3 hasAnchor" number="1.4.2">
+<h3><span class="header-section-number">1.4.2</span> Local level model<a href="chapter1.html#local-level-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In many situations, we may wish to model the level as dynamically evolving over time. One assumption is
+that the level evolves as a random walk. For this reason, this model is also called a random walk plus noise model:</p>
+<p><span class="math display" id="eq:dlm-rw-st" id="eq:dlm-rw-obs">\[\begin{align}
+y_t &amp;= x_t + v_t;~~ v_t \sim N(0,\sigma^2_v),  \tag{1.15} \\
+x_t &amp;= x_{t-1}+ w_t;~~ w_t \sim N(0,\sigma^2_w).
+\tag{1.16}
+\end{align}\]</span>
+Here, <span class="math inline">\(v_t\)</span> and <span class="math inline">\(w_t\)</span> are random errors which are assumed to follow zero mean normal distributions with unknown variances <span class="math inline">\(\sigma^2_v\)</span> and <span class="math inline">\(\sigma^2_w\)</span> respectively.
+The model in <a href="chapter1.html#eq:dlm-rw-obs">(1.15)</a> and <a href="chapter1.html#eq:dlm-rw-st">(1.16)</a> is one of the simplest <em>dynamic</em> models for a univariate time series <span class="math inline">\(y_t\)</span> and is appropriate when the time series exhibits a slowly changing level over time.
+We illustrate how the dynamic component impacts Bayesian inference of the latent variable <span class="math inline">\(x_t\)</span>, before and after we observe the data <span class="math inline">\(y_t\)</span> at time <span class="math inline">\(t\)</span>.</p>
+<p><strong>Prior distribution of <span class="math inline">\(x_t\)</span>.</strong>
+After we see <span class="math inline">\(y_{t-1}\)</span> at time <span class="math inline">\(t-1\)</span>, we can obtain the posterior distribution of <span class="math inline">\(x_{t-1}\)</span> given <span class="math inline">\(\boldsymbol y^{t-1}=(y_1, \ldots,y_{t-1})\)</span>, i.e.,
+<span class="math inline">\(\pi(x_{t-1}| \boldsymbol y^{t-1})\)</span>. This leads to the prior distribution for <span class="math inline">\(x_t\)</span> before we observe <span class="math inline">\(y_t\)</span>; i.e., <span class="math inline">\(\pi(x_t \vert \boldsymbol y^{t-1})\)</span>.</p>
+<p><strong>Forecast distribution of <span class="math inline">\(y_t\)</span>.</strong>
+At time <span class="math inline">\(t-1\)</span>, we predict the output <span class="math inline">\(y_t\)</span> for time <span class="math inline">\(t\)</span> using
+<span class="math inline">\(p(y_t \vert \boldsymbol y^{t-1})\)</span>.</p>
+<p><strong>Posterior distribution of <span class="math inline">\(x_t\)</span>.</strong>
+Once the data at time <span class="math inline">\(t\)</span>, i.e., <span class="math inline">\(y_{t}\)</span>, becomes available, we update our belief about <span class="math inline">\(x_t\)</span>,
+i.e., we obtain the posterior of <span class="math inline">\(x_{t}\)</span> given <span class="math inline">\(\boldsymbol y^t\)</span>, denoted by
+<span class="math inline">\(\pi(x_{t}|\boldsymbol y^t)\)</span>. As previously mentioned, this is the filtering distribution for <span class="math inline">\(x_t\)</span>.</p>
+<p>We next illustrate these three steps.
+At time <span class="math inline">\(t-1\)</span>, suppose that</p>
+<p><span class="math display">\[\begin{align*}
+\pi(x_{t-1}|\boldsymbol y^{t-1})\sim N(m_{t-1}, C_{t-1}).
+\end{align*}\]</span>
+Using the state equation</p>
+<p><span class="math display">\[\begin{align*}
+x_t=x_{t-1}+w_t;~~w_t \sim N(0, \sigma^2_w),
+\end{align*}\]</span>
+we can obtain the forecast distribution of <span class="math inline">\(x_t\)</span> as</p>
+<p><span class="math display">\[\begin{align*}
+\pi(x_t|\boldsymbol y^{t-1}) \sim N(a_t, R_t),
+\end{align*}\]</span>
+where</p>
+<p><span class="math display">\[\begin{align*}
+a_t = m_{t-1}, \text{ and }   R_t = C_{t-1}+\sigma^2_w.
+\end{align*}\]</span>
+Since <span class="math inline">\(\sigma^2_w&gt;0\)</span>, we become <em>more uncertain</em> about the average level <span class="math inline">\(x_t\)</span> than under the constant level model.
+Standing at time <span class="math inline">\(t-1\)</span>, we can also predict the next observation <span class="math inline">\(y_t\)</span> using the predictive distribution</p>
+<p><span class="math display">\[\begin{align*}
+y_t|\boldsymbol y^{t-1} \sim N(f_t, Q_t), \text{where}
+\end{align*}\]</span></p>
+<p><span class="math display">\[\begin{align*}
+f_t = a_t \,\, \text{and} \,\, Q_t = R_t + \sigma^2_v.
+\end{align*}\]</span></p>
+<p>The uncertainty about <span class="math inline">\(y_t\)</span> depends on the measurement error <span class="math inline">\(\sigma^2_v\)</span> as well as on the uncertainty about the average level <span class="math inline">\(x_t\)</span> as reflected by the state equation.</p>
+<p>At time <span class="math inline">\(t\)</span>, the new observation <span class="math inline">\(y_t\)</span> becomes available, and we update our uncertainty about <span class="math inline">\(x_t\)</span> with the new measurement <span class="math inline">\(y_t\)</span>. We obtain the posterior density <span class="math inline">\(\pi(x_t|\boldsymbol y^t)\)</span>, i.e., the <em>filtering density</em> as</p>
+<p><span class="math display">\[\begin{align*}
+x_t|\boldsymbol y^t \sim N(m_t, C_t),
+\end{align*}\]</span>
+where</p>
+<p><span class="math display">\[\begin{align*}
+m_t = a_t + \frac{R_t}{R_t+\sigma^2_v}(y_t-f_t)
+\end{align*}\]</span>
+and</p>
+<p><span class="math display">\[\begin{align*}
+C_t = \frac{\sigma^2_vR_t}{\sigma^2_v+R_t}.
+\end{align*}\]</span>
+Note that for this step, (i) the prior distribution of <span class="math inline">\(x_t\)</span> is <span class="math inline">\(N(a_t, R_t)\)</span> and (ii) <span class="math inline">\(y_t\)</span> is independent of its past history given <span class="math inline">\(x_t\)</span>.
+This sequential updating mechanism is known as <em>estimation-correction structure</em>, because the previous best estimate <span class="math inline">\(a_t\)</span> is corrected by a fraction of the forecast error <span class="math inline">\(e_t = y_t - f_t\)</span> having weight <span class="math inline">\(K_t =R_t/(R_t+\sigma^2_v)\)</span>. The magnitude of the state error variance <span class="math inline">\(\sigma^2_w\)</span> relative to the observation error variance <span class="math inline">\(\sigma^2_v\)</span> is known as the <em>signal-to-noise ratio (SNR)</em>. This quantity plays a crucial role in determining the effect of data on estimation and forecasting.</p>
+</div>
+<div id="gaussian-dlm-framework-for-univariate-time-series" class="section level3 hasAnchor" number="1.4.3">
+<h3><span class="header-section-number">1.4.3</span> Gaussian DLM framework for univariate time series<a href="chapter1.html#gaussian-dlm-framework-for-univariate-time-series" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The Gaussian DLM is a general and flexible framework for analyzing many different classes of time series <span class="citation">(<a href="#ref-ss2017" role="doc-biblioref">Shumway and Stoffer 2017</a>)</span>. The DLM consists of an
+observation equation and a state equation, which are respectively given by</p>
+<p><span class="math display" id="eq:dlm-obseq-uv">\[\begin{align}
+y_t =  \alpha + F_t x_t + v_t, \ v_t \sim N (0,\sigma^2_v),
+\tag{1.17}
+\end{align}\]</span>
+and</p>
+<p><span class="math display" id="eq:dlm-steq-uv">\[\begin{align}
+x_t =  G_t x_{t-1}+ w_t, \ w_t \sim N(0,\sigma^2_w).
+\tag{1.18}
+\end{align}\]</span></p>
+<p>The observation equation expresses <span class="math inline">\(y_t\)</span> as a linear combination of the latent variable <span class="math inline">\(x_t\)</span> and an observation error <span class="math inline">\(v_t\)</span> plus a constant level <span class="math inline">\(\alpha\)</span>; here <span class="math inline">\(F_t\)</span> is known.
+The state equation expresses <span class="math inline">\(x_t\)</span> as a linear combination of <span class="math inline">\(x_{t-1}\)</span> and a state error <span class="math inline">\(w_t\)</span>, where <span class="math inline">\(G_t\)</span> represents the transition from <span class="math inline">\(x_{t-1}\)</span> to <span class="math inline">\(x_t\)</span> and may be known or unknown or time-varying or constant. We assume that the initial state is Gaussian, i.e., <span class="math inline">\(x_0 \sim N(m_0,C_0)\)</span>.</p>
+<p>Usually, <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\sigma^2_v\)</span>, <span class="math inline">\(\sigma^2_w\)</span>, <span class="math inline">\(m_0\)</span>, and <span class="math inline">\(C_0\)</span> will be unknown and must be estimated from the data.
+Let <span class="math inline">\(\boldsymbol{\theta}\)</span> denote the collection of all the unknown scalars that we refer to as hyperparameters, i.e.,
+<span class="math inline">\(\boldsymbol{\theta}=(\alpha, \sigma^2_v, \sigma^2_w, m_0, C_0)&#39;\)</span>. In the DLM, the primary <em>parameter</em> of interest is the latent process <span class="math inline">\(x_t\)</span>.</p>
+<p><strong>Remark 1.</strong> The latent process <span class="math inline">\(x_t\)</span> is a <em>Markov chain</em>. This means that the conditional distribution of <span class="math inline">\(x_t\)</span> given its entire history, <span class="math inline">\(x_{t-1}, x_{t-2}, x_{t-3}, \ldots\)</span> only depends on the previous state <span class="math inline">\(x_{t-1}\)</span>, i.e.,</p>
+<p><span class="math display">\[\begin{align*}
+\pi(x_t \vert x_{t-1},  x_{t-2}, x_{t-3}, \ldots) = \pi(x_t \vert x_{t-1}).
+\end{align*}\]</span>
+The distribution may depend on the hyperparameters <span class="math inline">\(\boldsymbol{\theta}\)</span>.</p>
+<p><strong>Remark 2.</strong> Conditionally on <span class="math inline">\(x_t\)</span>, the observed data <span class="math inline">\(y_t\)</span> is independent of its own history <span class="math inline">\(y_{t-1}, y_{t-2}, y_{t-3}, \ldots\)</span>. All the information about the history of <span class="math inline">\(y_t\)</span> is included in the current state <span class="math inline">\(x_t\)</span>, which then determines <span class="math inline">\(y_t\)</span>.</p>
+<p><strong>Remark 3.</strong> At each time <span class="math inline">\(t\)</span>, we can explain <span class="math inline">\(y_t\)</span> as a linear function of <span class="math inline">\(x_t\)</span> and an additive Gaussian noise. The latent process <span class="math inline">\(x_t\)</span> follows the Markovian dynamics in a linear way; i.e., <span class="math inline">\(x_t\)</span> depends <em>linearly</em> only on <span class="math inline">\(x_{t-1}\)</span> and an additive Gaussian noise <span class="math inline">\(w_t\)</span>.</p>
+<p>For example, the random walk plus noise (or local level) model defined in <a href="chapter1.html#eq:dlm-rw-obs">(1.15)</a> and <a href="chapter1.html#eq:dlm-rw-st">(1.16)</a> for a univariate time series <span class="math inline">\(y_t\)</span>
+is a special case of <a href="chapter1.html#eq:dlm-obseq-uv">(1.17)</a> and <a href="chapter1.html#eq:dlm-steq-uv">(1.18)</a> with
+<span class="math inline">\(F_t =1, G_t=1\)</span> and <span class="math inline">\(\alpha=0\)</span>. Further, if we set <span class="math inline">\(\sigma^2_w=0\)</span>, and
+<span class="math inline">\(\alpha \neq 0\)</span>, the random walk plus noise model reduces to the constant plus noise model where <span class="math inline">\(\alpha\)</span> denotes a constant level that does not vary over time.
+In the next subsection, we show another simple and widely used example of a DLM.</p>
+</div>
+<div id="ar1-plus-noise-model" class="section level3 hasAnchor" number="1.4.4">
+<h3><span class="header-section-number">1.4.4</span> AR(1) plus noise model<a href="chapter1.html#ar1-plus-noise-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Rather than a random walk assumption for the dynamic evolution of the state variable in
+<a href="chapter1.html#eq:dlm-steq-uv">(1.18)</a>, we can allow the level <span class="math inline">\(x_t\)</span> to evolve over time as an autoregression of order 1, i.e., an AR(1) process with serial correlation <span class="math inline">\(\phi\)</span>. That is, in <a href="chapter1.html#eq:dlm-steq-uv">(1.18)</a>, we set <span class="math inline">\(G_t = \phi\)</span> instead of <span class="math inline">\(G_t =1\)</span> for all <span class="math inline">\(t\)</span>. The AR(1) plus noise model is</p>
+<p><span class="math display" id="eq:dlm-ar1-st" id="eq:dlm-ar1-obs">\[\begin{align}
+y_t &amp;= x_t + v_t;~~ v_t \sim N(0, \sigma^2_v),  \tag{1.19} \\
+x_t &amp;= \phi x_{t-1}+ w_t;~~ w_t \sim N(0, \sigma^2_w).
+\tag{1.20}
+\end{align}\]</span>
+For process stability, it is usual to assume that <span class="math inline">\(|\phi|&lt;1\)</span>. The other assumptions are similar to those under the random walk plus noise model. We discuss analyzing and forecasting univariate time series under these DLMs in Chapter <a href="chapter3.html#chapter3">3</a>. We end this section by introducing the DLM for a vector-valued process.</p>
+</div>
+<div id="dlm-for-vector-valued-time-series" class="section level3 hasAnchor" number="1.4.5">
+<h3><span class="header-section-number">1.4.5</span> DLM for vector-valued time series<a href="chapter1.html#dlm-for-vector-valued-time-series" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let <span class="math inline">\(\boldsymbol y_t\)</span> be a <span class="math inline">\(q\)</span>-dimensional observed time series, for <span class="math inline">\(q \ge 1\)</span> and let <span class="math inline">\(\boldsymbol x_t\)</span> be a <span class="math inline">\(p\)</span>-dimensional unobserved (or latent) state process for <span class="math inline">\(p \ge 1\)</span>. The DLM for <span class="math inline">\(\boldsymbol y_t\)</span> is described through the observation and state equations shown below:</p>
+<!--\textbf{Observation equation.} -->
+<p><span class="math display" id="eq:dlm-obseq">\[\begin{align}
+\boldsymbol y_t =  \boldsymbol F_t \boldsymbol x_t +
+\boldsymbol\Gamma \boldsymbol u_{1,t} +
+\boldsymbol v_t, \ \boldsymbol v_t \sim N_q (\boldsymbol 0,\boldsymbol V),
+\tag{1.21}
+\end{align}\]</span>
+and</p>
+<!--\textbf{\underline{State equation.}} -->
+<p><span class="math display" id="eq:dlm-steq">\[\begin{align}
+\boldsymbol x_t =  \boldsymbol G_t \boldsymbol x_{t-1}+
+\boldsymbol \Upsilon \boldsymbol u_{2,t} +
+\boldsymbol w_t, \ \boldsymbol w_t \sim N_p(\boldsymbol 0, \boldsymbol W). \tag{1.22}
+\end{align}\]</span></p>
+<p>In <a href="chapter1.html#eq:dlm-obseq">(1.21)</a> and <a href="chapter1.html#eq:dlm-steq">(1.22)</a>, for <span class="math inline">\(t=1,\ldots,n\)</span>,</p>
+<ul>
+<li><p><span class="math inline">\(\boldsymbol F_t\)</span> is a known matrix of order <span class="math inline">\(q \times p\)</span>,</p></li>
+<li><p><span class="math inline">\(\boldsymbol u_{j,t}\)</span> are known <span class="math inline">\(r_j\)</span>-dimensional vectors of exogenous predictors, for <span class="math inline">\(j=1,2\)</span>,</p></li>
+<li><p><span class="math inline">\(\boldsymbol \Gamma\)</span> is a <span class="math inline">\(q \times r_1\)</span> matrix of regression coefficients corresponding to <span class="math inline">\(\boldsymbol u_{1,t}\)</span>,</p></li>
+<li><p><span class="math inline">\(\boldsymbol \Upsilon\)</span> is a <span class="math inline">\(p \times r_2\)</span> matrix of regression coefficients corresponding to <span class="math inline">\(\boldsymbol u_{2,t}\)</span>,</p></li>
+<li><p><span class="math inline">\(\boldsymbol G_t\)</span> is a possibly unknown state transition matrix of order <span class="math inline">\(p \times p\)</span>,</p></li>
+<li><p><span class="math inline">\(\boldsymbol v_t \sim N_q(\boldsymbol 0, \boldsymbol V)\)</span> is the observation error process,</p></li>
+<li><p><span class="math inline">\(\boldsymbol w_t \sim N_p(\boldsymbol0, \boldsymbol W)\)</span> is the state error process,</p></li>
+<li><p><span class="math inline">\(\{\boldsymbol v_t\}\)</span> and <span class="math inline">\(\{\boldsymbol w_t\}\)</span> are mutually independent white noise processes,</p></li>
+<li><p>the initial state <span class="math inline">\(\boldsymbol x_{0} \sim N_p(\boldsymbol m_0, \boldsymbol C_0)\)</span>, and</p></li>
+<li><p><span class="math inline">\(\boldsymbol x_0\)</span> is independent of <span class="math inline">\(\{\boldsymbol v_t\}\)</span> and <span class="math inline">\(\{\boldsymbol w_t\}\)</span>.</p></li>
+</ul>
+<p>We write the DLM properties in terms of a general distributional setup. As we mentioned in the univariate case, here too, the state process is assumed to be linear, Markovian, and Gaussian, i.e.,</p>
+<p><span class="math display" id="eq:markovian">\[\begin{align}
+\pi(\boldsymbol x_{t} \vert \boldsymbol x_{t-1}, \boldsymbol x_{t-2},\ldots) =
+\pi(\boldsymbol x_{t} \vert \boldsymbol x_{t-1})  
+= f_{w}(\boldsymbol x_{t} - \boldsymbol G_t \boldsymbol x_{t-1} -\boldsymbol \Upsilon \boldsymbol u_{2,t}),
+\tag{1.23}  
+\end{align}\]</span>
+where <span class="math inline">\(f_{w}(.)\)</span> denotes a <span class="math inline">\(p\)</span>-variate Gaussian p.d.f. with mean vector <span class="math inline">\(\boldsymbol 0\)</span> and covariance matrix <span class="math inline">\(\boldsymbol W\)</span>. The observations are linear, Gaussian, and conditionally independent
+given the state vector, i.e.,</p>
+<p><span class="math display" id="eq:obsrelation">\[\begin{align}
+p(\boldsymbol y_{t}\vert \boldsymbol x_{t}, \boldsymbol y_{t-1}, \ldots,\boldsymbol y_1) =
+p(\boldsymbol y_{t}\vert \boldsymbol x_{t}) = f_{v}(\boldsymbol y_{t} -
+\boldsymbol F_{t} \boldsymbol x_{t}-\boldsymbol \Gamma \boldsymbol u_{1,t}),
+\tag{1.24}       
+\end{align}\]</span>
+where <span class="math inline">\(f_{v}(.)\)</span> is a <span class="math inline">\(q\)</span>-variate Gaussian p.d.f. with mean vector <span class="math inline">\(\boldsymbol 0\)</span> and covariance matrix <span class="math inline">\(\boldsymbol V\)</span>.
+The joint distribution of the observation and state processes is specified by</p>
+<p><span class="math display" id="eq:jointdist">\[\begin{align}
+\pi(\boldsymbol x_{0},\boldsymbol x_{1},\ldots,\boldsymbol x_{n},
+\boldsymbol y_{1}, \ldots, \boldsymbol y_{n}) = \pi(\boldsymbol x_{0})
+\times  \prod_{t=1}^{n}
+f_{w}(\boldsymbol x_{t} - \boldsymbol G_t \boldsymbol x_{t-1}
+-\boldsymbol \Upsilon \boldsymbol u_{2,t})
+f_{v}(\boldsymbol y_{t} - \boldsymbol F_{t}\boldsymbol x_{t}-\boldsymbol\Gamma \boldsymbol u_{1,t}).
+\tag{1.25}
+\end{align}\]</span></p>
+</div>
+<div id="kalman-filtering-and-smoothing" class="section level3 hasAnchor" number="1.4.6">
+<h3><span class="header-section-number">1.4.6</span> Kalman filtering and smoothing<a href="chapter1.html#kalman-filtering-and-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Kalman filtering and smoothing for the Gaussian DLM have been described and implemented in <code>R</code> packages such as <code>dlm</code> <span class="citation">(<a href="#ref-dlm2010" role="doc-biblioref">Petris 2010</a>)</span> and <code>astsa</code> <span class="citation">(<a href="#ref-ss2017" role="doc-biblioref">Shumway and Stoffer 2017</a>)</span>.
+At each time <span class="math inline">\(t\)</span>, we can estimate the latent state vector <span class="math inline">\(\boldsymbol x_t\)</span> given data
+<span class="math inline">\(\boldsymbol Y^s = (\boldsymbol y_1&#39;, \boldsymbol y_2&#39;,\ldots, \boldsymbol y_s&#39;)&#39;\)</span>, as <span class="math inline">\(\boldsymbol x_t^s\)</span>, where <span class="math inline">\(s &lt; t\)</span> or <span class="math inline">\(s = t\)</span> or <span class="math inline">\(s &gt; t\)</span>. Differences in the information
+set <span class="math inline">\(\boldsymbol Y^s\)</span> on which we condition lead to the three different situations listed below:</p>
+<ul>
+<li><p><span class="math inline">\(s &lt; t\)</span>: Forecasting/prediction. For example, when <span class="math inline">\(s=t-1\)</span>, we estimate
+<span class="math inline">\(\boldsymbol x_t\)</span> by <span class="math inline">\(\boldsymbol x_t^{t-1} = E(\boldsymbol x_t | \boldsymbol Y^{t-1})\)</span>, its one-step ahead forecast estimate;</p></li>
+<li><p><span class="math inline">\(s = t\)</span>: Filtering. When <span class="math inline">\(s=t\)</span>, we obtain the filter estimate of <span class="math inline">\(\boldsymbol x_t\)</span> as <span class="math inline">\(\boldsymbol x_t^{t} = E(\boldsymbol x_t | \boldsymbol Y^{t})\)</span>;</p></li>
+<li><p><span class="math inline">\(s &gt; t\)</span>: Smoothing. For example, when <span class="math inline">\(s=n&gt;t\)</span>, we estimate
+<span class="math inline">\(\boldsymbol x_t\)</span> by <span class="math inline">\(\boldsymbol x_t^{n} = E(\boldsymbol x_t | \boldsymbol Y^{n})\)</span>, its smoothed estimate.</p></li>
+</ul>
+<p>Note that the <code>R-INLA</code> implementation of a DLM produces the smoothed estimate of the states, i.e., <span class="math inline">\(\boldsymbol x_t^n\)</span> and not the filter estimates <span class="math inline">\(\boldsymbol x_t^t\)</span> for <span class="math inline">\(t=1,\ldots,n\)</span>. In fact, as we show in Chapter <a href="chapter3.html#chapter3">3</a>,
+one must iteratively run the <code>inla()</code> function <span class="math inline">\(n\)</span> times in order to obtain the
+filter estimates of <span class="math inline">\(\boldsymbol x_t\)</span>.</p>
+</div>
+</div>
+<div id="beyonddlm" class="section level2 hasAnchor" number="1.5">
+<h2><span class="header-section-number">1.5</span> Beyond basic Gaussian DLMs<a href="chapter1.html#beyonddlm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>So far in this chapter, we have seen a few examples of Gaussian DLMs. In Chapters
+<a href="chapter3.html#chapter3">3</a> and <a href="chapter4.html#chapter4">4</a>, we will describe how to use <code>R-INLA</code> to fit these models to time series exhibiting various characteristics.
+The statistical details of the INLA framework itself are briefly reviewed in Chapter <a href="chapter2.html#chapter2">2</a>.
+In Chapter <a href="chapter5.html#chapter5">5</a>, we show how to fit Gaussian DLMs to time series when we have exogenous predictors observed over the same time frame as the time series we wish to model and predict, also including structural modeling <span class="citation">(<a href="#ref-harvey2014structural" role="doc-biblioref">Harvey and Koopman 2014</a>)</span>.</p>
+<p>Hierarchical dynamic linear models (HDLMs) allow us to model a set of <span class="math inline">\(g\)</span> independent time series, each of length <span class="math inline">\(n\)</span> <span class="citation">(<a href="#ref-gamerman1993dynamic" role="doc-biblioref">D. Gamerman and Migon 1993</a>)</span>. HDLMs are often referred to as panel time series models in the literature.
+In Chapter <a href="chapter6.html#chapter6">6</a>, we consider models for a set of <span class="math inline">\(g\)</span> univariate time series.</p>
+<p>While Gaussian DLMs are relatively easy to fit to data, they may not always be suitable for various types of complex time series data from different application domains. Examples consist of positive, continuous-valued time series, binary-valued time series, or count time series <span class="citation">(<a href="#ref-west2006bayesian" role="doc-biblioref">West and Harrison 1997</a>)</span>.
+Chapter <a href="ch-nongaus.html#ch-nongaus">7</a> describes models for time series following gamma, Weibull or beta distributions, while
+in Chapter <a href="ch-binary.html#ch-binary">8</a>, we describe dynamic model fitting for binary-valued time series as well as categorical time series.
+In Chapter <a href="ch-count.html#ch-count">9</a>, we use <code>R-INLA</code> to model and forecast univariate count time series, as well as sets of univariate count time series.</p>
+<p>A popular example of a nonlinear and non-Gaussian dynamic time series model is the stochastic volatility (SV) model that is used for modeling financial log returns, for which a Bayesian framework was described in <span class="citation">Kim, Shephard, and Chib (<a href="#ref-kim1998stochastic" role="doc-biblioref">1998</a>)</span>. The SV model is also useful in other application domains to model logarithms of growths (which are similar to log returns).
+In Chapter <a href="ch-sv.html#ch-sv">10</a>, we describe dynamic stochastic volatility models using <code>R-INLA</code>. Chapter <a href="ch-st.html#ch-st">11</a> discusses spatio-temporal modeling.</p>
+<p>Chapter <a href="chmvdlm.html#chmvdlm">12</a> describes DLMs for <span class="math inline">\(q\)</span>-dimensional time series and approaches for forecasting them. A mitigating factor here is that <code>R-INLA</code> is currently only able to handle dimensions <span class="math inline">\(q \le 5\)</span>.
+Chapter <a href="ch-hmv.html#ch-hmv">13</a> extends the hierarchical models in Chapter <a href="chapter6.html#chapter6">6</a> to multivariate time series, using ideas from Chapter <a href="chmvdlm.html#chmvdlm">12</a>. The chapter also considers level correlated models for hierarchical modeling of
+multivariate count time series. The use of INLA in these situations offers a useful computationally feasible alternative to MCMC methods which can be too slow to be practically useful in many situations.</p>
+</div>
+<div id="chapter-1-appendix" class="section level2 unnumbered hasAnchor">
+<h2>Chapter 1 – Appendix<a href="chapter1.html#chapter-1-appendix" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="conditional-distributions" class="section level3 unnumbered hasAnchor">
+<h3>Conditional distributions<a href="chapter1.html#conditional-distributions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We review some useful notation and formulas.
+Let <span class="math inline">\(W,Y\)</span>, and <span class="math inline">\(Z\)</span> denote random variables.</p>
+<ol style="list-style-type: decimal">
+<li>Conditional distribution of <span class="math inline">\(Y\)</span> given <span class="math inline">\(Z\)</span>:</li>
+</ol>
+<p><span class="math display" id="eq:cond">\[\begin{align}
+p(Y|Z) = \frac{p(Y,Z)}{p(Z)},
+\tag{1.26}
+\end{align}\]</span>
+provided the denominator <span class="math inline">\(p(Z)\)</span> is positive.
+We can write <a href="chapter1.html#eq:cond">(1.26)</a> equivalently as</p>
+<p><span class="math display" id="eq:cond2">\[\begin{align}
+p(Z) = \frac{p(Y,Z)}{p(Y|Z)}.
+\tag{1.27}
+\end{align}\]</span></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Conditioning both sides of <a href="chapter1.html#eq:cond2">(1.27)</a> on <span class="math inline">\(W\)</span>,</li>
+</ol>
+<p><span class="math display" id="eq:post">\[\begin{align}
+p(Z|W) = \frac{p(Y,Z|W)}{p(Y|Z,W)}.
+\tag{1.28}
+\end{align}\]</span>
+We can rewrite <a href="chapter1.html#eq:post">(1.28)</a> equivalently as</p>
+<p><span class="math display">\[\begin{align}
+p(Y,Z|W) = p(Z|W) \times p(Y|Z,W).
+\end{align}\]</span></p>
+</div>
+<div id="exponential-family-of-distributions" class="section level3 unnumbered hasAnchor">
+<h3>Exponential family of distributions<a href="chapter1.html#exponential-family-of-distributions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="one-parameter-exponential-family" class="section level4 unnumbered hasAnchor">
+<h4>One-parameter exponential family<a href="chapter1.html#one-parameter-exponential-family" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The one-parameter exponential family is defined by the p.m.f. or p.d.f.</p>
+<p><span class="math display" id="eq:expfam1">\[\begin{align}
+p(y|\theta)= h(y)\, \exp\big[\eta(\theta) t(y) -b(\theta)\big],
+\tag{1.29}
+\end{align}\]</span>
+where <span class="math inline">\(t(y), h(y), b(\theta)\)</span> are known functions. The support of <span class="math inline">\(Y\)</span> does not depend on <span class="math inline">\(\theta\)</span>.
+The distribution <a href="chapter1.html#eq:expfam1">(1.29)</a> can also be written as</p>
+<p><span class="math display" id="eq:expfam2">\[\begin{align}
+p(y|\theta)= h(y)\, g(\theta) \, \exp\big[\eta(\theta)\, t(y)\big],  
+\tag{1.30}
+\end{align}\]</span>
+or</p>
+<p><span class="math display" id="eq:expfam3">\[\begin{align}
+p(y|\theta)=\exp\big[\eta(\theta)\, t(y)-b(\theta)+c(y)\big].  
+\tag{1.31}
+\end{align}\]</span>
+If <span class="math inline">\(\eta(\theta)=\theta\)</span>, the exponential family is said to be in canonical form.</p>
+</div>
+<div id="k-parameter-exponential-family" class="section level4 unnumbered hasAnchor">
+<h4><span class="math inline">\(k\)</span>-parameter exponential family<a href="chapter1.html#k-parameter-exponential-family" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Let <span class="math inline">\(\boldsymbol\theta\)</span> be a <span class="math inline">\(k\)</span>-dimensional vector. The exponential family
+p.m.f. or p.d.f. has the form</p>
+<p><span class="math display" id="eq:vexpfam1">\[\begin{align}
+p(y|\boldsymbol{\theta})= h(y)\, \exp\big[\sum_{i=1}^{k}\eta_{i}(\boldsymbol{\theta})\, t_{i}\,(y)-b(\boldsymbol{\theta})\big],
+\tag{1.32}
+\end{align}\]</span>
+where <span class="math inline">\(\eta_{i}(\boldsymbol{\theta}),\ i=1,\ldots,k\)</span> are real-valued functions of only <span class="math inline">\(\boldsymbol{\theta}\)</span> and
+<span class="math inline">\(t_{i}(y), \ i=1,\ldots,k\)</span> are real-valued functions of only <span class="math inline">\(y\)</span>.
+If <span class="math inline">\(\eta_{i}(\boldsymbol{\theta}) = \theta_i\)</span>, for all <span class="math inline">\(i\)</span>, the <span class="math inline">\(k\)</span>-parameter exponential family will be in canonical form.
+We can also write <a href="chapter1.html#eq:vexpfam1">(1.32)</a> as</p>
+<p><span class="math display" id="eq:vexpfam2">\[\begin{align}
+p(y|\boldsymbol{\theta})=h(y)\, \exp\big[\boldsymbol{\eta}(\boldsymbol{\theta})&#39;\, {\boldsymbol t}(y)-b(\boldsymbol{\theta})\big],  \tag{1.33}
+\end{align}\]</span>
+or as</p>
+<p><span class="math display" id="eq:vexpfam3">\[\begin{align}
+p(y|\boldsymbol{\theta})=h(y)\, g(\boldsymbol{\theta})\,\exp\big[\boldsymbol{\eta}(\boldsymbol{\theta})&#39; \, {\boldsymbol t}(y)\big],
+\tag{1.34}
+\end{align}\]</span>
+where <span class="math inline">\(\boldsymbol{\eta}(\boldsymbol{\theta})&#39;=\big(\eta_{1}(\boldsymbol{\theta}), \ldots. \eta_{k}(\boldsymbol{\theta})\big)\)</span> and
+<span class="math inline">\({\boldsymbol t}(y)=\big(t_1(y),\ldots, t_k(y)\big)\)</span>.</p>
+</div>
+<div id="exponential-dispersion-family-of-distributions" class="section level4 unnumbered hasAnchor">
+<h4>Exponential dispersion family of distributions<a href="chapter1.html#exponential-dispersion-family-of-distributions" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Let <span class="math inline">\(\theta\)</span> be a scalar parameter of interest. Let <span class="math inline">\(\phi&gt;0\)</span> be a
+<em>dispersion parameter</em> which may or may not be known. Consider the p.d.f.</p>
+<p><span class="math display" id="eq:exp-disperse">\[\begin{align}
+p(y| \theta,\phi) = \exp \big[\frac{y \theta - b(\theta)}{\phi} + c(y,\phi)\big],
+\tag{1.35}    
+\end{align}\]</span>
+where <span class="math inline">\(b(\cdot)\)</span> and <span class="math inline">\(c(\cdot,\cdot)\)</span> are specified functions. Here, <span class="math inline">\(\theta\)</span> is called the <em>canonical parameter</em> of the distribution, <span class="math inline">\(b(\theta)\)</span>, <span class="math inline">\(\phi\)</span> and <span class="math inline">\(c(y,\phi)\)</span> are related by
+the condition that <span class="math inline">\(p(y| \theta,\phi)\)</span> must integrate to 1. The function
+<span class="math inline">\(b(\theta)\)</span> is usually explicitly given for standard distributions, while <span class="math inline">\(c(y,\phi)\)</span> is left implicit. This is not a
+problem for estimating <span class="math inline">\(\theta\)</span>, since the score equation does not involve <span class="math inline">\(c(y,\phi)\)</span>. However, without an explicit <span class="math inline">\(c(y,\phi)\)</span>, likelihood based estimation of the dispersion <span class="math inline">\(\phi\)</span>, or a likelihood based inference for <span class="math inline">\((\theta,\phi)\)</span> are not possible.</p>
+<p>The log-likelihood function of <span class="math inline">\((\theta,\phi)\)</span> is given by</p>
+<p><span class="math display" id="eq:loglik-expfam">\[\begin{align}
+\ell(\theta,\phi; y) = \log p(y| \theta,\phi)
+= \frac{\big[y\theta - b(\theta)\big]}{\phi} + c(y,\phi).   
+\tag{1.36}
+\end{align}\]</span>
+To find the mean and variance of <span class="math inline">\(Y \sim p(y| \theta,\phi)\)</span>, recall that</p>
+<p><span class="math display" id="eq:hess-expfam" id="eq:score-expfam">\[\begin{align}
+&amp;  E[\nabla \ell(\theta,\phi; y)] =   E(\partial \ell/ \partial \theta) = 0,
+\tag{1.37} \\
+&amp;  E(\partial^{2} \ell/ \partial \theta^{2})+E(\partial \ell/ \partial \theta)^{2}=0,
+\tag{1.38}
+\end{align}\]</span>
+where</p>
+<p><span class="math display">\[\begin{align*}
+\partial \ell/ \partial \theta &amp;= \{y-   \partial b(\theta) /\partial \theta\} / \phi    = \{y-b&#39;(\theta)\} / \phi,\\
+\partial ^{2} \ell/ \partial \theta^{2}&amp;= - \{ \partial ^{2} b (\theta) / \partial \theta^{2} \}/\phi =
+-b^{\prime \prime }(\theta)/\phi,
+\end{align*}\]</span>
+for the p.d.f. <a href="chapter1.html#eq:exp-disperse">(1.35)</a>.
+It follows from the above that</p>
+<p><span class="math display" id="eq:canonical-var" id="eq:canonical-mean">\[\begin{align}
+E(Y) &amp;=  \mu =  \partial b(\theta) /\partial \theta  =b&#39;(\theta)
+\tag{1.39}, \mbox{ and}   \\  
+Var(Y) &amp;= E\big[(Y -  \partial b(\theta) /\partial \theta )^2\big] = \partial ^{2} b (\theta) / \partial \theta^{2} \phi =  \phi b&#39;&#39;(\theta).
+\tag{1.40}
+  \end{align}\]</span>
+Since <span class="math inline">\(\phi&gt;0\)</span>, as long as <span class="math inline">\(Y\)</span> is nondegenerate, <span class="math inline">\(b&#39;&#39;(\theta)&gt;0\)</span>, so
+that <span class="math inline">\(b\)</span> is strictly convex and <span class="math inline">\(b&#39;\)</span> is strictly increasing. Then
+the correspondence <a href="chapter1.html#eq:canonical-mean">(1.39)</a> is 1-to-1, and the
+distribution of <span class="math inline">\(Y\)</span> can be parameterized by <span class="math inline">\(\mu = E(Y)\)</span> and
+<span class="math inline">\(\phi\)</span> via</p>
+<p><span class="math display" id="eq:exp-mean2">\[\begin{align}
+    \theta = (b&#39;)^{-1}(\mu).  \tag{1.41}
+  \end{align}\]</span>
+The function <span class="math inline">\(b&#39;&#39;(\theta)\)</span> depends on the canonical parameter, and hence on <span class="math inline">\(\mu\)</span>, and is called the variance function, and is denoted by <span class="math inline">\(v(\mu)\)</span>. Then,</p>
+<p><span class="math display" id="eq:exp-var2">\[\begin{align}
+     Var(Y) = \phi v(\mu) \mbox{ with }
+    v(\mu)= b&#39;&#39;((b&#39;)^{-1}(\mu)).    \tag{1.42}
+  \end{align}\]</span>
+This explains why <span class="math inline">\(\phi\)</span> is called the dispersion parameter in a generalized linear model (GLIM). It plays a role similar to <span class="math inline">\(\sigma^2\)</span>.</p>
+
+</div>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-berry2020bayesian" class="csl-entry">
+Berry, Lindsay R., and Mike West. 2020. <span>“Bayesian Forecasting of Many Count-Valued Time Series.”</span> <em>Journal of Business &amp; Economic Statistics</em> 38 (4): 872–87.
+</div>
+<div id="ref-blei2017variational" class="csl-entry">
+Blei, David M., Alp Kucukelbir, and Jon D. McAuliffe. 2017. <span>“Variational Inference: A Review for Statisticians.”</span> <em>Journal of the American Statistical Association</em> 112 (518): 859–77.
+</div>
+<div id="ref-chib1995marginal" class="csl-entry">
+Chib, Siddhartha. 1995. <span>“Marginal Likelihood from the <span>G</span>ibbs Output.”</span> <em>Journal of the American Statistical Association</em> 90 (432): 1313–21.
+</div>
+<div id="ref-cox1981statistical" class="csl-entry">
+Cox, David R., Gudmundur Gudmundsson, Georg Lindgren, Lennart Bondesson, Erik Harsaae, Petter Laake, Katarina Juselius, and Steffen L Lauritzen. 1981. <span>“Statistical Analysis of Time Series: Some Recent Developments [with Discussion and Reply].”</span> <em>Scandinavian Journal of Statistics</em> 8: 93–115.
+</div>
+<div id="ref-ebrahimi2010sample" class="csl-entry">
+Ebrahimi, Nader, Ehsan S. Soofi, and Refik Soyer. 2010. <span>“On the Sample Information about Parameter and Prediction.”</span> <em>Statistical Science</em> 25 (3): 348–67.
+</div>
+<div id="ref-GamermanLopes" class="csl-entry">
+Gamerman, D., and F. H. Lopes. 2006. <em>Markov Chain Monte Carlo: Stochastic Simulation for Bayesian Inference</em>. New York: Chapman &amp; Hall/CRC.
+</div>
+<div id="ref-gamerman1993dynamic" class="csl-entry">
+Gamerman, D., and Helio S. Migon. 1993. <span>“Dynamic Hierarchical Models.”</span> <em>Journal of the Royal Statistical Society: Series B (Methodological)</em> 55 (3): 629–42.
+</div>
+<div id="ref-gelfand1994bayesian" class="csl-entry">
+Gelfand, A. E., and Dipak K. Dey. 1994. <span>“Bayesian Model Choice: Asymptotics and Exact Calculations.”</span> <em>Journal of the Royal Statistical Society: Series B (Methodological)</em> 56 (3): 501–14.
+</div>
+<div id="ref-GelfandSmith90" class="csl-entry">
+Gelfand, A. E., and A. F. M. Smith. 1990. <span>“Sampling-Based Approaches to Calculating Marginal Densities.”</span> <em>Journal of the American Statistical Association</em> 85: 398–409.
+</div>
+<div id="ref-gelman2014understanding" class="csl-entry">
+Gelman, Andrew, Jessica Hwang, and Aki Vehtari. 2014. <span>“Understanding Predictive Information Criteria for <span>B</span>ayesian Models.”</span> <em>Statistics and Computing</em> 24 (6): 997–1016.
+</div>
+<div id="ref-harvey2014structural" class="csl-entry">
+Harvey, Andrew, and S. J. Koopman. 2014. <span>“Structural Time Series Models.”</span> <em>Wiley StatsRef: Statistics Reference Online</em>.
+</div>
+<div id="ref-jeffreys1935some" class="csl-entry">
+Jeffreys, Harold. 1935. <span>“Some Tests of Significance, Treated by the Theory of Probability.”</span> In <em>Mathematical Proceedings of the Cambridge Philosophical Society</em>, 31:203–22. 2. Cambridge University Press.
+</div>
+<div id="ref-jordan1998introduction" class="csl-entry">
+Jordan, Michael I., Zoubin Ghahramani, Tommi S. Jaakkola, and Lawrence K. Saul. 1998. <span>“An Introduction to Variational Methods for Graphical Models.”</span> In <em>Learning in Graphical Models</em>, 105–61. Springer.
+</div>
+<div id="ref-kass1995bayes" class="csl-entry">
+Kass, Robert E., and Adrian E. Raftery. 1995. <span>“Bayes Factors.”</span> <em>Journal of the American Statistical Association</em> 90 (430): 773–95.
+</div>
+<div id="ref-kim1998stochastic" class="csl-entry">
+Kim, Sangjoon, Neil Shephard, and Siddhartha Chib. 1998. <span>“Stochastic Volatility: Likelihood Inference and Comparison with <span>ARCH</span> Models.”</span> <em>The Review of Economic Studies</em> 65 (3): 361–93.
+</div>
+<div id="ref-koop2018variational" class="csl-entry">
+Korobilis, Dimitris, and Gary Koop. 2018. <span>“Variational <span>B</span>ayes Inference in High-Dimensional Time-Varying Parameter Models.”</span>
+</div>
+<div id="ref-lindley1983theory" class="csl-entry">
+———. 1983. <span>“Theory and Practice of <span>B</span>ayesian Statistics.”</span> <em>Journal of the Royal Statistical Society. Series D (The Statistician)</em> 32 (1/2): 1–11.
+</div>
+<div id="ref-lunn2000winbugs" class="csl-entry">
+Lunn, David J, Andrew Thomas, Nicky Best, and David Spiegelhalter. 2000. <span>“WinBUGS-a Bayesian Modelling Framework: Concepts, Structure, and Extensibility.”</span> <em>Statistics and Computing</em> 10 (4): 325–37.
+</div>
+<div id="ref-marin2012approximate" class="csl-entry">
+Marin, Jean-Michel, Pierre Pudlo, Christian P. Robert, and Robin J. Ryder. 2012. <span>“Approximate <span>B</span>ayesian Computational Methods.”</span> <em>Statistics and Computing</em> 22 (6): 1167–80.
+</div>
+<div id="ref-martins2013bayesian" class="csl-entry">
+Martins, Thiago G., Daniel Simpson, Finn Lindgren, and Håvard Rue. 2013. <span>“Bayesian Computing with <span>INLA</span>: New Features.”</span> <em>Computational Statistics &amp; Data Analysis</em> 67: 68–83.
+</div>
+<div id="ref-newton1994approximate" class="csl-entry">
+Newton, Michael A., and Adrian E. Raftery. 1994. <span>“Approximate <span>B</span>ayesian Inference with the Weighted Likelihood Bootstrap.”</span> <em>Journal of the Royal Statistical Society: Series B (Methodological)</em> 56 (1): 3–26.
+</div>
+<div id="ref-dlm2010" class="csl-entry">
+Petris, Giovanni. 2010. <span>“An <span>R</span> Package for <span>D</span>ynamic <span>L</span>inear <span>M</span>odels.”</span> <em>Journal of Statistical Software</em> 36 (12): 1–16. <a href="http://www.jstatsoft.org/v36/i12/">http://www.jstatsoft.org/v36/i12/</a>.
+</div>
+<div id="ref-plummer2003jags" class="csl-entry">
+Plummer, Martyn et al. 2003. <span>“JAGS: A Program for Analysis of Bayesian Graphical Models Using Gibbs Sampling.”</span> In <em>Proceedings of the 3rd International Workshop on Distributed Statistical Computing</em>, 124:1–10. 125.10. Vienna, Austria.
+</div>
+<div id="ref-rue09" class="csl-entry">
+Rue, Håvard, Sara Martino, and Nicholas Chopin. 2009. <span>“Approximate <span>B</span>ayesian Inference for Latent <span>G</span>aussian Models Using Integrated Nested <span>L</span>aplace Approximations (with Discussion).”</span> <em>Journal of the Royal Statistical Society, Series B</em> 71: 319–92.
+</div>
+<div id="ref-ruiz2012direct" class="csl-entry">
+Ruiz-Cárdenas, Ramiro, Elias T. Krainski, and Håvard Rue. 2012. <span>“Direct Fitting of Dynamic Models Using Integrated Nested <span>L</span>aplace Approximations—<span>INLA</span>.”</span> <em>Computational Statistics &amp; Data Analysis</em> 56 (6): 1808–28.
+</div>
+<div id="ref-ss2017" class="csl-entry">
+Shumway, Robert H., and David S. Stoffer. 2017. <em>Time Series Analysis and Its Applications: With r Examples</em>. Springer Texts in Statistics. New York: Springer International Publishing.
+</div>
+<div id="ref-spiegelhalter2002bayesian" class="csl-entry">
+Spiegelhalter, David J, Nicola G Best, Bradley P Carlin, and Angelika Van Der Linde. 2002. <span>“Bayesian Measures of Model Complexity and Fit.”</span> <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 64 (4): 583–639.
+</div>
+<div id="ref-TannerWong87" class="csl-entry">
+Tanner, M., and W. H. Wong. 1987. <span>“The Calculation of Posterior Distributions by Data Augmentation (with Discussion).”</span> <em>Journal of the American Statistical Association</em> 82: 528–54.
+</div>
+<div id="ref-tierney1986accurate" class="csl-entry">
+Tierney, Luke, and Joseph B. Kadane. 1986. <span>“Accurate Approximations for Posterior Moments and Marginal Densities.”</span> <em>Journal of the American Statistical Association</em> 81 (393): 82–86.
+</div>
+<div id="ref-watanabe2010asymptotic" class="csl-entry">
+Watanabe, Sumio, and Manfred Opper. 2010. <span>“Asymptotic Equivalence of <span>B</span>ayes Cross Validation and Widely Applicable Information Criterion in Singular Learning Theory.”</span> <em>Journal of Machine Learning Research</em> 11 (12).
+</div>
+<div id="ref-west2006bayesian" class="csl-entry">
+West, Mike, and Jeff Harrison. 1997. <em>Bayesian Forecasting and Dynamic Models</em>. 2nd ed. New York: Springer-Verlag.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chapter2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"split_by": "chapter",
+"split_bib": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

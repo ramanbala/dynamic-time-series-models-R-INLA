@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 Modeling Categorical Time Series | Dynamic Time Series Models using R-INLA: An Applied Perspective</title>
+  <meta name="description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 Modeling Categorical Time Series | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA/" />
+  <meta property="og:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+  <meta property="og:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="github-repo" content="ramanbala/dynamic-time-series-models-R-INLA" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 Modeling Categorical Time Series | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  
+  <meta name="twitter:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="twitter:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+
+<meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
+
+
+<meta name="date" content="2022-06-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ch-nongaus.html"/>
+<link rel="next" href="ch-count.html"/>
+<script src="libs/header-attrs/header-attrs.js"></script>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+<script src="libs/kePrint/kePrint.js"></script>
+<link href="libs/lightable/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a></li>
+
+<li class="divider"></li>
+<li><a href="index.html#preface">Preface<span></span></a>
+<ul>
+<li><a href="index.html#why-read-this-book">Why read this book?<span></span></a></li>
+<li><a href="index.html#structure-of-the-book">Structure of the book<span></span></a></li>
+<li><a href="index.html#software-information-and-conventions">Software information and conventions<span></span></a></li>
+<li><a href="index.html#acknowledgments">Acknowledgments<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="chapter1.html"><a href="chapter1.html"><i class="fa fa-check"></i><b>1</b> Bayesian Analysis<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="chapter1.html"><a href="chapter1.html#intro-ch1"><i class="fa fa-check"></i><b>1.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="1.2" data-path="chapter1.html"><a href="chapter1.html#bayes-framework"><i class="fa fa-check"></i><b>1.2</b> Bayesian framework<span></span></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="chapter1.html"><a href="chapter1.html#bayesian-model-comparison"><i class="fa fa-check"></i><b>1.2.1</b> Bayesian model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="chapter1.html"><a href="chapter1.html#bayes-ts"><i class="fa fa-check"></i><b>1.3</b> Bayesian analysis of time series<span></span></a></li>
+<li class="chapter" data-level="1.4" data-path="chapter1.html"><a href="chapter1.html#dlms"><i class="fa fa-check"></i><b>1.4</b> Gaussian dynamic linear models (DLMs)<span></span></a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="chapter1.html"><a href="chapter1.html#constant-level-plus-noise-model"><i class="fa fa-check"></i><b>1.4.1</b> Constant level plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.2" data-path="chapter1.html"><a href="chapter1.html#local-level-model"><i class="fa fa-check"></i><b>1.4.2</b> Local level model<span></span></a></li>
+<li class="chapter" data-level="1.4.3" data-path="chapter1.html"><a href="chapter1.html#gaussian-dlm-framework-for-univariate-time-series"><i class="fa fa-check"></i><b>1.4.3</b> Gaussian DLM framework for univariate time series<span></span></a></li>
+<li class="chapter" data-level="1.4.4" data-path="chapter1.html"><a href="chapter1.html#ar1-plus-noise-model"><i class="fa fa-check"></i><b>1.4.4</b> AR(1) plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.5" data-path="chapter1.html"><a href="chapter1.html#dlm-for-vector-valued-time-series"><i class="fa fa-check"></i><b>1.4.5</b> DLM for vector-valued time series<span></span></a></li>
+<li class="chapter" data-level="1.4.6" data-path="chapter1.html"><a href="chapter1.html#kalman-filtering-and-smoothing"><i class="fa fa-check"></i><b>1.4.6</b> Kalman filtering and smoothing<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="chapter1.html"><a href="chapter1.html#beyonddlm"><i class="fa fa-check"></i><b>1.5</b> Beyond basic Gaussian DLMs<span></span></a></li>
+<li><a href="chapter1.html#chapter-1-appendix">Chapter 1 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter1.html#conditional-distributions">Conditional distributions<span></span></a></li>
+<li><a href="chapter1.html#exponential-family-of-distributions">Exponential family of distributions<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter2.html"><a href="chapter2.html"><i class="fa fa-check"></i><b>2</b> A Review of INLA<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="chapter2.html"><a href="chapter2.html#intro-ch2"><i class="fa fa-check"></i><b>2.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="2.2" data-path="chapter2.html"><a href="chapter2.html#laplace"><i class="fa fa-check"></i><b>2.2</b> Laplace approximation<span></span></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="chapter2.html"><a href="chapter2.html#simplaplace"><i class="fa fa-check"></i><b>2.2.1</b> Simplified Laplace approximation<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="chapter2.html"><a href="chapter2.html#inlats"><i class="fa fa-check"></i><b>2.3</b> INLA structure for time series<span></span></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="chapter2.html"><a href="chapter2.html#inla-steps"><i class="fa fa-check"></i><b>2.3.1</b> INLA steps<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="chapter2.html"><a href="chapter2.html#forecast"><i class="fa fa-check"></i><b>2.4</b> Forecasting in INLA<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="chapter2.html"><a href="chapter2.html#marglik"><i class="fa fa-check"></i><b>2.5</b> Marginal likelihood computation in INLA<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="chapter2.html"><a href="chapter2.html#rinlapkg"><i class="fa fa-check"></i><b>2.6</b> <code>R-INLA</code> package – some basics<span></span></a></li>
+<li><a href="chapter2.html#chapter-2-appendix">Chapter 2 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter2.html#gaussian-markov-random-field-gmrf">Gaussian Markov Random Field (GMRF)<span></span></a></li>
+<li><a href="chapter2.html#kullback-leibler-divergence">Kullback-Leibler divergence<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter3.html"><a href="chapter3.html"><i class="fa fa-check"></i><b>3</b> Details of R-INLA for Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="chapter3.html"><a href="chapter3.html#intro-ch3"><i class="fa fa-check"></i><b>3.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="3.2" data-path="chapter3.html"><a href="chapter3.html#ch3-rw1noise"><i class="fa fa-check"></i><b>3.2</b> Random walk plus noise model<span></span></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="chapter3.html"><a href="chapter3.html#inlaformula"><i class="fa fa-check"></i><b>3.2.1</b> <code>R-INLA</code> model formula<span></span></a></li>
+<li class="chapter" data-level="3.2.2" data-path="chapter3.html"><a href="chapter3.html#inlaexec"><i class="fa fa-check"></i><b>3.2.2</b> Model execution<span></span></a></li>
+<li class="chapter" data-level="3.2.3" data-path="chapter3.html"><a href="chapter3.html#inlaprior"><i class="fa fa-check"></i><b>3.2.3</b> Prior specifications for hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.4" data-path="chapter3.html"><a href="chapter3.html#inlaposterior"><i class="fa fa-check"></i><b>3.2.4</b> Posterior distributions of hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.5" data-path="chapter3.html"><a href="chapter3.html#fittedvalues"><i class="fa fa-check"></i><b>3.2.5</b> Fitted values for latent states and responses<span></span></a></li>
+<li class="chapter" data-level="3.2.6" data-path="chapter3.html"><a href="chapter3.html#filterestimate"><i class="fa fa-check"></i><b>3.2.6</b> Filtering and smoothing in DLM<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="chapter3.html"><a href="chapter3.html#ch3-ar1levelnoise"><i class="fa fa-check"></i><b>3.3</b> AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="chapter3.html"><a href="chapter3.html#ch3-high-lags"><i class="fa fa-check"></i><b>3.4</b> Dynamic linear models with higher order AR lags<span></span></a>
+<ul>
+<li><a href="chapter3.html#arp-with-level-plus-noise-model">AR<span class="math inline">\((p)\)</span> with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="chapter3.html"><a href="chapter3.html#ch3-rwdrift"><i class="fa fa-check"></i><b>3.5</b> Random walk with drift plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.6" data-path="chapter3.html"><a href="chapter3.html#ch3-rwtvdrift"><i class="fa fa-check"></i><b>3.6</b> Second-order polynomial model<span></span></a></li>
+<li class="chapter" data-level="3.7" data-path="chapter3.html"><a href="chapter3.html#forecasting"><i class="fa fa-check"></i><b>3.7</b> Forecasting states and observations<span></span></a></li>
+<li class="chapter" data-level="3.8" data-path="chapter3.html"><a href="chapter3.html#modsel"><i class="fa fa-check"></i><b>3.8</b> Model comparisons<span></span></a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="chapter3.html"><a href="chapter3.html#modsel-insamp-ch3"><i class="fa fa-check"></i><b>3.8.1</b> In-sample model comparisons<span></span></a></li>
+<li class="chapter" data-level="3.8.2" data-path="chapter3.html"><a href="chapter3.html#modsel-outsamp-ch3"><i class="fa fa-check"></i><b>3.8.2</b> Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="chapter3.html"><a href="chapter3.html#nondefault-priors"><i class="fa fa-check"></i><b>3.9</b> Non-default prior specifications<span></span></a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="chapter3.html"><a href="chapter3.html#custom-priors"><i class="fa fa-check"></i><b>3.9.1</b> Custom prior specifications<span></span></a></li>
+<li class="chapter" data-level="3.9.2" data-path="chapter3.html"><a href="chapter3.html#pc-priors"><i class="fa fa-check"></i><b>3.9.2</b> Penalized complexity (PC) priors<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="chapter3.html"><a href="chapter3.html#post-sampling"><i class="fa fa-check"></i><b>3.10</b> Posterior sampling of latent effects and hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.11" data-path="chapter3.html"><a href="chapter3.html#postpred-samples"><i class="fa fa-check"></i><b>3.11</b> Posterior predictive samples of unknown observations<span></span></a></li>
+<li><a href="chapter3.html#chapter-3-appendix">Chapter 3 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter3.html#sampling-properties-of-time-series">Sampling properties of time series<span></span></a></li>
+<li><a href="chapter3.html#autoregressive-models">Autoregressive models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter4.html"><a href="chapter4.html"><i class="fa fa-check"></i><b>4</b> Modeling Univariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="chapter4.html"><a href="chapter4.html#intro-ch4"><i class="fa fa-check"></i><b>4.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="4.2" data-path="chapter4.html"><a href="chapter4.html#dat-analysis"><i class="fa fa-check"></i><b>4.2</b> Example: A software engineering example – Musa data<span></span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="chapter4.html"><a href="chapter4.html#ch4-model1"><i class="fa fa-check"></i><b>4.2.1</b> Model 1. AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.2" data-path="chapter4.html"><a href="chapter4.html#ch4-model2"><i class="fa fa-check"></i><b>4.2.2</b> Model 2. Random walk plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.3" data-path="chapter4.html"><a href="chapter4.html#ch4-model3"><i class="fa fa-check"></i><b>4.2.3</b> Model 3. AR(1) with trend plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.4" data-path="chapter4.html"><a href="chapter4.html#ch4-model4"><i class="fa fa-check"></i><b>4.2.4</b> Model 4. AR(2) with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chapter4.html"><a href="chapter4.html#forecasting-musa"><i class="fa fa-check"></i><b>4.3</b> Forecasting future states and responses<span></span></a></li>
+<li class="chapter" data-level="4.4" data-path="chapter4.html"><a href="chapter4.html#modsel-ch4"><i class="fa fa-check"></i><b>4.4</b> Model comparisons<span></span></a>
+<ul>
+<li><a href="chapter4.html#in-sample-comparisons">In-sample comparisons<span></span></a></li>
+<li><a href="chapter4.html#out-of-sample-comparisons">Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter5.html"><a href="chapter5.html"><i class="fa fa-check"></i><b>5</b> Time Series Regression Models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="chapter5.html"><a href="chapter5.html#intro-ch5"><i class="fa fa-check"></i><b>5.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="5.2" data-path="chapter5.html"><a href="chapter5.html#ch5-strdecomp"><i class="fa fa-check"></i><b>5.2</b> Structural models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="chapter5.html"><a href="chapter5.html#hotelcost"><i class="fa fa-check"></i><b>5.2.1</b> Example: Monthly average cost of nightly hotel stay<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="chapter5.html"><a href="chapter5.html#ch5-exogpreds"><i class="fa fa-check"></i><b>5.3</b> Models with exogenous predictors<span></span></a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter5.html"><a href="chapter5.html#hourly-traffic"><i class="fa fa-check"></i><b>5.3.1</b> Example: Hourly traffic volumes<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="chapter5.html"><a href="chapter5.html#ar1c"><i class="fa fa-check"></i><b>5.4</b> Latent AR(1) model with covariates plus noise<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Hierarchical Dynamic Models for Panel Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#intro-ch6"><i class="fa fa-check"></i><b>6.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#homog-state"><i class="fa fa-check"></i><b>6.2</b> Models with homogenous state evolution<span></span></a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="chapter6.html"><a href="chapter6.html#simul1-panelts"><i class="fa fa-check"></i><b>6.2.1</b> Example: Simulated homogeneous panel time series with the same level<span></span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="chapter6.html"><a href="chapter6.html#simul2-panelts"><i class="fa fa-check"></i><b>6.2.2</b> Example: Simulated homogeneous panel time series with different levels<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#ridesource-hdlm"><i class="fa fa-check"></i><b>6.3</b> Example: Ridesourcing in NYC<span></span></a>
+<ul>
+<li><a href="chapter6.html#description-of-variables">Description of variables<span></span></a></li>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#hmod.H1"><i class="fa fa-check"></i><b>6.3.1</b> Model H1. Dynamic intercept and exogenous predictors<span></span></a></li>
+<li class="chapter" data-level="6.3.2" data-path="chapter6.html"><a href="chapter6.html#hmod.H2"><i class="fa fa-check"></i><b>6.3.2</b> Model H2. Dynamic intercept and Taxi usage<span></span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="chapter6.html"><a href="chapter6.html#hmod.H3"><i class="fa fa-check"></i><b>6.3.3</b> Model H3. Taxi usage varies by time and zone<span></span></a></li>
+<li class="chapter" data-level="6.3.4" data-path="chapter6.html"><a href="chapter6.html#hmod.H4"><i class="fa fa-check"></i><b>6.3.4</b> Model H4. Fixed intercept, Taxi usage varies over time and zones<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="chapter6.html"><a href="chapter6.html#model-comparison"><i class="fa fa-check"></i><b>6.4</b> Model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-nongaus.html"><a href="ch-nongaus.html"><i class="fa fa-check"></i><b>7</b> Non-Gaussian Continuous Responses<span></span></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#intro-nongaus"><i class="fa fa-check"></i><b>7.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="7.2" data-path="ch-nongaus.html"><a href="ch-nongaus.html#gamma-model"><i class="fa fa-check"></i><b>7.2</b> Gamma state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#vix"><i class="fa fa-check"></i><b>7.2.1</b> Example: Volatility index (VIX) time series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="ch-nongaus.html"><a href="ch-nongaus.html#weibull-model"><i class="fa fa-check"></i><b>7.3</b> Weibull state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#forecasting-from-weibull-models"><i class="fa fa-check"></i><b>7.3.1</b> Forecasting from Weibull models<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="ch-nongaus.html"><a href="ch-nongaus.html#beta-model"><i class="fa fa-check"></i><b>7.4</b> Beta state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#crest"><i class="fa fa-check"></i><b>7.4.1</b> Example: Crest market share<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ch-binary.html"><a href="ch-binary.html"><i class="fa fa-check"></i><b>8</b> Modeling Categorical Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="ch-binary.html"><a href="ch-binary.html#intro-ch-binary"><i class="fa fa-check"></i><b>8.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="8.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-model"><i class="fa fa-check"></i><b>8.2</b> Binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-bin"><i class="fa fa-check"></i><b>8.2.1</b> Example: Simulated single binomial response series<span></span></a></li>
+<li class="chapter" data-level="8.2.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-weekly-shopping"><i class="fa fa-check"></i><b>8.2.2</b> Example: Weekly shopping trips for a single household<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="ch-binary.html"><a href="ch-binary.html#hbin"><i class="fa fa-check"></i><b>8.3</b> Modeling multiple binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-hbin"><i class="fa fa-check"></i><b>8.3.1</b> Example: Dynamic aggregated model for multiple binomial response time series<span></span></a></li>
+<li class="chapter" data-level="8.3.2" data-path="ch-binary.html"><a href="ch-binary.html#hbin-weekly-shopping"><i class="fa fa-check"></i><b>8.3.2</b> Example: Weekly shopping trips for multiple households<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="ch-binary.html"><a href="ch-binary.html#cat-models"><i class="fa fa-check"></i><b>8.4</b> Multinomial time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-mn-p"><i class="fa fa-check"></i><b>8.4.1</b> Example: Simulated categorical time series<span></span></a></li>
+<li><a href="ch-binary.html#model-d4-dynamic-coefficient-for-c_jt">Model D4: Dynamic coefficient for <span class="math inline">\(C_{j,t}\)</span><span></span></a></li>
+</ul></li>
+<li><a href="ch-binary.html#chapter-8-appendix">Chapter 8 – Appendix<span></span></a>
+<ul>
+<li><a href="ch-binary.html#poisson-trick-for-multinomial-models">Poisson-trick for multinomial models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-count.html"><a href="ch-count.html"><i class="fa fa-check"></i><b>9</b> Modeling Count Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="ch-count.html"><a href="ch-count.html#intro-ch-count"><i class="fa fa-check"></i><b>9.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="9.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts"><i class="fa fa-check"></i><b>9.2</b> Univariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="ch-count.html"><a href="ch-count.html#uvcounts-simpois"><i class="fa fa-check"></i><b>9.2.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.2.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts-crashct"><i class="fa fa-check"></i><b>9.2.2</b> Example: Modeling crash counts in CT<span></span></a></li>
+<li class="chapter" data-level="9.2.3" data-path="ch-count.html"><a href="ch-count.html#uvcounts-bikerental"><i class="fa fa-check"></i><b>9.2.3</b> Example: Daily bike rentals in Washington D.C.<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="ch-count.html"><a href="ch-count.html#hieruvcounts"><i class="fa fa-check"></i><b>9.3</b> Hierarchical modeling of univariate count time series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="ch-count.html"><a href="ch-count.html#simul1-hcount"><i class="fa fa-check"></i><b>9.3.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.3.2" data-path="ch-count.html"><a href="ch-count.html#tnc-hcount"><i class="fa fa-check"></i><b>9.3.2</b> Example: Modeling daily TNC usage in NYC<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="ch-sv.html"><a href="ch-sv.html"><i class="fa fa-check"></i><b>10</b> Modeling Stochastic Volatility<span></span></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="ch-sv.html"><a href="ch-sv.html#ch-sv-intro"><i class="fa fa-check"></i><b>10.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="10.2" data-path="ch-sv.html"><a href="ch-sv.html#sv-uv"><i class="fa fa-check"></i><b>10.2</b> Univariate SV models<span></span></a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="ch-sv.html"><a href="ch-sv.html#simul-svnormal"><i class="fa fa-check"></i><b>10.2.1</b> Example: Simulated SV data with standard normal errors<span></span></a></li>
+<li class="chapter" data-level="10.2.2" data-path="ch-sv.html"><a href="ch-sv.html#simul-svt5"><i class="fa fa-check"></i><b>10.2.2</b> Example: Simulated SV data with Student-<span class="math inline">\(t_{\nu}\)</span> errors<span></span></a></li>
+<li class="chapter" data-level="10.2.3" data-path="ch-sv.html"><a href="ch-sv.html#stockrets"><i class="fa fa-check"></i><b>10.2.3</b> Example: IBM stock returns<span></span></a></li>
+<li class="chapter" data-level="10.2.4" data-path="ch-sv.html"><a href="ch-sv.html#nysestockrets"><i class="fa fa-check"></i><b>10.2.4</b> Example: NYSE returns<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="ch-st.html"><a href="ch-st.html"><i class="fa fa-check"></i><b>11</b> Spatio-temporal Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="ch-st.html"><a href="ch-st.html#ch-st-intro"><i class="fa fa-check"></i><b>11.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="11.2" data-path="ch-st.html"><a href="ch-st.html#st-process"><i class="fa fa-check"></i><b>11.2</b> Spatio-temporal process<span></span></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-st.html"><a href="ch-st.html#dyn-areal-model"><i class="fa fa-check"></i><b>11.3</b> Dynamic spatial models for areal data<span></span></a></li>
+<li class="chapter" data-level="11.4" data-path="ch-st.html"><a href="ch-st.html#st-tnc-example"><i class="fa fa-check"></i><b>11.4</b> Example: Monthly TNC usage in NYC taxi zones<span></span></a>
+<ul>
+<li><a href="ch-st.html#data-preprocessing">Data preprocessing<span></span></a></li>
+<li class="chapter" data-level="11.4.1" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh"><i class="fa fa-check"></i><b>11.4.1</b> Model 1. Knorr-Held additive effects model<span></span></a></li>
+<li class="chapter" data-level="11.4.2" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh-inter"><i class="fa fa-check"></i><b>11.4.2</b> Knorr-Held models with space-time interactions<span></span></a></li>
+<li><a href="ch-st.html#model-kh3.-knorr-held-model-with-interaction-between-epsilon_i-and-gamma_t">Model KH3. Knorr-Held model with interaction between <span class="math inline">\(\epsilon_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+<li><a href="ch-st.html#model-kh4.-knorr-held-model-with-interaction-between-nu_i-and-gamma_t">Model KH4. Knorr-Held model with interaction between <span class="math inline">\(\nu_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chmvdlm.html"><a href="chmvdlm.html"><i class="fa fa-check"></i><b>12</b> Multivariate Gaussian Dynamic Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="chmvdlm.html"><a href="chmvdlm.html#intro-chmvdlm"><i class="fa fa-check"></i><b>12.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="12.2" data-path="chmvdlm.html"><a href="chmvdlm.html#MVDiagWPhi"><i class="fa fa-check"></i><b>12.2</b> Model with diagonal <span class="math inline">\(\boldsymbol W\)</span> and <span class="math inline">\(\boldsymbol \Phi\)</span> matrices<span></span></a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="chmvdlm.html"><a href="chmvdlm.html#V-setup"><i class="fa fa-check"></i><b>12.2.1</b> Description of the setup for <span class="math inline">\(\boldsymbol V\)</span><span></span></a></li>
+<li class="chapter" data-level="12.2.2" data-path="chmvdlm.html"><a href="chmvdlm.html#simbivar1"><i class="fa fa-check"></i><b>12.2.2</b> Example: Simulated bivariate AR(1) series<span></span></a></li>
+<li class="chapter" data-level="12.2.3" data-path="chmvdlm.html"><a href="chmvdlm.html#tnctaxi-onezone"><i class="fa fa-check"></i><b>12.2.3</b> Example: Ridesourcing data in NYC for a single taxi zone<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="chmvdlm.html"><a href="chmvdlm.html#MVICCWPhi"><i class="fa fa-check"></i><b>12.3</b> Model with equicorrelated <span class="math inline">\(\boldsymbol{w}_t\)</span> and diagonal <span class="math inline">\(\boldsymbol \Phi\)</span><span></span></a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simtrivar1"><i class="fa fa-check"></i><b>12.3.1</b> Example: Simulated trivariate series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chmvdlm.html"><a href="chmvdlm.html#rgenericmv"><i class="fa fa-check"></i><b>12.4</b> Fitting multivariate models using <code>rgeneric</code><span></span></a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simulgen"><i class="fa fa-check"></i><b>12.4.1</b> Example: Simulated bivariate VAR(1) series<span></span></a></li>
+</ul></li>
+<li><a href="chmvdlm.html#chapter-12-appendix">Chapter 12 – Appendix<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="ch-hmv.html"><a href="ch-hmv.html"><i class="fa fa-check"></i><b>13</b> Hierarchical Multivariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="ch-hmv.html"><a href="ch-hmv.html#intro-ch-hmv"><i class="fa fa-check"></i><b>13.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="13.2" data-path="ch-hmv.html"><a href="ch-hmv.html#mvhdlm"><i class="fa fa-check"></i><b>13.2</b> Multivariate hierarchical dynamic linear model<span></span></a>
+<ul>
+<li><a href="ch-hmv.html#response-and-predictor-variables">Response and predictor variables<span></span></a></li>
+<li><a href="ch-hmv.html#model-setup">Model setup<span></span></a></li>
+<li class="chapter" data-level="13.2.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-hmv"><i class="fa fa-check"></i><b>13.2.1</b> Example: Analysis of TNC and Taxi as responses<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="ch-hmv.html"><a href="ch-hmv.html#lcmcounts"><i class="fa fa-check"></i><b>13.3</b> Level correlated models for multivariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-daily"><i class="fa fa-check"></i><b>13.3.1</b> Example: TNC and Taxi counts based on daily data<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>14</b> Resources for the User<span></span></a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="resources.html"><a href="resources.html#intro-resources"><i class="fa fa-check"></i><b>14.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="14.2" data-path="resources.html"><a href="resources.html#package-list"><i class="fa fa-check"></i><b>14.2</b> Packages used in the book<span></span></a></li>
+<li class="chapter" data-level="14.3" data-path="resources.html"><a href="resources.html#custom-functions"><i class="fa fa-check"></i><b>14.3</b> Custom functions used in the book<span></span></a>
+<ul>
+<li><a href="resources.html#basic-plotting-functions">Basic plotting functions<span></span></a></li>
+<li><a href="resources.html#functions-for-forecast-evaluation">Functions for forecast evaluation<span></span></a></li>
+<li><a href="resources.html#function-for-model-comparison">Function for model comparison<span></span></a></li>
+<li><a href="resources.html#function-for-the-filtering-algorithm-in-dlm">Function for the filtering algorithm in DLM<span></span></a></li>
+<li class="chapter" data-level="14.3.1" data-path="resources.html"><a href="resources.html#rgeneric-fn"><i class="fa fa-check"></i><b>14.3.1</b> <code>rgeneric()</code> function for DLM-VAR model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="resources.html"><a href="resources.html#items-often-used"><i class="fa fa-check"></i><b>14.4</b> Often used <code>R-INLA</code> items<span></span></a>
+<ul>
+<li><a href="resources.html#control-options">Control options<span></span></a></li>
+<li><a href="resources.html#options-for-computing-marginals">Options for computing marginals<span></span></a></li>
+<li><a href="resources.html#random-effect-specifications">Random effect specifications<span></span></a></li>
+<li><a href="resources.html#prior-specifications">Prior specifications<span></span></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ch-binary" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Modeling Categorical Time Series<a href="ch-binary.html#ch-binary" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="intro-ch-binary" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Introduction<a href="ch-binary.html#intro-ch-binary" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This chapter describes Bayesian dynamic generalized linear models (DGLMs) for categorical time series.
+Section <a href="ch-binary.html#bin-model">8.2</a> discusses model fitting for a single binomial response time series, while Section <a href="ch-binary.html#hbin">8.3</a> describes a hierarchical framework for modeling multiple binomial response time series (see Chapter <a href="chapter6.html#chapter6">6</a> for a discussion on <em>Gaussian</em> hierarchical dynamic models). Modeling time series with more than two categories is discussed in Section <a href="ch-binary.html#cat-models">8.4</a>.</p>
+<p>The custom functions must first be sourced.</p>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="ch-binary.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;functions_custom.R&quot;</span>)</span></code></pre></div>
+<p>We use the following packages in this chapter.</p>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="ch-binary.html#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(INLA)</span>
+<span id="cb199-2"><a href="ch-binary.html#cb199-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<p>We analyze the following data set.</p>
+<ol style="list-style-type: decimal">
+<li>Weekly shopping trips</li>
+</ol>
+</div>
+<div id="bin-model" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Binomial response time series<a href="ch-binary.html#bin-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Consider a discrete-valued time series <span class="math inline">\(Y_t\)</span> whose conditional distribution at time <span class="math inline">\(t\)</span> is Bin<span class="math inline">\((m,\pi_t)\)</span>, where <span class="math inline">\(m\)</span> denotes the size of the distribution. Then,
+<span class="math inline">\(Y_t\)</span> denotes the number of successes in <span class="math inline">\(m\)</span> independent Bernoulli trials, and has mean and variance given by <span class="math inline">\(E(Y_t) = m \pi_t\)</span> and
+<span class="math inline">\(\mbox{Var}(Y_t) = m \pi_t (1-\pi_t)\)</span>. Following the well known generalized linear modeling approach <span class="citation">(<a href="#ref-mccullaghnelder1989" role="doc-biblioref">McCullagh and Nelder 1989</a>)</span>, we can link the mean response <span class="math inline">\(\pi_t\)</span> to a structured linear Gaussian predictor using a suitable link function. Well known link functions for binomial response modeling include the logit and probit links for <span class="math inline">\(\pi_t\)</span>, given by</p>
+<p><span class="math display">\[\begin{align*}
+\text{logit}(\pi_t) = \log \frac{\pi_t}{1-\pi_t},
+\end{align*}\]</span>
+and</p>
+<p><span class="math display">\[\begin{align*}
+\text{probit}(\pi_t) = \mathcal{N}^{-1}(\pi_t),
+\end{align*}\]</span>
+where <span class="math inline">\(\mathcal{N}^{-1}(.)\)</span> denotes the inverse c.d.f. of the <span class="math inline">\(N(0,1)\)</span> distribution. Note that we have used <span class="math inline">\(\mathcal{N}^{-1}\)</span> instead of the usual notation in the literature of <span class="math inline">\(\Phi^{-1}\)</span> to avoid confusion with the matrix of AR
+coefficients (see Chapter <a href="chmvdlm.html#chmvdlm">12</a>). Excellent references on sampling based Bayesian approaches for fitting DGLMs include <span class="citation">Dani Gamerman (<a href="#ref-gamerman1998" role="doc-biblioref">1998</a>)</span> and <span class="citation">West and Harrison (<a href="#ref-west2006bayesian" role="doc-biblioref">1997</a>)</span>. Also, see <span class="citation">Refik Soyer and Sung (<a href="#ref-soyer2013bayesian" role="doc-biblioref">2013</a>)</span> for a discussion of binary longitudinal response modeling under a probit link.</p>
+<div id="simul-bin" class="section level3 hasAnchor" number="8.2.1">
+<h3><span class="header-section-number">8.2.1</span> Example: Simulated single binomial response series<a href="ch-binary.html#simul-bin" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The observation and state equations of a DGLM for a binomial response time series <span class="math inline">\(Y_t\)</span> with a logit link are shown below:</p>
+<p><span class="math display" id="eq:bin-h2">\[\begin{align}
+Y_{t}|\pi_{t} &amp; \sim  \text{Binomial}(m, \pi_{t}), \notag \\
+\text{logit} (\pi_{t}) &amp;= \alpha +\beta_{t,0},\notag \\
+\beta_{t,0} &amp;= \phi \beta_{t-1,0} + w_{t,0}.
+\tag{8.1}
+\end{align}\]</span>
+The model assumes a time-varying intercept <span class="math inline">\(\beta_{t,0}\)</span> following a latent Gaussian AR(1) model to explain <span class="math inline">\(\text{logit} (\pi_{t})\)</span>, where <span class="math inline">\(|\phi| &lt; 1\)</span> and the state error <span class="math inline">\(w_{t,0}\)</span> is N<span class="math inline">\((0,\sigma^2_w)\)</span>. We have also included a fixed level <span class="math inline">\(\alpha\)</span>.</p>
+<p>We show the model setup on a simulated time series of length <span class="math inline">\(n = 1000\)</span>, with a burn-in of length <span class="math inline">\(500\)</span>. The size <span class="math inline">\(m\)</span> of the binomial distribution is denoted by <em>bin.size</em>, and will be passed to <code>inla()</code> through the argument <em>Ntrials</em>.</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="ch-binary.html#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123457</span>)</span>
+<span id="cb200-2"><a href="ch-binary.html#cb200-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb200-3"><a href="ch-binary.html#cb200-3" aria-hidden="true" tabindex="-1"></a>burn.in <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb200-4"><a href="ch-binary.html#cb200-4" aria-hidden="true" tabindex="-1"></a>n.tot <span class="ot">&lt;-</span> n <span class="sc">+</span> burn.in</span>
+<span id="cb200-5"><a href="ch-binary.html#cb200-5" aria-hidden="true" tabindex="-1"></a>bin.size <span class="ot">&lt;-</span> <span class="dv">10</span> </span>
+<span id="cb200-6"><a href="ch-binary.html#cb200-6" aria-hidden="true" tabindex="-1"></a>sigma2.w <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb200-7"><a href="ch-binary.html#cb200-7" aria-hidden="true" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb200-8"><a href="ch-binary.html#cb200-8" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">1.3</span></span>
+<span id="cb200-9"><a href="ch-binary.html#cb200-9" aria-hidden="true" tabindex="-1"></a>yit <span class="ot">&lt;-</span> beta.t0 <span class="ot">&lt;-</span> pi.t <span class="ot">&lt;-</span> eta.t <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;double&quot;</span>, n.tot)</span>
+<span id="cb200-10"><a href="ch-binary.html#cb200-10" aria-hidden="true" tabindex="-1"></a>beta.t0 <span class="ot">&lt;-</span></span>
+<span id="cb200-11"><a href="ch-binary.html#cb200-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar =</span> phi, <span class="at">ma =</span> <span class="dv">0</span>), <span class="at">n =</span> n.tot, <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma2.w))</span>
+<span id="cb200-12"><a href="ch-binary.html#cb200-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n.tot) {</span>
+<span id="cb200-13"><a href="ch-binary.html#cb200-13" aria-hidden="true" tabindex="-1"></a>  eta.t[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta.t0[i]</span>
+<span id="cb200-14"><a href="ch-binary.html#cb200-14" aria-hidden="true" tabindex="-1"></a>  pi.t[i] <span class="ot">&lt;-</span> <span class="fu">exp</span>(eta.t[i]) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(eta.t[i]))</span>
+<span id="cb200-15"><a href="ch-binary.html#cb200-15" aria-hidden="true" tabindex="-1"></a>  yit[i] <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">size =</span> bin.size, <span class="at">prob =</span> pi.t[i])</span>
+<span id="cb200-16"><a href="ch-binary.html#cb200-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb200-17"><a href="ch-binary.html#cb200-17" aria-hidden="true" tabindex="-1"></a>yit <span class="ot">&lt;-</span> <span class="fu">tail</span>(yit, n)</span></code></pre></div>
+<p>The true precision of the state error <span class="math inline">\(w_{t,0}\)</span> is <span class="math inline">\(20\)</span>, while the true precision of the state variable <span class="math inline">\(\beta_{t,0}\)</span> is 7.2, which can be computed using the book’s custom function <code>prec.state.ar1()</code>:</p>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="ch-binary.html#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prec.state.ar1</span>(<span class="at">state.sigma2 =</span> sigma2.w, <span class="at">phi =</span> phi)</span></code></pre></div>
+<p>We fit the model in <a href="ch-binary.html#eq:bin-h2">(8.1)</a> to the simulated data.</p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="ch-binary.html#cb202-1" aria-hidden="true" tabindex="-1"></a>id.beta0 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb202-2"><a href="ch-binary.html#cb202-2" aria-hidden="true" tabindex="-1"></a>data.bin <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(id.beta0, yit)</span>
+<span id="cb202-3"><a href="ch-binary.html#cb202-3" aria-hidden="true" tabindex="-1"></a>prior.bin <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb202-4"><a href="ch-binary.html#cb202-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">prec =</span> <span class="fu">list</span>(<span class="at">prior =</span> <span class="st">&quot;loggamma&quot;</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>)),</span>
+<span id="cb202-5"><a href="ch-binary.html#cb202-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">rho =</span> <span class="fu">list</span>(<span class="at">prior =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.15</span>))</span>
+<span id="cb202-6"><a href="ch-binary.html#cb202-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb202-7"><a href="ch-binary.html#cb202-7" aria-hidden="true" tabindex="-1"></a>formula.bin <span class="ot">&lt;-</span></span>
+<span id="cb202-8"><a href="ch-binary.html#cb202-8" aria-hidden="true" tabindex="-1"></a>  yit <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.beta0,</span>
+<span id="cb202-9"><a href="ch-binary.html#cb202-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb202-10"><a href="ch-binary.html#cb202-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">constr =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb202-11"><a href="ch-binary.html#cb202-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">hyper =</span> prior.bin)</span>
+<span id="cb202-12"><a href="ch-binary.html#cb202-12" aria-hidden="true" tabindex="-1"></a>model.bin <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb202-13"><a href="ch-binary.html#cb202-13" aria-hidden="true" tabindex="-1"></a>  formula.bin,</span>
+<span id="cb202-14"><a href="ch-binary.html#cb202-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>,</span>
+<span id="cb202-15"><a href="ch-binary.html#cb202-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ntrials =</span> bin.size,</span>
+<span id="cb202-16"><a href="ch-binary.html#cb202-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.family =</span> <span class="fu">list</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>),</span>
+<span id="cb202-17"><a href="ch-binary.html#cb202-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data.bin,</span>
+<span id="cb202-18"><a href="ch-binary.html#cb202-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>),</span>
+<span id="cb202-19"><a href="ch-binary.html#cb202-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb202-20"><a href="ch-binary.html#cb202-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb202-21"><a href="ch-binary.html#cb202-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb202-22"><a href="ch-binary.html#cb202-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb202-23"><a href="ch-binary.html#cb202-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb202-24"><a href="ch-binary.html#cb202-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span></span>
+<span id="cb202-25"><a href="ch-binary.html#cb202-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb202-26"><a href="ch-binary.html#cb202-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb202-27"><a href="ch-binary.html#cb202-27" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.bin)</span></span>
+<span id="cb202-28"><a href="ch-binary.html#cb202-28" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.bin<span class="sc">$</span>summary.fixed[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>)])</span>
+<span id="cb202-29"><a href="ch-binary.html#cb202-29" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean  sd    0.5q </span></span>
+<span id="cb202-30"><a href="ch-binary.html#cb202-30" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept 1.228 0.044 1.227</span></span>
+<span id="cb202-31"><a href="ch-binary.html#cb202-31" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.bin<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>)])</span>
+<span id="cb202-32"><a href="ch-binary.html#cb202-32" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                   mean  sd    0.5q </span></span>
+<span id="cb202-33"><a href="ch-binary.html#cb202-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for id.beta0 8.773 2.019 8.533</span></span>
+<span id="cb202-34"><a href="ch-binary.html#cb202-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Rho for id.beta0       0.818 0.056 0.825</span></span></code></pre></div>
+<p>The posterior means for <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\sigma^2_w\)</span> are 1.228, 0.818 and 8.773 respectively, suggesting that the true parameters in the simulation are recovered well.</p>
+<p>Note that if we <em>incorrectly</em> fit a model with no level <span class="math inline">\(\alpha\)</span> to this data, then neither the posterior mean of <span class="math inline">\(\phi\)</span> nor the posterior mean of the precision of the state variable are recovered well. In particular, the posterior mean of <span class="math inline">\(\phi\)</span> increases to <span class="math inline">\(0.996\)</span> (i.e., it tends to a limit of 1), possibly in order to accommodate the omitted non-zero level. We illustrate this below. We reiterate what we mentioned in Section <a href="chapter3.html#ch3-ar1levelnoise">3.3</a>, that it is advisable to include a level <span class="math inline">\(\alpha\)</span> in the model, expecting it to be estimated close to zero in cases when the true level is zero.</p>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="ch-binary.html#cb203-1" aria-hidden="true" tabindex="-1"></a>formula.bin.noalpha <span class="ot">&lt;-</span></span>
+<span id="cb203-2"><a href="ch-binary.html#cb203-2" aria-hidden="true" tabindex="-1"></a>  yit <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.beta0,</span>
+<span id="cb203-3"><a href="ch-binary.html#cb203-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb203-4"><a href="ch-binary.html#cb203-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">constr =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb203-5"><a href="ch-binary.html#cb203-5" aria-hidden="true" tabindex="-1"></a>model.bin.noalpha <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb203-6"><a href="ch-binary.html#cb203-6" aria-hidden="true" tabindex="-1"></a>  formula.bin.noalpha,</span>
+<span id="cb203-7"><a href="ch-binary.html#cb203-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>,</span>
+<span id="cb203-8"><a href="ch-binary.html#cb203-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ntrials =</span> bin.size,</span>
+<span id="cb203-9"><a href="ch-binary.html#cb203-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.family =</span> <span class="fu">list</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>),</span>
+<span id="cb203-10"><a href="ch-binary.html#cb203-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data.bin,</span>
+<span id="cb203-11"><a href="ch-binary.html#cb203-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>),</span>
+<span id="cb203-12"><a href="ch-binary.html#cb203-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb203-13"><a href="ch-binary.html#cb203-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb203-14"><a href="ch-binary.html#cb203-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb203-15"><a href="ch-binary.html#cb203-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb203-16"><a href="ch-binary.html#cb203-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb203-17"><a href="ch-binary.html#cb203-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span></span>
+<span id="cb203-18"><a href="ch-binary.html#cb203-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb203-19"><a href="ch-binary.html#cb203-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb203-20"><a href="ch-binary.html#cb203-20" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.bin.noalpha<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>)])</span>
+<span id="cb203-21"><a href="ch-binary.html#cb203-21" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                   mean  sd    0.5q </span></span>
+<span id="cb203-22"><a href="ch-binary.html#cb203-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for id.beta0 1.144 0.451 1.075</span></span>
+<span id="cb203-23"><a href="ch-binary.html#cb203-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Rho for id.beta0       0.996 0.002 0.996</span></span></code></pre></div>
+</div>
+<div id="bin-weekly-shopping" class="section level3 hasAnchor" number="8.2.2">
+<h3><span class="header-section-number">8.2.2</span> Example: Weekly shopping trips for a single household<a href="ch-binary.html#bin-weekly-shopping" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The dataset <em>trips</em> consists of the number of weekly shopping trips for <span class="math inline">\(N=548\)</span> households across <span class="math inline">\(n = 104\)</span> weeks <span class="citation">(<a href="#ref-soyer2016bayesian" role="doc-biblioref">R. Soyer, Aktekin, and Kim 2016</a>)</span>. Here, we present our analysis for a <em>single household</em>, while we discuss a model for all households using a hierarchical model in Section <a href="ch-binary.html#hbin-weekly-shopping">8.3.2</a>. In this example, we set <span class="math inline">\(m\)</span> or <em>bin.size</em> to be the maximum number of shopping trips taken by this household over the <span class="math inline">\(104\)</span> weeks, and assume that the observed weekly shopping trips <span class="math inline">\(Y_t\)</span> has a Bin<span class="math inline">\((m,\pi_t)\)</span> distribution.</p>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="ch-binary.html#cb204-1" aria-hidden="true" tabindex="-1"></a>trips.single.household <span class="ot">&lt;-</span></span>
+<span id="cb204-2"><a href="ch-binary.html#cb204-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read.csv</span>(<span class="st">&quot;weekly_shopping_single_household.csv&quot;</span>,</span>
+<span id="cb204-3"><a href="ch-binary.html#cb204-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb204-4"><a href="ch-binary.html#cb204-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb204-5"><a href="ch-binary.html#cb204-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tsline</span>(trips.single.household<span class="sc">$</span>n.trips,</span>
+<span id="cb204-6"><a href="ch-binary.html#cb204-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;week&quot;</span>,</span>
+<span id="cb204-7"><a href="ch-binary.html#cb204-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&quot;shopping trips&quot;</span>,</span>
+<span id="cb204-8"><a href="ch-binary.html#cb204-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">line.color =</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb204-9"><a href="ch-binary.html#cb204-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">line.size =</span> <span class="fl">0.6</span>) </span></code></pre></div>
+<div class="figure"><span id="fig:single-house-trip"></span>
+<img src="gitbook_version_files/figure-html/single-house-trip-1.png" alt="Number of weekly shopping trips for a single household over n = 104 weeks." width="672" />
+<p class="caption">
+FIGURE 8.1: Number of weekly shopping trips for a single household over n = 104 weeks.
+</p>
+</div>
+<p>Figure <a href="ch-binary.html#fig:single-house-trip">8.1</a> shows a plot of <span class="math inline">\(Y_t\)</span>
+for a household with ID <em>14100859</em>. We divide the data into training and test portions, and create a data frame which includes an index <code>id.beta0</code>.</p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="ch-binary.html#cb205-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(trips.single.household)</span>
+<span id="cb205-2"><a href="ch-binary.html#cb205-2" aria-hidden="true" tabindex="-1"></a>n.hold <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb205-3"><a href="ch-binary.html#cb205-3" aria-hidden="true" tabindex="-1"></a>n.train <span class="ot">&lt;-</span> n <span class="sc">-</span> n.hold</span>
+<span id="cb205-4"><a href="ch-binary.html#cb205-4" aria-hidden="true" tabindex="-1"></a>train.trips.single.household <span class="ot">&lt;-</span></span>
+<span id="cb205-5"><a href="ch-binary.html#cb205-5" aria-hidden="true" tabindex="-1"></a>  trips.single.household<span class="sc">$</span>n.trips[<span class="dv">1</span><span class="sc">:</span>n.train]</span>
+<span id="cb205-6"><a href="ch-binary.html#cb205-6" aria-hidden="true" tabindex="-1"></a>test.trips.single.household <span class="ot">&lt;-</span></span>
+<span id="cb205-7"><a href="ch-binary.html#cb205-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tail</span>(trips.single.household<span class="sc">$</span>n.trips, n.hold)</span>
+<span id="cb205-8"><a href="ch-binary.html#cb205-8" aria-hidden="true" tabindex="-1"></a>bin.size <span class="ot">&lt;-</span> <span class="fu">max</span>(train.trips.single.household)</span>
+<span id="cb205-9"><a href="ch-binary.html#cb205-9" aria-hidden="true" tabindex="-1"></a>id.beta0 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb205-10"><a href="ch-binary.html#cb205-10" aria-hidden="true" tabindex="-1"></a>data.single.household <span class="ot">&lt;-</span></span>
+<span id="cb205-11"><a href="ch-binary.html#cb205-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(<span class="at">n.trips =</span> <span class="fu">c</span>(train.trips.single.household,</span>
+<span id="cb205-12"><a href="ch-binary.html#cb205-12" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">rep</span>(<span class="cn">NA</span>, n.hold)), id.beta0)</span></code></pre></div>
+<p>To model the time series of trips using <a href="ch-binary.html#eq:bin-h2">(8.1)</a>, we use a non-default prior specification for <span class="math inline">\(1/\sigma^2_w\)</span>; specifically, we assume small values of 0.1 and 0.1 for the shape and scale parameters of the log gamma distribution, leading to a diffuse prior. The AR(1) parameter has the default prior for its internal parametrization, as discussed in Chapter <a href="chapter3.html#chapter3">3</a>.</p>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="ch-binary.html#cb206-1" aria-hidden="true" tabindex="-1"></a>prior.single.household <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb206-2"><a href="ch-binary.html#cb206-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">prec =</span> <span class="fu">list</span>(<span class="at">prior =</span> <span class="st">&quot;loggamma&quot;</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>)),</span>
+<span id="cb206-3"><a href="ch-binary.html#cb206-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">rho =</span> <span class="fu">list</span>(<span class="at">prior =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb206-4"><a href="ch-binary.html#cb206-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>The formula and results are shown below.</p>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="ch-binary.html#cb207-1" aria-hidden="true" tabindex="-1"></a>formula.single.household <span class="ot">&lt;-</span></span>
+<span id="cb207-2"><a href="ch-binary.html#cb207-2" aria-hidden="true" tabindex="-1"></a>  n.trips <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.beta0,  <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>, <span class="at">hyper =</span> prior.single.household)</span>
+<span id="cb207-3"><a href="ch-binary.html#cb207-3" aria-hidden="true" tabindex="-1"></a>inla.single.household <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb207-4"><a href="ch-binary.html#cb207-4" aria-hidden="true" tabindex="-1"></a>  formula.single.household,</span>
+<span id="cb207-5"><a href="ch-binary.html#cb207-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&#39;binomial&#39;</span>,</span>
+<span id="cb207-6"><a href="ch-binary.html#cb207-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ntrials =</span> bin.size,</span>
+<span id="cb207-7"><a href="ch-binary.html#cb207-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data.single.household,</span>
+<span id="cb207-8"><a href="ch-binary.html#cb207-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.family =</span> <span class="fu">list</span>(<span class="at">link =</span> <span class="st">&#39;logit&#39;</span>),</span>
+<span id="cb207-9"><a href="ch-binary.html#cb207-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">link =</span> <span class="dv">1</span>, <span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb207-10"><a href="ch-binary.html#cb207-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb207-11"><a href="ch-binary.html#cb207-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb207-12"><a href="ch-binary.html#cb207-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb207-13"><a href="ch-binary.html#cb207-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb207-14"><a href="ch-binary.html#cb207-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb207-15"><a href="ch-binary.html#cb207-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb207-16"><a href="ch-binary.html#cb207-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb207-17"><a href="ch-binary.html#cb207-17" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(inla.single.household)</span></span>
+<span id="cb207-18"><a href="ch-binary.html#cb207-18" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(inla.single.household<span class="sc">$</span>summary.fixed[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>)])</span>
+<span id="cb207-19"><a href="ch-binary.html#cb207-19" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean  0.025q 0.975q</span></span>
+<span id="cb207-20"><a href="ch-binary.html#cb207-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept 0.288 -0.11  0.652</span></span>
+<span id="cb207-21"><a href="ch-binary.html#cb207-21" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(inla.single.household<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb207-22"><a href="ch-binary.html#cb207-22" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                   mean  sd   </span></span>
+<span id="cb207-23"><a href="ch-binary.html#cb207-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for id.beta0 4.625 1.947</span></span>
+<span id="cb207-24"><a href="ch-binary.html#cb207-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Rho for id.beta0       0.802 0.089</span></span></code></pre></div>
+<p>The posterior mean and standard deviation of the hyperparameter <span class="math inline">\(\phi\)</span> are respectively 0.802 and 0.089, showing that there is a strong positive temporal correlation in the number of shopping trips for this household. We obtain forecasts using <code>inla.posterior.sample()</code>. The contents of each sample can be viewed using <code>inla.single.household$misc$configs$contents</code>.</p>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="ch-binary.html#cb208-1" aria-hidden="true" tabindex="-1"></a>post.samp <span class="ot">&lt;-</span></span>
+<span id="cb208-2"><a href="ch-binary.html#cb208-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inla.posterior.sample</span>(<span class="at">n =</span> <span class="dv">1000</span>,</span>
+<span id="cb208-3"><a href="ch-binary.html#cb208-3" aria-hidden="true" tabindex="-1"></a>                        inla.single.household,</span>
+<span id="cb208-4"><a href="ch-binary.html#cb208-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">seed =</span> <span class="dv">1234</span>)</span>
+<span id="cb208-5"><a href="ch-binary.html#cb208-5" aria-hidden="true" tabindex="-1"></a>inla.single.household<span class="sc">$</span>misc<span class="sc">$</span>configs<span class="sc">$</span>contents</span>
+<span id="cb208-6"><a href="ch-binary.html#cb208-6" aria-hidden="true" tabindex="-1"></a><span class="do">## $tag</span></span>
+<span id="cb208-7"><a href="ch-binary.html#cb208-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;Predictor&quot;   &quot;id.beta0&quot;    &quot;(Intercept)&quot;</span></span>
+<span id="cb208-8"><a href="ch-binary.html#cb208-8" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb208-9"><a href="ch-binary.html#cb208-9" aria-hidden="true" tabindex="-1"></a><span class="do">## $start</span></span>
+<span id="cb208-10"><a href="ch-binary.html#cb208-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [1]   1 105 209</span></span>
+<span id="cb208-11"><a href="ch-binary.html#cb208-11" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb208-12"><a href="ch-binary.html#cb208-12" aria-hidden="true" tabindex="-1"></a><span class="do">## $length</span></span>
+<span id="cb208-13"><a href="ch-binary.html#cb208-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 104 104   1</span></span></code></pre></div>
+<p>Here “Predictor” returns the predicted <span class="math inline">\(\eta_t\)</span> for each <span class="math inline">\(t\)</span>. All the elements in <code>tag</code> are stored under <em>latent</em> for each posterior sample. The first <span class="math inline">\(n\)</span> rows are the “Predictors”, the next <span class="math inline">\(n\)</span> rows are the posterior estimates of “id.beta0” and the last row contains the posterior estimate of “(Intercept)”. Here, we only show the first and last <span class="math inline">\(6\)</span> rows of <em>latent</em> for the first sample.</p>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="ch-binary.html#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(post.samp[[<span class="dv">1</span>]]<span class="sc">$</span>latent)</span>
+<span id="cb209-2"><a href="ch-binary.html#cb209-2" aria-hidden="true" tabindex="-1"></a><span class="do">##             sample:1</span></span>
+<span id="cb209-3"><a href="ch-binary.html#cb209-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Predictor:1 -0.18534</span></span>
+<span id="cb209-4"><a href="ch-binary.html#cb209-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Predictor:2 -0.15249</span></span>
+<span id="cb209-5"><a href="ch-binary.html#cb209-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Predictor:3 -0.20560</span></span>
+<span id="cb209-6"><a href="ch-binary.html#cb209-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Predictor:4  0.28900</span></span>
+<span id="cb209-7"><a href="ch-binary.html#cb209-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Predictor:5  0.02523</span></span>
+<span id="cb209-8"><a href="ch-binary.html#cb209-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Predictor:6 -0.39242</span></span>
+<span id="cb209-9"><a href="ch-binary.html#cb209-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(post.samp[[<span class="dv">1</span>]]<span class="sc">$</span>latent)</span>
+<span id="cb209-10"><a href="ch-binary.html#cb209-10" aria-hidden="true" tabindex="-1"></a><span class="do">##               sample:1</span></span>
+<span id="cb209-11"><a href="ch-binary.html#cb209-11" aria-hidden="true" tabindex="-1"></a><span class="do">## id.beta0:100    0.1207</span></span>
+<span id="cb209-12"><a href="ch-binary.html#cb209-12" aria-hidden="true" tabindex="-1"></a><span class="do">## id.beta0:101    0.7823</span></span>
+<span id="cb209-13"><a href="ch-binary.html#cb209-13" aria-hidden="true" tabindex="-1"></a><span class="do">## id.beta0:102    0.8362</span></span>
+<span id="cb209-14"><a href="ch-binary.html#cb209-14" aria-hidden="true" tabindex="-1"></a><span class="do">## id.beta0:103    0.6775</span></span>
+<span id="cb209-15"><a href="ch-binary.html#cb209-15" aria-hidden="true" tabindex="-1"></a><span class="do">## id.beta0:104    0.1225</span></span>
+<span id="cb209-16"><a href="ch-binary.html#cb209-16" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept):1   0.2945</span></span></code></pre></div>
+<p>We transform the predicted <span class="math inline">\(\eta_{j,t}\)</span> into the predicted <span class="math inline">\(\tilde{\pi}_{j,t}\)</span> via</p>
+<p><span class="math display">\[\begin{align*}
+\tilde{\pi}_{j,t} = \frac{\exp(\eta_{j,t})}{1+ \exp(\eta_{j,t})},
+\end{align*}\]</span>
+for each Monte Carlo realization <span class="math inline">\(j=1,\ldots,1000\)</span>. For each <span class="math inline">\(j\)</span>, we use <code>rbinom()</code> to simulate a fitted response from
+<!--Bin$(m,p_{j,t})$-->
+Bin<span class="math inline">\((m,\tilde{\pi}_{j,t})\)</span>
+for <span class="math inline">\(t=1,\ldots,n\)</span>, yielding <span class="math inline">\(1000\)</span> binomial time series. We can then obtain summaries such as the mean, standard deviation, and percentiles from these posterior predictive distributions, as shown below.</p>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="ch-binary.html#cb210-1" aria-hidden="true" tabindex="-1"></a>fit.post.samp <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, <span class="dv">1000</span>)</span>
+<span id="cb210-2"><a href="ch-binary.html#cb210-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>) {</span>
+<span id="cb210-3"><a href="ch-binary.html#cb210-3" aria-hidden="true" tabindex="-1"></a>  eta <span class="ot">&lt;-</span> post.samp[[j]]<span class="sc">$</span>latent[<span class="dv">1</span><span class="sc">:</span>n]</span>
+<span id="cb210-4"><a href="ch-binary.html#cb210-4" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">exp</span>(eta) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(eta))</span>
+<span id="cb210-5"><a href="ch-binary.html#cb210-5" aria-hidden="true" tabindex="-1"></a>  fit.post.samp[[j]] <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, bin.size, p)</span>
+<span id="cb210-6"><a href="ch-binary.html#cb210-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb210-7"><a href="ch-binary.html#cb210-7" aria-hidden="true" tabindex="-1"></a>fore.mean <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(fit.post.samp) <span class="sc">%&gt;%</span></span>
+<span id="cb210-8"><a href="ch-binary.html#cb210-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(<span class="dv">1</span>, mean)</span>
+<span id="cb210-9"><a href="ch-binary.html#cb210-9" aria-hidden="true" tabindex="-1"></a>fore.sd <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(fit.post.samp) <span class="sc">%&gt;%</span></span>
+<span id="cb210-10"><a href="ch-binary.html#cb210-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(<span class="dv">1</span>, sd) <span class="sc">%&gt;%</span></span>
+<span id="cb210-11"><a href="ch-binary.html#cb210-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb210-12"><a href="ch-binary.html#cb210-12" aria-hidden="true" tabindex="-1"></a>fore.quant <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(fit.post.samp) <span class="sc">%&gt;%</span></span>
+<span id="cb210-13"><a href="ch-binary.html#cb210-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(<span class="dv">1</span>, <span class="cf">function</span>(x)</span>
+<span id="cb210-14"><a href="ch-binary.html#cb210-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">quantile</span>(x, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>)))</span>
+<span id="cb210-15"><a href="ch-binary.html#cb210-15" aria-hidden="true" tabindex="-1"></a>obs.fit.single.household <span class="ot">&lt;-</span></span>
+<span id="cb210-16"><a href="ch-binary.html#cb210-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(</span>
+<span id="cb210-17"><a href="ch-binary.html#cb210-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">observed =</span> trips.single.household<span class="sc">$</span>n.trips,</span>
+<span id="cb210-18"><a href="ch-binary.html#cb210-18" aria-hidden="true" tabindex="-1"></a>    fore.mean,</span>
+<span id="cb210-19"><a href="ch-binary.html#cb210-19" aria-hidden="true" tabindex="-1"></a>    fore.sd,</span>
+<span id="cb210-20"><a href="ch-binary.html#cb210-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">quant0.025 =</span> fore.quant[<span class="dv">1</span>,],</span>
+<span id="cb210-21"><a href="ch-binary.html#cb210-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">quant0.975 =</span> fore.quant[<span class="dv">2</span>,]</span>
+<span id="cb210-22"><a href="ch-binary.html#cb210-22" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p>Figure <a href="ch-binary.html#fig:obs-fit-bin-1">8.2</a> shows the observed weekly shopping trips along with the mean of the forecast values generated from <code>inla.posterior.sample()</code>.</p>
+<div class="figure"><span id="fig:obs-fit-bin-1"></span>
+<img src="gitbook_version_files/figure-html/obs-fit-bin-1-1.png" alt="Observed (red) versus fitted values (blue) for  weekly shopping trips of a single household. The black vertical line splits the data into training and test portions." width="672" />
+<p class="caption">
+FIGURE 8.2: Observed (red) versus fitted values (blue) for weekly shopping trips of a single household. The black vertical line splits the data into training and test portions.
+</p>
+</div>
+<p>For this household, the fixed level <span class="math inline">\(\alpha\)</span> is not significant, and fitting the model without a level <span class="math inline">\(\alpha\)</span> yields results that are quite similar to what we have shown, as we see below.</p>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="ch-binary.html#cb211-1" aria-hidden="true" tabindex="-1"></a>formula.single.household.noalpha <span class="ot">&lt;-</span></span>
+<span id="cb211-2"><a href="ch-binary.html#cb211-2" aria-hidden="true" tabindex="-1"></a>  n.trips <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.beta0,  <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>, <span class="at">hyper =</span> prior.single.household)</span>
+<span id="cb211-3"><a href="ch-binary.html#cb211-3" aria-hidden="true" tabindex="-1"></a>inla.single.household.noalpha <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb211-4"><a href="ch-binary.html#cb211-4" aria-hidden="true" tabindex="-1"></a>  formula.single.household.noalpha,</span>
+<span id="cb211-5"><a href="ch-binary.html#cb211-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&#39;binomial&#39;</span>,</span>
+<span id="cb211-6"><a href="ch-binary.html#cb211-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ntrials =</span> bin.size,</span>
+<span id="cb211-7"><a href="ch-binary.html#cb211-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data.single.household,</span>
+<span id="cb211-8"><a href="ch-binary.html#cb211-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.family =</span> <span class="fu">list</span>(<span class="at">link =</span> <span class="st">&#39;logit&#39;</span>),</span>
+<span id="cb211-9"><a href="ch-binary.html#cb211-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">link =</span> <span class="dv">1</span>, <span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb211-10"><a href="ch-binary.html#cb211-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(<span class="at">dic =</span> <span class="cn">TRUE</span>, <span class="at">cpo =</span> <span class="cn">TRUE</span>, <span class="at">waic =</span></span>
+<span id="cb211-11"><a href="ch-binary.html#cb211-11" aria-hidden="true" tabindex="-1"></a>                           <span class="cn">TRUE</span>)</span>
+<span id="cb211-12"><a href="ch-binary.html#cb211-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb211-13"><a href="ch-binary.html#cb211-13" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(inla.single.household.noalpha<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb211-14"><a href="ch-binary.html#cb211-14" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                   mean  sd   </span></span>
+<span id="cb211-15"><a href="ch-binary.html#cb211-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for id.beta0 3.947 1.571</span></span>
+<span id="cb211-16"><a href="ch-binary.html#cb211-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Rho for id.beta0       0.844 0.066</span></span></code></pre></div>
+</div>
+</div>
+<div id="hbin" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Modeling multiple binomial response time series<a href="ch-binary.html#hbin" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In many situations, we may wish to model several binomial response time series <span class="math inline">\(Y_{it}\)</span> for <span class="math inline">\(t=1,\ldots,n\)</span> weeks and <span class="math inline">\(i=1,\ldots,g\)</span> households by aggregating information from all the series. Assume that <span class="math inline">\(Y_{it}\)</span> follows a
+Binomial<span class="math inline">\((m_i, \pi_{it})\)</span> distribution with
+mean <span class="math inline">\(E(Y_{it}) = m_i \pi_{it}\)</span>
+and variance <span class="math inline">\(\mbox{Var}(Y_{it}) = m_i \pi_{it} (1-\pi_{it})\)</span>.
+Again, each <span class="math inline">\(\pi_{it}\)</span> is
+linked to a structured predictor which may be a function of exogenous predictors, or suitable functions of time, or both. In a dynamic model, the state variables may be indexed by <span class="math inline">\(i\)</span>, or <span class="math inline">\(t\)</span>, or both. The coefficients corresponding to the exogenous predictors
+may be static or dynamic. They can also be constant across <span class="math inline">\(i\)</span> or vary by <span class="math inline">\(i\)</span>.
+A similar approach was described in Chapter <a href="chapter6.html#chapter6">6</a>, where we discussed hierarchical DLMs for <span class="math inline">\(g\)</span> continuous-valued response time series.</p>
+<div id="simul-hbin" class="section level3 hasAnchor" number="8.3.1">
+<h3><span class="header-section-number">8.3.1</span> Example: Dynamic aggregated model for multiple binomial response time series<a href="ch-binary.html#simul-hbin" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider the observation and state equations for a hierarchical DGLM (HDGLM) for <span class="math inline">\(g\)</span> binomial response series under a logit link:</p>
+<p><span class="math display" id="eq:bin-h2n">\[\begin{align}
+Y_{it}|\pi_{it} &amp; \sim  \text{Bin}(m_i, \pi_{it}), \notag \\
+\text{logit} (\pi_{it}) &amp;= \alpha +\beta_{it,0}+ \beta_{it,1}Z_{it,1}+\beta_{2}Z_{it,2},\notag \\
+\beta_{it,0} &amp;= \phi_0 \beta_{i,t-1,0} + w_{it,0}, \notag \\
+\beta_{it,1} &amp;= \phi_1 \beta_{i,t-1,1} + w_{it,1}.
+\tag{8.2}
+\end{align}\]</span>
+Here, <span class="math inline">\(\alpha\)</span> is a fixed level, while the intercept <span class="math inline">\(\beta_{it,0}\)</span> varies over both <span class="math inline">\(t\)</span> and <span class="math inline">\(i\)</span>; <span class="math inline">\(\beta_{it,1}\)</span> is a random effect corresponding to an exogenous predictor <span class="math inline">\(Z_{it,1}\)</span>, and we assume that it varies over both <span class="math inline">\(t\)</span> and <span class="math inline">\(i\)</span>; and <span class="math inline">\(\beta_2\)</span> is a static (fixed) effect corresponding to another exogenous predictor <span class="math inline">\(Z_{it,2}\)</span>. Specifically, <span class="math inline">\(\beta_{it,0}\)</span> follows a latent Gaussian AR(1) process with the same coefficient <span class="math inline">\(\phi_0\)</span> across all <span class="math inline">\(i\)</span>, where <span class="math inline">\(|\phi_0| &lt; 1\)</span>, and state error <span class="math inline">\(w_{it,0}\)</span> which is N<span class="math inline">\((0,\sigma^2_{w0})\)</span>. Likewise, <span class="math inline">\(\beta_{it,1}\)</span> is a latent Gaussian AR(1) process with coefficient <span class="math inline">\(\phi_1\)</span> (with <span class="math inline">\(|\phi_1| &lt; 1\)</span>), and state error <span class="math inline">\(w_{it,1} \sim\)</span> N<span class="math inline">\((0,\sigma^2_{w1})\)</span>.</p>
+<p>Values of the sizes <span class="math inline">\(m_i,~i=1,\ldots, g\)</span>, are randomly selected from the set of integers
+<span class="math inline">\(\{1,2,\ldots, 12\}\)</span>, and the true parameter values are shown below.</p>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="ch-binary.html#cb212-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123457</span>)</span>
+<span id="cb212-2"><a href="ch-binary.html#cb212-2" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="dv">300</span></span>
+<span id="cb212-3"><a href="ch-binary.html#cb212-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb212-4"><a href="ch-binary.html#cb212-4" aria-hidden="true" tabindex="-1"></a>burn.in <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb212-5"><a href="ch-binary.html#cb212-5" aria-hidden="true" tabindex="-1"></a>n.tot <span class="ot">&lt;-</span> n <span class="sc">+</span> burn.in</span>
+<span id="cb212-6"><a href="ch-binary.html#cb212-6" aria-hidden="true" tabindex="-1"></a>bin.size <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">size =</span> g, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb212-7"><a href="ch-binary.html#cb212-7" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">1.3</span></span>
+<span id="cb212-8"><a href="ch-binary.html#cb212-8" aria-hidden="true" tabindex="-1"></a>beta<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fl">2.0</span></span>
+<span id="cb212-9"><a href="ch-binary.html#cb212-9" aria-hidden="true" tabindex="-1"></a>sigma2.w0 <span class="ot">&lt;-</span> <span class="fl">0.15</span></span>
+<span id="cb212-10"><a href="ch-binary.html#cb212-10" aria-hidden="true" tabindex="-1"></a>sigma2.w1 <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb212-11"><a href="ch-binary.html#cb212-11" aria-hidden="true" tabindex="-1"></a>phi<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fl">0.8</span></span>
+<span id="cb212-12"><a href="ch-binary.html#cb212-12" aria-hidden="true" tabindex="-1"></a>phi<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fl">0.4</span></span></code></pre></div>
+<p>We simulate <span class="math inline">\(g=300\)</span> binomial response time series from <a href="ch-binary.html#eq:bin-h2n">(8.2)</a>, each of length <span class="math inline">\(n=100\)</span> as follows.</p>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="ch-binary.html#cb213-1" aria-hidden="true" tabindex="-1"></a>yit.all <span class="ot">&lt;-</span> z1.all <span class="ot">&lt;-</span> z2.all <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, g)</span>
+<span id="cb213-2"><a href="ch-binary.html#cb213-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>g) {</span>
+<span id="cb213-3"><a href="ch-binary.html#cb213-3" aria-hidden="true" tabindex="-1"></a>  z1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n.tot, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb213-4"><a href="ch-binary.html#cb213-4" aria-hidden="true" tabindex="-1"></a>  z2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n.tot, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb213-5"><a href="ch-binary.html#cb213-5" aria-hidden="true" tabindex="-1"></a>  yit <span class="ot">&lt;-</span></span>
+<span id="cb213-6"><a href="ch-binary.html#cb213-6" aria-hidden="true" tabindex="-1"></a>    beta<span class="fl">.0</span>t <span class="ot">&lt;-</span> beta<span class="fl">.1</span>t <span class="ot">&lt;-</span> pi.t <span class="ot">&lt;-</span> eta.t <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;double&quot;</span>, n.tot)</span>
+<span id="cb213-7"><a href="ch-binary.html#cb213-7" aria-hidden="true" tabindex="-1"></a>  beta<span class="fl">.0</span>t <span class="ot">&lt;-</span></span>
+<span id="cb213-8"><a href="ch-binary.html#cb213-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar =</span> phi<span class="fl">.0</span>, <span class="at">ma =</span> <span class="dv">0</span>),</span>
+<span id="cb213-9"><a href="ch-binary.html#cb213-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">n =</span> n.tot,</span>
+<span id="cb213-10"><a href="ch-binary.html#cb213-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma2.w0))</span>
+<span id="cb213-11"><a href="ch-binary.html#cb213-11" aria-hidden="true" tabindex="-1"></a>  beta<span class="fl">.1</span>t <span class="ot">&lt;-</span></span>
+<span id="cb213-12"><a href="ch-binary.html#cb213-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar =</span> phi<span class="fl">.1</span>, <span class="at">ma =</span> <span class="dv">0</span>),</span>
+<span id="cb213-13"><a href="ch-binary.html#cb213-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">n =</span> n.tot,</span>
+<span id="cb213-14"><a href="ch-binary.html#cb213-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma2.w1))</span>
+<span id="cb213-15"><a href="ch-binary.html#cb213-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n.tot) {</span>
+<span id="cb213-16"><a href="ch-binary.html#cb213-16" aria-hidden="true" tabindex="-1"></a>    eta.t[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta<span class="fl">.0</span>t[i] <span class="sc">+</span> beta<span class="fl">.1</span>t[i] <span class="sc">*</span> z1[i] <span class="sc">+</span> beta<span class="fl">.2</span> <span class="sc">*</span> z2[i]</span>
+<span id="cb213-17"><a href="ch-binary.html#cb213-17" aria-hidden="true" tabindex="-1"></a>    pi.t[i] <span class="ot">&lt;-</span> <span class="fu">exp</span>(eta.t[i]) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(eta.t[i]))</span>
+<span id="cb213-18"><a href="ch-binary.html#cb213-18" aria-hidden="true" tabindex="-1"></a>    yit[i] <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n =</span> <span class="dv">1</span>,</span>
+<span id="cb213-19"><a href="ch-binary.html#cb213-19" aria-hidden="true" tabindex="-1"></a>                     <span class="at">size =</span> bin.size[j],</span>
+<span id="cb213-20"><a href="ch-binary.html#cb213-20" aria-hidden="true" tabindex="-1"></a>                     <span class="at">prob =</span> pi.t[i])</span>
+<span id="cb213-21"><a href="ch-binary.html#cb213-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb213-22"><a href="ch-binary.html#cb213-22" aria-hidden="true" tabindex="-1"></a>  yit.all[[j]] <span class="ot">&lt;-</span> <span class="fu">tail</span>(yit, n)</span>
+<span id="cb213-23"><a href="ch-binary.html#cb213-23" aria-hidden="true" tabindex="-1"></a>  z1.all[[j]] <span class="ot">&lt;-</span> <span class="fu">tail</span>(z1, n)</span>
+<span id="cb213-24"><a href="ch-binary.html#cb213-24" aria-hidden="true" tabindex="-1"></a>  z2.all[[j]] <span class="ot">&lt;-</span> <span class="fu">tail</span>(z2, n)</span>
+<span id="cb213-25"><a href="ch-binary.html#cb213-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb213-26"><a href="ch-binary.html#cb213-26" aria-hidden="true" tabindex="-1"></a>yit.all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(yit.all)</span>
+<span id="cb213-27"><a href="ch-binary.html#cb213-27" aria-hidden="true" tabindex="-1"></a>z1.all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(z1.all)</span>
+<span id="cb213-28"><a href="ch-binary.html#cb213-28" aria-hidden="true" tabindex="-1"></a>z2.all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(z2.all)</span></code></pre></div>
+<p>Recall from Chapter <a href="chapter6.html#chapter6">6</a>, that to set up a hierarchical model, it is necessary to define appropriate indexes like <em>id.beta0</em> and <em>id.beta1</em> to capture the time varying effect and <em>re.beta0</em> and <em>re.beta1</em> to allow the intercept and covariate <span class="math inline">\(Z_{it,1}\)</span> to vary over groups <span class="math inline">\(i=1,\ldots,g\)</span>. In the binomial response models, note that the size <em>Ntrials</em> must be provided for each <span class="math inline">\(i\)</span> via
+<code>bin.size.all &lt;- rep(bin.size, each = n)</code>.</p>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="ch-binary.html#cb214-1" aria-hidden="true" tabindex="-1"></a>id.beta0 <span class="ot">&lt;-</span> id.beta1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, g)</span>
+<span id="cb214-2"><a href="ch-binary.html#cb214-2" aria-hidden="true" tabindex="-1"></a>re.beta0 <span class="ot">&lt;-</span> re.beta1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>g, <span class="at">each =</span> n)</span>
+<span id="cb214-3"><a href="ch-binary.html#cb214-3" aria-hidden="true" tabindex="-1"></a>bin.size.all <span class="ot">&lt;-</span> <span class="fu">rep</span>(bin.size, <span class="at">each =</span> n)</span>
+<span id="cb214-4"><a href="ch-binary.html#cb214-4" aria-hidden="true" tabindex="-1"></a>data.simul.hbin <span class="ot">&lt;-</span></span>
+<span id="cb214-5"><a href="ch-binary.html#cb214-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(id.beta0,</span>
+<span id="cb214-6"><a href="ch-binary.html#cb214-6" aria-hidden="true" tabindex="-1"></a>                   id.beta1,</span>
+<span id="cb214-7"><a href="ch-binary.html#cb214-7" aria-hidden="true" tabindex="-1"></a>                   yit.all,</span>
+<span id="cb214-8"><a href="ch-binary.html#cb214-8" aria-hidden="true" tabindex="-1"></a>                   z1.all,</span>
+<span id="cb214-9"><a href="ch-binary.html#cb214-9" aria-hidden="true" tabindex="-1"></a>                   re.beta0,</span>
+<span id="cb214-10"><a href="ch-binary.html#cb214-10" aria-hidden="true" tabindex="-1"></a>                   re.beta1,</span>
+<span id="cb214-11"><a href="ch-binary.html#cb214-11" aria-hidden="true" tabindex="-1"></a>                   bin.size.all)</span></code></pre></div>
+<p>We use non-default priors for <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\sigma^2_w\)</span> (in their internal parametrizations).</p>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="ch-binary.html#cb215-1" aria-hidden="true" tabindex="-1"></a>prior.hbin <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb215-2"><a href="ch-binary.html#cb215-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">prec =</span> <span class="fu">list</span>(<span class="at">prior =</span> <span class="st">&quot;loggamma&quot;</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>)),</span>
+<span id="cb215-3"><a href="ch-binary.html#cb215-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">rho =</span> <span class="fu">list</span>(<span class="at">prior =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.15</span>))</span>
+<span id="cb215-4"><a href="ch-binary.html#cb215-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>The formula and <code>inla()</code> call are shown below, followed by results from fitting the model in <a href="ch-binary.html#eq:bin-h2n">(8.2)</a> to this data. The fitted model for the aggregated binomial responses recovers the true parameters well, as seen from the posterior summaries of the fixed effects and the hyperparameters.</p>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="ch-binary.html#cb216-1" aria-hidden="true" tabindex="-1"></a>formula.simul.hbin <span class="ot">&lt;-</span></span>
+<span id="cb216-2"><a href="ch-binary.html#cb216-2" aria-hidden="true" tabindex="-1"></a>  yit.all <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> z2.all <span class="sc">+</span></span>
+<span id="cb216-3"><a href="ch-binary.html#cb216-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.beta0,</span>
+<span id="cb216-4"><a href="ch-binary.html#cb216-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb216-5"><a href="ch-binary.html#cb216-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">replicate =</span> re.beta0,</span>
+<span id="cb216-6"><a href="ch-binary.html#cb216-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">hyper =</span> prior.hbin) <span class="sc">+</span></span>
+<span id="cb216-7"><a href="ch-binary.html#cb216-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(</span>
+<span id="cb216-8"><a href="ch-binary.html#cb216-8" aria-hidden="true" tabindex="-1"></a>    id.beta1,</span>
+<span id="cb216-9"><a href="ch-binary.html#cb216-9" aria-hidden="true" tabindex="-1"></a>    z1.all,</span>
+<span id="cb216-10"><a href="ch-binary.html#cb216-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb216-11"><a href="ch-binary.html#cb216-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">replicate =</span> re.beta1,</span>
+<span id="cb216-12"><a href="ch-binary.html#cb216-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">hyper =</span> prior.hbin</span>
+<span id="cb216-13"><a href="ch-binary.html#cb216-13" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="ch-binary.html#cb217-1" aria-hidden="true" tabindex="-1"></a>model.simul.hbin <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb217-2"><a href="ch-binary.html#cb217-2" aria-hidden="true" tabindex="-1"></a>  formula.simul.hbin,</span>
+<span id="cb217-3"><a href="ch-binary.html#cb217-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>,</span>
+<span id="cb217-4"><a href="ch-binary.html#cb217-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ntrials =</span> bin.size.all,</span>
+<span id="cb217-5"><a href="ch-binary.html#cb217-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.family =</span> <span class="fu">list</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>),</span>
+<span id="cb217-6"><a href="ch-binary.html#cb217-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data.simul.hbin,</span>
+<span id="cb217-7"><a href="ch-binary.html#cb217-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>),</span>
+<span id="cb217-8"><a href="ch-binary.html#cb217-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb217-9"><a href="ch-binary.html#cb217-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb217-10"><a href="ch-binary.html#cb217-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb217-11"><a href="ch-binary.html#cb217-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb217-12"><a href="ch-binary.html#cb217-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb217-13"><a href="ch-binary.html#cb217-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span></span>
+<span id="cb217-14"><a href="ch-binary.html#cb217-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb217-15"><a href="ch-binary.html#cb217-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="ch-binary.html#cb218-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(summary.simul.hbin<span class="sc">$</span>fixed[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb218-2"><a href="ch-binary.html#cb218-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean  sd    0.025q 0.5q  0.975q</span></span>
+<span id="cb218-3"><a href="ch-binary.html#cb218-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept 1.279 0.014 1.252  1.279 1.306 </span></span>
+<span id="cb218-4"><a href="ch-binary.html#cb218-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 z2.all    1.978 0.011 1.956  1.978 2.000</span></span>
+<span id="cb218-5"><a href="ch-binary.html#cb218-5" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(summary.simul.hbin<span class="sc">$</span>hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb218-6"><a href="ch-binary.html#cb218-6" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                   mean   sd   </span></span>
+<span id="cb218-7"><a href="ch-binary.html#cb218-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for id.beta0  2.600 0.098</span></span>
+<span id="cb218-8"><a href="ch-binary.html#cb218-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Rho for id.beta0        0.811 0.009</span></span>
+<span id="cb218-9"><a href="ch-binary.html#cb218-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Precision for id.beta1 20.046 3.357</span></span>
+<span id="cb218-10"><a href="ch-binary.html#cb218-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Rho for id.beta1        0.263 0.324</span></span></code></pre></div>
+</div>
+<div id="hbin-weekly-shopping" class="section level3 hasAnchor" number="8.3.2">
+<h3><span class="header-section-number">8.3.2</span> Example: Weekly shopping trips for multiple households<a href="ch-binary.html#hbin-weekly-shopping" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We model the number of weekly shopping trips, i.e., <em>n.trips</em>, of <span class="math inline">\(g=548\)</span> households over <span class="math inline">\(n=104\)</span> weeks <span class="citation">(<a href="#ref-soyer2016bayesian" role="doc-biblioref">R. Soyer, Aktekin, and Kim 2016</a>)</span>. We fit a hierarchical model to the binomial responses <span class="math inline">\(Y_{it}\)</span>. The size <span class="math inline">\(m_i\)</span> of the binomial distribution for each household is taken to be the maximum of the shopping trips across all weeks for that household. The model has a random household-specific and time-varying intercept, but no exogenous predictors.</p>
+<p><span class="math display" id="eq:bin-h2-shop">\[\begin{align}
+Y_{it}|\pi_{it} &amp; \sim  \text{Bin}(m_i,\pi_{it}), \notag \\
+\text{logit} (\pi_{it}) &amp;= \alpha+\beta_{it,0} ,\notag \\
+\beta_{it,0} &amp;= \phi_0 \beta_{i,t-1,0} + w_{it,0},
+\tag{8.3}
+\end{align}\]</span></p>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="ch-binary.html#cb219-1" aria-hidden="true" tabindex="-1"></a>trips <span class="ot">&lt;-</span></span>
+<span id="cb219-2"><a href="ch-binary.html#cb219-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read.csv</span>(<span class="st">&quot;Weekly_Shopping_Trips.csv&quot;</span>,</span>
+<span id="cb219-3"><a href="ch-binary.html#cb219-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb219-4"><a href="ch-binary.html#cb219-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>Each row of the data set <em>trips</em> contains the weekly number of trips for each of <span class="math inline">\(g=548\)</span> households over <span class="math inline">\(n=104\)</span> weeks. We first convert data from <em>wide data</em> format to <em>long data</em> format, which facilitates our model setup.</p>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="ch-binary.html#cb220-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">nrow</span>(trips) </span>
+<span id="cb220-2"><a href="ch-binary.html#cb220-2" aria-hidden="true" tabindex="-1"></a>trips.long <span class="ot">&lt;-</span> trips <span class="sc">%&gt;%</span></span>
+<span id="cb220-3"><a href="ch-binary.html#cb220-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> W614<span class="sc">:</span>W717, <span class="at">names_to =</span> <span class="st">&quot;week&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb220-4"><a href="ch-binary.html#cb220-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">n.trips =</span> value)</span>
+<span id="cb220-5"><a href="ch-binary.html#cb220-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(trips.long<span class="sc">$</span>week)</span>
+<span id="cb220-6"><a href="ch-binary.html#cb220-6" aria-hidden="true" tabindex="-1"></a>n.hold <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb220-7"><a href="ch-binary.html#cb220-7" aria-hidden="true" tabindex="-1"></a>n.train <span class="ot">&lt;-</span> n <span class="sc">-</span> n.hold</span>
+<span id="cb220-8"><a href="ch-binary.html#cb220-8" aria-hidden="true" tabindex="-1"></a>trips.house <span class="ot">&lt;-</span> trips.long <span class="sc">%&gt;%</span> </span>
+<span id="cb220-9"><a href="ch-binary.html#cb220-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_split</span>(panelist)</span>
+<span id="cb220-10"><a href="ch-binary.html#cb220-10" aria-hidden="true" tabindex="-1"></a>train.df <span class="ot">&lt;-</span> trips.house <span class="sc">%&gt;%</span></span>
+<span id="cb220-11"><a href="ch-binary.html#cb220-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="cf">function</span>(x)</span>
+<span id="cb220-12"><a href="ch-binary.html#cb220-12" aria-hidden="true" tabindex="-1"></a>    x[<span class="dv">1</span><span class="sc">:</span>n.train, ]) <span class="sc">%&gt;%</span></span>
+<span id="cb220-13"><a href="ch-binary.html#cb220-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>()</span>
+<span id="cb220-14"><a href="ch-binary.html#cb220-14" aria-hidden="true" tabindex="-1"></a>test.df <span class="ot">&lt;-</span> trips.house <span class="sc">%&gt;%</span></span>
+<span id="cb220-15"><a href="ch-binary.html#cb220-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="cf">function</span>(x)</span>
+<span id="cb220-16"><a href="ch-binary.html#cb220-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tail</span>(x, n.hold)) <span class="sc">%&gt;%</span></span>
+<span id="cb220-17"><a href="ch-binary.html#cb220-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>()</span></code></pre></div>
+<p>We set up indexes and replicates for fitting <a href="ch-binary.html#eq:bin-h2-shop">(8.3)</a>.</p>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="ch-binary.html#cb221-1" aria-hidden="true" tabindex="-1"></a>bin.size <span class="ot">&lt;-</span> train.df <span class="sc">%&gt;%</span></span>
+<span id="cb221-2"><a href="ch-binary.html#cb221-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_split</span>(panelist) <span class="sc">%&gt;%</span></span>
+<span id="cb221-3"><a href="ch-binary.html#cb221-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(<span class="cf">function</span>(x)</span>
+<span id="cb221-4"><a href="ch-binary.html#cb221-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(x<span class="sc">$</span>n.trips))</span>
+<span id="cb221-5"><a href="ch-binary.html#cb221-5" aria-hidden="true" tabindex="-1"></a>trips.allh <span class="ot">&lt;-</span> trips.house <span class="sc">%&gt;%</span></span>
+<span id="cb221-6"><a href="ch-binary.html#cb221-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="cf">function</span>(x)</span>
+<span id="cb221-7"><a href="ch-binary.html#cb221-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(x, <span class="at">n.trips =</span> <span class="fu">replace</span>(</span>
+<span id="cb221-8"><a href="ch-binary.html#cb221-8" aria-hidden="true" tabindex="-1"></a>      n.trips, <span class="at">list =</span> (n.train <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>n, <span class="at">values =</span> <span class="cn">NA</span></span>
+<span id="cb221-9"><a href="ch-binary.html#cb221-9" aria-hidden="true" tabindex="-1"></a>    )))</span>
+<span id="cb221-10"><a href="ch-binary.html#cb221-10" aria-hidden="true" tabindex="-1"></a>id.b0 <span class="ot">&lt;-</span> id.house <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, g)</span>
+<span id="cb221-11"><a href="ch-binary.html#cb221-11" aria-hidden="true" tabindex="-1"></a>re <span class="ot">&lt;-</span> re.house <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>g, <span class="at">each =</span> n)</span>
+<span id="cb221-12"><a href="ch-binary.html#cb221-12" aria-hidden="true" tabindex="-1"></a>trips.allh <span class="ot">&lt;-</span></span>
+<span id="cb221-13"><a href="ch-binary.html#cb221-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(<span class="fu">bind_rows</span>(trips.allh), id.b0, re, id.house, re.house)</span>
+<span id="cb221-14"><a href="ch-binary.html#cb221-14" aria-hidden="true" tabindex="-1"></a>prior.hbin <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb221-15"><a href="ch-binary.html#cb221-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">prec =</span> <span class="fu">list</span>(<span class="at">prior =</span> <span class="st">&quot;loggamma&quot;</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>)),</span>
+<span id="cb221-16"><a href="ch-binary.html#cb221-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">rho =</span> <span class="fu">list</span>(<span class="at">prior =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.15</span>))</span>
+<span id="cb221-17"><a href="ch-binary.html#cb221-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb221-18"><a href="ch-binary.html#cb221-18" aria-hidden="true" tabindex="-1"></a>bin.size.all <span class="ot">&lt;-</span> <span class="fu">rep</span>(bin.size, <span class="at">each =</span> n)</span></code></pre></div>
+<p>The formula and results are shown below.</p>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="ch-binary.html#cb222-1" aria-hidden="true" tabindex="-1"></a>formula.allh <span class="ot">&lt;-</span> n.trips <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span></span>
+<span id="cb222-2"><a href="ch-binary.html#cb222-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.b0,</span>
+<span id="cb222-3"><a href="ch-binary.html#cb222-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb222-4"><a href="ch-binary.html#cb222-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">replicate =</span> re,<span class="at">hyper =</span> prior.hbin) <span class="sc">+</span></span>
+<span id="cb222-5"><a href="ch-binary.html#cb222-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.house, <span class="at">model =</span> <span class="st">&quot;iid&quot;</span>, <span class="at">replicate =</span> re.house)</span>
+<span id="cb222-6"><a href="ch-binary.html#cb222-6" aria-hidden="true" tabindex="-1"></a>model.allh <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb222-7"><a href="ch-binary.html#cb222-7" aria-hidden="true" tabindex="-1"></a>  formula.allh,</span>
+<span id="cb222-8"><a href="ch-binary.html#cb222-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>,</span>
+<span id="cb222-9"><a href="ch-binary.html#cb222-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ntrials =</span> bin.size.all,</span>
+<span id="cb222-10"><a href="ch-binary.html#cb222-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.family =</span> <span class="fu">list</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>),</span>
+<span id="cb222-11"><a href="ch-binary.html#cb222-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> trips.allh,</span>
+<span id="cb222-12"><a href="ch-binary.html#cb222-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>),</span>
+<span id="cb222-13"><a href="ch-binary.html#cb222-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb222-14"><a href="ch-binary.html#cb222-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb222-15"><a href="ch-binary.html#cb222-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb222-16"><a href="ch-binary.html#cb222-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb222-17"><a href="ch-binary.html#cb222-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb222-18"><a href="ch-binary.html#cb222-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb222-19"><a href="ch-binary.html#cb222-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb222-20"><a href="ch-binary.html#cb222-20" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(model.allh) </span></span></code></pre></div>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="ch-binary.html#cb223-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.allh<span class="sc">$</span>summary.fixed[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb223-2"><a href="ch-binary.html#cb223-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean   sd   </span></span>
+<span id="cb223-3"><a href="ch-binary.html#cb223-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept -0.737 0.019</span></span>
+<span id="cb223-4"><a href="ch-binary.html#cb223-4" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.allh<span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb223-5"><a href="ch-binary.html#cb223-5" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                   mean   sd   </span></span>
+<span id="cb223-6"><a href="ch-binary.html#cb223-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for id.b0     2.575 0.104</span></span>
+<span id="cb223-7"><a href="ch-binary.html#cb223-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Rho for id.b0           0.975 0.002</span></span>
+<span id="cb223-8"><a href="ch-binary.html#cb223-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Precision for id.house 11.480 1.095</span></span></code></pre></div>
+<p>Similar to Section <a href="ch-binary.html#bin-weekly-shopping">8.2.2</a>, we obtain the posterior predictions and their summaries for all <span class="math inline">\(g\)</span> households using <code>inla.posterior.sample()</code>.</p>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="ch-binary.html#cb224-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234579</span>)</span>
+<span id="cb224-2"><a href="ch-binary.html#cb224-2" aria-hidden="true" tabindex="-1"></a>post.samp <span class="ot">&lt;-</span> <span class="fu">inla.posterior.sample</span>(<span class="at">n =</span> <span class="dv">1000</span>, model.allh)</span>
+<span id="cb224-3"><a href="ch-binary.html#cb224-3" aria-hidden="true" tabindex="-1"></a>model.allh<span class="sc">$</span>misc<span class="sc">$</span>configs<span class="sc">$</span>contents</span>
+<span id="cb224-4"><a href="ch-binary.html#cb224-4" aria-hidden="true" tabindex="-1"></a>fit.post.samp <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, <span class="dv">1000</span>)</span>
+<span id="cb224-5"><a href="ch-binary.html#cb224-5" aria-hidden="true" tabindex="-1"></a>fit.house <span class="ot">&lt;-</span></span>
+<span id="cb224-6"><a href="ch-binary.html#cb224-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="dv">0</span>,</span>
+<span id="cb224-7"><a href="ch-binary.html#cb224-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">nrow =</span> n,</span>
+<span id="cb224-8"><a href="ch-binary.html#cb224-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">ncol =</span> g,</span>
+<span id="cb224-9"><a href="ch-binary.html#cb224-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">paste</span>(<span class="st">&quot;H&quot;</span>, <span class="dv">1</span><span class="sc">:</span>g, <span class="at">sep =</span> <span class="st">&quot;.&quot;</span>)))</span>
+<span id="cb224-10"><a href="ch-binary.html#cb224-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>) {</span>
+<span id="cb224-11"><a href="ch-binary.html#cb224-11" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> post.samp[[j]]<span class="sc">$</span>latent[<span class="dv">1</span><span class="sc">:</span>(n <span class="sc">*</span> g)] <span class="sc">%&gt;%</span></span>
+<span id="cb224-12"><a href="ch-binary.html#cb224-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matrix</span>(<span class="at">nrow =</span> n,</span>
+<span id="cb224-13"><a href="ch-binary.html#cb224-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">ncol =</span> g,</span>
+<span id="cb224-14"><a href="ch-binary.html#cb224-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">byrow =</span> F)</span>
+<span id="cb224-15"><a href="ch-binary.html#cb224-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>g) {</span>
+<span id="cb224-16"><a href="ch-binary.html#cb224-16" aria-hidden="true" tabindex="-1"></a>    fit.house[, i] <span class="ot">&lt;-</span></span>
+<span id="cb224-17"><a href="ch-binary.html#cb224-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sapply</span>(p[, i], <span class="cf">function</span>(x)</span>
+<span id="cb224-18"><a href="ch-binary.html#cb224-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">rbinom</span>(<span class="dv">1</span>, bin.size[g], <span class="fu">exp</span>(x) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(x))))</span>
+<span id="cb224-19"><a href="ch-binary.html#cb224-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb224-20"><a href="ch-binary.html#cb224-20" aria-hidden="true" tabindex="-1"></a>  fit.post.samp[[j]] <span class="ot">&lt;-</span> fit.house</span>
+<span id="cb224-21"><a href="ch-binary.html#cb224-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb224-22"><a href="ch-binary.html#cb224-22" aria-hidden="true" tabindex="-1"></a>fit.post.samp.all <span class="ot">&lt;-</span> fit.post.samp <span class="sc">%&gt;%</span></span>
+<span id="cb224-23"><a href="ch-binary.html#cb224-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(as_tibble) <span class="sc">%&gt;%</span></span>
+<span id="cb224-24"><a href="ch-binary.html#cb224-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>()</span>
+<span id="cb224-25"><a href="ch-binary.html#cb224-25" aria-hidden="true" tabindex="-1"></a>fit.per.house <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, g)</span>
+<span id="cb224-26"><a href="ch-binary.html#cb224-26" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(fit.per.house)</span>
+<span id="cb224-27"><a href="ch-binary.html#cb224-27" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(fit.post.samp.all[, <span class="dv">1</span>])</span>
+<span id="cb224-28"><a href="ch-binary.html#cb224-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>g) {</span>
+<span id="cb224-29"><a href="ch-binary.html#cb224-29" aria-hidden="true" tabindex="-1"></a>  fit.per.house[[k]] <span class="ot">&lt;-</span></span>
+<span id="cb224-30"><a href="ch-binary.html#cb224-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matrix</span>(<span class="fu">c</span>(fit.post.samp.all[[k]]), <span class="at">nrow =</span> n, <span class="at">ncol =</span> <span class="dv">1000</span>)</span>
+<span id="cb224-31"><a href="ch-binary.html#cb224-31" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>In Figure <a href="ch-binary.html#fig:household-obs-fit">8.3</a>, we show plots of observed and fitted values from the hierarchical model <a href="ch-binary.html#eq:bin-h2-shop">(8.3)</a> for a random sample of four households.</p>
+<div class="figure"><span id="fig:household-obs-fit"></span>
+<img src="gitbook_version_files/figure-html/household-obs-fit-1.png" alt="Plots of observed (red) and fitted (blue) series for four different households." width="672" />
+<p class="caption">
+FIGURE 8.3: Plots of observed (red) and fitted (blue) series for four different households.
+</p>
+</div>
+</div>
+</div>
+<div id="cat-models" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Multinomial time series<a href="ch-binary.html#cat-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We end this chapter with a discussion on using <code>R-INLA</code> for modeling categorical time series that follow a multinomial distribution; see <span class="citation">Cargnoni, Müller, and West (<a href="#ref-cargnoni1997bayesian" role="doc-biblioref">1997</a>)</span>.
+Consider a categorical variable with <span class="math inline">\(J\)</span> mutually exclusive levels. For example, the variable could be the channel for selling a product, with <span class="math inline">\(J=3\)</span> levels corresponding to brick-and-mortar stores, discount stores, and online sites.
+Suppose that out of a total of <span class="math inline">\(Y_{t+}\)</span> units at time <span class="math inline">\(t\)</span>,
+<span class="math inline">\(Y_{j,t}\)</span> units correspond to level <span class="math inline">\(j,~j=1,\ldots,J\)</span>, such that
+<span class="math inline">\(Y_{j,t}\)</span> are non-negative integers, and <span class="math inline">\(\sum_{j=1}^J Y_{j,t}=Y_{t+}\)</span>.
+At each time <span class="math inline">\(t\)</span>, given
+<span class="math inline">\(Y_{t+}\)</span> (i.e., assuming that <span class="math inline">\(Y_{t+}\)</span> is a fixed constant), suppose that the random vector
+<span class="math inline">\(\boldsymbol{y}_t =(Y_{1,t}, \ldots, Y_{J,t})&#39;\)</span> has a multinomial distribution, <span class="math inline">\(MN(Y_{t+},\pi_{1,t},\ldots, \pi_{J,t})\)</span>, with p.m.f.</p>
+<p><span class="math display" id="eq:cat-1">\[\begin{align}
+p(\boldsymbol{y}_t; \boldsymbol{\pi}_t, Y_{t+})
+&amp; = \frac{Y_{t+}!}{\prod_{j=1}^J y_{j,t}!} \prod_{j=1}^J \pi_{j,t}^{Y_{j,t}}
+\notag \\
+&amp;= \frac{\Gamma(Y_{t+}+1)}{\prod_{j=1}^J \Gamma(Y_{j,t}+1)} \prod_{j=1}^J \pi_{j,t}^{Y_{j,t}},
+\tag{8.4}
+\end{align}\]</span>
+where <span class="math inline">\(\boldsymbol{\pi}_t = (\pi_{1,t},\ldots, \pi_{J,t})&#39;\)</span>, <span class="math inline">\(0 \le \pi_{j,t} \le 1\)</span> and <span class="math inline">\(\sum_{j=1}^J \pi_{j,t}=1\)</span>.</p>
+<p>At each time <span class="math inline">\(t\)</span>, assume that we have a <span class="math inline">\(k\)</span>-dimensional vector of predictors
+<span class="math inline">\(\boldsymbol{Z}_{j,t}\)</span>, which may also vary by level <span class="math inline">\(j\)</span>.
+Let <span class="math inline">\(\boldsymbol{Y}^n = (\boldsymbol{y}_{1}&#39;,\ldots,\boldsymbol{y}_{n}&#39;)&#39;\)</span> denote the observed multinomial data over <span class="math inline">\(n\)</span> time periods (i.e., <span class="math inline">\(t=1,\ldots,n\)</span>).
+Assume that the proportions <span class="math inline">\(\pi_{j,t}\)</span> are proportional to the regression function
+<span class="math inline">\(g_{j,t}(\boldsymbol{\beta},\boldsymbol{Z}_{j,t}),~j=1,\ldots,J\)</span>, where <span class="math inline">\(\boldsymbol{\beta}\)</span> represents the <span class="math inline">\(k\)</span>-dimensional vector of regression coefficients.
+Let <span class="math inline">\(\eta_{j,t} = \boldsymbol{Z}&#39;_{j,t} \boldsymbol{\beta}\)</span>.
+For simplicity of notation, denote <span class="math inline">\(g_{j,t}(\boldsymbol{\beta},\boldsymbol{Z}_{j,t})\)</span> by <span class="math inline">\(g_{j,t}(\boldsymbol{\beta})\)</span>, and let
+<span class="math inline">\(G_t(\boldsymbol{\beta}) = \sum_{j=1}^J g_{j,t}(\boldsymbol{\beta})\)</span>.
+The most commonly used link function specifies</p>
+<p><span class="math display">\[\begin{align}
+g_{j,t}(\boldsymbol{\beta}) = \exp(\eta_{j,t}) = \exp(\boldsymbol{z}&#39;_{j,t} \boldsymbol{\beta}).
+\end{align}\]</span></p>
+<p>The multinomial proportions are expressed as functions of <span class="math inline">\(\boldsymbol{\beta}\)</span>, i.e.,</p>
+<p><span class="math display" id="eq:cat-2">\[\begin{align}
+\pi_{j,t}(\boldsymbol{\beta}) = \frac{g_{j,t}(\boldsymbol{\beta})}{G_t (\boldsymbol{\beta})},
+\tag{8.5}
+\end{align}\]</span>
+and the multinomial likelihood <!--in \@ref(eq:cat-1)-->
+can be written as</p>
+<p><span class="math display" id="eq:cat-7">\[\begin{align}
+L_{\mathcal{M}}(\boldsymbol{\beta};\boldsymbol{Y}^n) \propto \prod_{t=1}^n \prod_{j=1}^J
+\left[\frac{g_{j,t}(\boldsymbol\beta)}{G_t(\boldsymbol\beta)}\right]^{y_{j,t}},   \tag{8.6}
+\end{align}\]</span>
+where the subscript <span class="math inline">\(\mathcal{M}\)</span> stands for <em>multinomial</em>. To carry out Bayesian inference, we employ appropriate priors on <span class="math inline">\(\boldsymbol{\beta}\)</span> and obtain
+posterior summaries.</p>
+<p>Templates for directly specifiying the formulas for Bayesian modeling of categorical data are not currently available in <code>INLA</code>. Instead, <code>INLA</code> uses the well-known
+<em>Multinomial-Poisson (M-P) transform</em> to rewrite the multinomial likelihood
+in <a href="ch-binary.html#eq:cat-7">(8.6)</a> as an (see <span class="citation">Baker (<a href="#ref-baker1994multinomial" role="doc-biblioref">1994</a>)</span> and <span class="citation">Guimaraes (<a href="#ref-guimaraes2004MNPoisson" role="doc-biblioref">2004</a>)</span>), an approach referred to in the literature as the <em>Poisson-trick</em> (<span class="citation">Lee, Green, and Ryan (<a href="#ref-lee2017poissontrick" role="doc-biblioref">2017</a>)</span> and <span class="citation">Chen and Liu (<a href="#ref-chen1997poissontrick" role="doc-biblioref">1997</a>)</span>).</p>
+<p>Let <span class="math inline">\(\phi_t\)</span> be an auxiliary parameter for each time <span class="math inline">\(t\)</span>, and let <span class="math inline">\(\boldsymbol{\phi} = (\phi_1,\ldots,\phi_n)&#39;\)</span>.
+The idea behind the Multinomial-Poisson (M-P)
+transformation is to assume that independently for all <span class="math inline">\(t\)</span>, <span class="math inline">\(Y_{t+}\)</span> is a random variable with</p>
+<p><span class="math display" id="eq:cat-8">\[\begin{align}
+Y_{t+} \sim {\rm Poisson}(\phi_t G_t(\boldsymbol{\beta})),
+\tag{8.7}
+\end{align}\]</span>
+and to show that estimating <span class="math inline">\(\boldsymbol{\beta}\)</span> by maximizing <a href="ch-binary.html#eq:cat-7">(8.6)</a> is equivalent to estimating it by maximizing</p>
+<p><span class="math display" id="eq:cat-10">\[\begin{align}
+L_{\mathcal{P}}(\boldsymbol{\phi},\boldsymbol{\beta}; \boldsymbol{Y}^n) \propto
+\prod_{t=1}^n \prod_{j=1}^J
+[g_{j,t}(\boldsymbol{\beta}) e^{\phi_t}]^{y_{j,t}}
+\exp [- g_{j,t}(\boldsymbol{\beta}) e^{\phi_t}].
+\tag{8.8}
+\end{align}\]</span>
+See Chapter <a href="ch-binary.html#ch-binary">8</a> – Appendix for details.</p>
+<div id="simul-mn-p" class="section level3 hasAnchor" number="8.4.1">
+<h3><span class="header-section-number">8.4.1</span> Example: Simulated categorical time series<a href="ch-binary.html#simul-mn-p" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider a dynamic model for <span class="math inline">\(\boldsymbol{y}_t = (Y_{1,t}, \ldots, Y_{J,t})&#39;\)</span> with</p>
+<p><span class="math display" id="eq:mlogit-obs">\[\begin{align}
+g_{j,t}(\boldsymbol{\beta}_t,\boldsymbol{Z}_{j,t})
+&amp;= \exp(\boldsymbol{Z}&#39;_{j,t}\boldsymbol{\beta}_t) = \exp(\eta_{j,t}), {\rm where} \notag \\  
+\eta_{j,t} &amp; =
+\begin{cases}
+\beta_{j,t,0} + \beta C_{j,t} + \delta_j U_{j,t}  &amp; \mbox{ if } j=i, \\
+\beta C_{j,t} + \delta_j U_{j,t} &amp; \mbox{ if } j \neq i,  
+\end{cases}
+\tag{8.9}
+\end{align}\]</span>
+where the time-varying intercept <span class="math inline">\(\beta_{j,t,0}\)</span> for the selected category evolves as a random walk</p>
+<p><span class="math display" id="eq:mlogit-rw">\[\begin{align}
+\beta_{j,t,0} = \beta_{j,t-1,0} + w_{j,t},
+\tag{8.10}
+\end{align}\]</span>
+with <span class="math inline">\(w_{j,t} \sim N(0, \sigma^2_{w_j})\)</span>.
+For instance, if we let <span class="math inline">\(j=1\)</span>, then <span class="math inline">\(\eta_{1,t}\)</span> for the first category includes a dynamic intercept <span class="math inline">\(\beta_{1,t,0}\)</span>, while the others do not. In <a href="ch-binary.html#eq:mlogit-obs">(8.9)</a>, <span class="math inline">\(C_{j,t}\)</span> is a category specific predictor over time with a coefficient <span class="math inline">\(\beta\)</span> which is constant across <span class="math inline">\(t\)</span> and <span class="math inline">\(j\)</span>,
+<span class="math inline">\(U_{j,t}\)</span> is another category specific predictor over time with a category-specific coefficient <span class="math inline">\(\delta_j\)</span>. For more on this setup, see.<a href="resources.html#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
+<div id="model-d1-dynamic-intercept-in-a-single-category" class="section level4 unnumbered hasAnchor">
+<h4>Model D1: Dynamic intercept in a single category<a href="ch-binary.html#model-d1-dynamic-intercept-in-a-single-category" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>We generate a <em>single categorical time series</em> of length <span class="math inline">\(n=500\)</span>,
+with <span class="math inline">\(J=3\)</span> categories, so that, at each time <span class="math inline">\(t\)</span>, <span class="math inline">\(N=100\)</span> units are categorized into
+these three groups. Here, <span class="math inline">\(N\)</span> denotes the
+multinomial size and <span class="math inline">\(Y_{j,t}\)</span> denotes the multinomial counts for <span class="math inline">\(j=1,\ldots,J\)</span> categories at time <span class="math inline">\(t\)</span>.
+We set up the true parameter values for the model in <a href="ch-binary.html#eq:mlogit-obs">(8.9)</a> and <a href="ch-binary.html#eq:mlogit-rw">(8.10)</a>, and generate a latent time-varying random effect <span class="math inline">\(\beta_{1,t,0}\)</span> for the <em>first</em> category.</p>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="ch-binary.html#cb225-1" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span>  <span class="sc">-</span><span class="fl">0.3</span>  <span class="co"># coefficient for C[j,t]</span></span>
+<span id="cb225-2"><a href="ch-binary.html#cb225-2" aria-hidden="true" tabindex="-1"></a>deltas <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>) <span class="co"># category specific coefficients for U[j,t]</span></span>
+<span id="cb225-3"><a href="ch-binary.html#cb225-3" aria-hidden="true" tabindex="-1"></a>param <span class="ot">&lt;-</span>  <span class="fu">c</span>(beta, deltas)</span>
+<span id="cb225-4"><a href="ch-binary.html#cb225-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span>  <span class="dv">1000</span> </span>
+<span id="cb225-5"><a href="ch-binary.html#cb225-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123457</span>)</span>
+<span id="cb225-6"><a href="ch-binary.html#cb225-6" aria-hidden="true" tabindex="-1"></a><span class="co"># category specific predictor with constant coefficient beta</span></span>
+<span id="cb225-7"><a href="ch-binary.html#cb225-7" aria-hidden="true" tabindex="-1"></a>C<span class="fl">.1</span> <span class="ot">&lt;-</span>  <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">30</span>, <span class="at">sd =</span> <span class="fl">2.5</span>)</span>
+<span id="cb225-8"><a href="ch-binary.html#cb225-8" aria-hidden="true" tabindex="-1"></a>C<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">35</span>, <span class="at">sd =</span> <span class="fl">3.5</span>)</span>
+<span id="cb225-9"><a href="ch-binary.html#cb225-9" aria-hidden="true" tabindex="-1"></a>C<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">40</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb225-10"><a href="ch-binary.html#cb225-10" aria-hidden="true" tabindex="-1"></a><span class="co"># category specific predictor with category-specific coefficient delta_j</span></span>
+<span id="cb225-11"><a href="ch-binary.html#cb225-11" aria-hidden="true" tabindex="-1"></a>U<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb225-12"><a href="ch-binary.html#cb225-12" aria-hidden="true" tabindex="-1"></a>U<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb225-13"><a href="ch-binary.html#cb225-13" aria-hidden="true" tabindex="-1"></a>U<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<p>We set up the following function to simulate the time series from model <a href="ch-binary.html#eq:mlogit-obs">(8.9)</a> and <a href="ch-binary.html#eq:mlogit-rw">(8.10)</a>. Note that we can include a random walk effect for either of the other categories <span class="math inline">\(j=2\)</span> as <span class="math inline">\(\beta_{2,t,0}\)</span> or for <span class="math inline">\(j=3\)</span> as <span class="math inline">\(\beta_{3,t,0}\)</span> instead of category <span class="math inline">\(j=1\)</span>, by modifying the code below, i.e., uncommenting
+<code>random.int[t]</code> for the category we wish to modify and commenting it out from the others.</p>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="ch-binary.html#cb226-1" aria-hidden="true" tabindex="-1"></a>Multinom.sample.rand <span class="ot">&lt;-</span> <span class="cf">function</span>(N, random.int) {</span>
+<span id="cb226-2"><a href="ch-binary.html#cb226-2" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> n)</span>
+<span id="cb226-3"><a href="ch-binary.html#cb226-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb226-4"><a href="ch-binary.html#cb226-4" aria-hidden="true" tabindex="-1"></a>    eta<span class="fl">.1</span> <span class="ot">&lt;-</span> beta <span class="sc">*</span> C<span class="fl">.1</span>[t] <span class="sc">+</span> deltas[<span class="dv">1</span>] <span class="sc">*</span> U<span class="fl">.1</span>[t] <span class="sc">+</span> </span>
+<span id="cb226-5"><a href="ch-binary.html#cb226-5" aria-hidden="true" tabindex="-1"></a>      random.int[t]</span>
+<span id="cb226-6"><a href="ch-binary.html#cb226-6" aria-hidden="true" tabindex="-1"></a>    eta<span class="fl">.2</span> <span class="ot">&lt;-</span> beta <span class="sc">*</span> C<span class="fl">.2</span>[t] <span class="sc">+</span> deltas[<span class="dv">2</span>] <span class="sc">*</span> U<span class="fl">.2</span>[t]  </span>
+<span id="cb226-7"><a href="ch-binary.html#cb226-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   + random.int[t]</span></span>
+<span id="cb226-8"><a href="ch-binary.html#cb226-8" aria-hidden="true" tabindex="-1"></a>    eta<span class="fl">.3</span> <span class="ot">&lt;-</span> beta <span class="sc">*</span> C<span class="fl">.3</span>[t] <span class="sc">+</span> deltas[<span class="dv">3</span>] <span class="sc">*</span> U<span class="fl">.3</span>[t] </span>
+<span id="cb226-9"><a href="ch-binary.html#cb226-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   + random.int[t]</span></span>
+<span id="cb226-10"><a href="ch-binary.html#cb226-10" aria-hidden="true" tabindex="-1"></a>    probs <span class="ot">&lt;-</span> <span class="fu">c</span>(eta<span class="fl">.1</span>, eta<span class="fl">.2</span>, eta<span class="fl">.3</span>)</span>
+<span id="cb226-11"><a href="ch-binary.html#cb226-11" aria-hidden="true" tabindex="-1"></a>    probs <span class="ot">&lt;-</span> <span class="fu">exp</span>(probs) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">exp</span>(probs))</span>
+<span id="cb226-12"><a href="ch-binary.html#cb226-12" aria-hidden="true" tabindex="-1"></a>    samp <span class="ot">&lt;-</span> <span class="fu">rmultinom</span>(<span class="dv">1</span>, N, <span class="at">prob =</span> probs)</span>
+<span id="cb226-13"><a href="ch-binary.html#cb226-13" aria-hidden="true" tabindex="-1"></a>    Y[t,] <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(samp)</span>
+<span id="cb226-14"><a href="ch-binary.html#cb226-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb226-15"><a href="ch-binary.html#cb226-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(Y) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Y.1&quot;</span>, <span class="st">&quot;Y.2&quot;</span>, <span class="st">&quot;Y.3&quot;</span>)</span>
+<span id="cb226-16"><a href="ch-binary.html#cb226-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(Y)</span>
+<span id="cb226-17"><a href="ch-binary.html#cb226-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We generate <span class="math inline">\(\beta_{1,t,0}\)</span> from a random walk with standard deviation 0.1.</p>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="ch-binary.html#cb227-1" aria-hidden="true" tabindex="-1"></a>rw1.int <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n)</span>
+<span id="cb227-2"><a href="ch-binary.html#cb227-2" aria-hidden="true" tabindex="-1"></a>rw1.int[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb227-3"><a href="ch-binary.html#cb227-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n) {</span>
+<span id="cb227-4"><a href="ch-binary.html#cb227-4" aria-hidden="true" tabindex="-1"></a>  rw1.int[t] <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> rw1.int[t <span class="sc">-</span> <span class="dv">1</span>], <span class="at">sd =</span> <span class="fl">0.1</span>)</span>
+<span id="cb227-5"><a href="ch-binary.html#cb227-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We then generate the multinomial time series <em>Y.rw1</em> with size <span class="math inline">\(N=100\)</span> at each time <span class="math inline">\(t\)</span>, and plot the series, see Figure <a href="ch-binary.html#fig:mn-tsplots">8.4</a>.</p>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="ch-binary.html#cb228-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb228-2"><a href="ch-binary.html#cb228-2" aria-hidden="true" tabindex="-1"></a>Y.rw1 <span class="ot">&lt;-</span> <span class="fu">Multinom.sample.rand</span>(N, rw1.int)</span></code></pre></div>
+<div class="figure"><span id="fig:mn-tsplots"></span>
+<img src="gitbook_version_files/figure-html/mn-tsplots-1.png" alt="Simulated multinomial time series from Model D1." width="672" />
+<p class="caption">
+FIGURE 8.4: Simulated multinomial time series from Model D1.
+</p>
+</div>
+<p>Next, we build the data set to input into <code>R-INLA</code>. This data set will have <span class="math inline">\(3n\)</span> rows, one for each choice category in each choice situation, <code>Y.1, Y.2, Y.3</code>.
+For the predictor <span class="math inline">\(C_{j,t}\)</span>, we use the long format, so we stack <code>C.1, C.2, C.3</code> into a long vector <em>C</em> in a single column.
+For the predictors <span class="math inline">\(U_{j,t}\)</span>, we use three columns, <code>U.1, U.2, U.3</code>, one for each category with <span class="math inline">\(3n\)</span> rows each. Each column will have the value of the predictor for the corresponding category, and zeros for the other categories.</p>
+<p>The data frame additionally includes one more column, i.e.,
+an index column representing the choice situation, with an additional parameter <span class="math inline">\(\phi\)</span>, corresponding to the <span class="math inline">\(\phi_t\)</span> we included in the M-P transformation. Note that <span class="math inline">\(\phi_t\)</span> indexes time but remains the same across categories for each time. The following function takes as input a data frame in wide format and transforms it
+into the structure described above, and sets up the index for the dynamic intercept <span class="math inline">\(\beta_{1,t,0}\)</span>. We then construct the data frame <em>inla.dat</em>.</p>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="ch-binary.html#cb229-1" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">c</span>(Y.rw1[,<span class="dv">1</span>], Y.rw1[, <span class="dv">2</span>], Y.rw1[, <span class="dv">3</span>])</span>
+<span id="cb229-2"><a href="ch-binary.html#cb229-2" aria-hidden="true" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="fu">c</span>(C<span class="fl">.1</span>, C<span class="fl">.2</span>, C<span class="fl">.3</span>)</span>
+<span id="cb229-3"><a href="ch-binary.html#cb229-3" aria-hidden="true" tabindex="-1"></a>U<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(U<span class="fl">.1</span>, <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">2</span><span class="sc">*</span>n))</span>
+<span id="cb229-4"><a href="ch-binary.html#cb229-4" aria-hidden="true" tabindex="-1"></a>U<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="cn">NA</span>, n),U<span class="fl">.2</span>, <span class="fu">rep</span>(<span class="cn">NA</span>, n))</span>
+<span id="cb229-5"><a href="ch-binary.html#cb229-5" aria-hidden="true" tabindex="-1"></a>U<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">2</span><span class="sc">*</span>n),U<span class="fl">.3</span>)</span>
+<span id="cb229-6"><a href="ch-binary.html#cb229-6" aria-hidden="true" tabindex="-1"></a>rw1.idx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">2</span><span class="sc">*</span>n))</span>
+<span id="cb229-7"><a href="ch-binary.html#cb229-7" aria-hidden="true" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="dv">3</span>)</span>
+<span id="cb229-8"><a href="ch-binary.html#cb229-8" aria-hidden="true" tabindex="-1"></a>inla.dat <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(Y, C, U<span class="fl">.1</span>, U<span class="fl">.2</span>, U<span class="fl">.3</span>, rw1.idx, phi)</span></code></pre></div>
+<p>The formula using the M-P transformation is given below.</p>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="ch-binary.html#cb230-1" aria-hidden="true" tabindex="-1"></a>formula.rw1 <span class="ot">&lt;-</span> Y <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> C <span class="sc">+</span> U<span class="fl">.1</span> <span class="sc">+</span> U<span class="fl">.2</span> <span class="sc">+</span> U<span class="fl">.3</span> <span class="sc">+</span></span>
+<span id="cb230-2"><a href="ch-binary.html#cb230-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(phi, <span class="at">model =</span> <span class="st">&quot;iid&quot;</span>,</span>
+<span id="cb230-3"><a href="ch-binary.html#cb230-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">hyper =</span> <span class="fu">list</span>(<span class="at">prec =</span> <span class="fu">list</span>(<span class="at">initial =</span> <span class="sc">-</span><span class="dv">10</span>,<span class="at">fixed =</span> <span class="cn">TRUE</span>))) <span class="sc">+</span></span>
+<span id="cb230-4"><a href="ch-binary.html#cb230-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(rw1.idx, <span class="at">model =</span> <span class="st">&quot;rw1&quot;</span>, <span class="at">constr =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>For <span class="math inline">\(\phi_t\)</span>, the default is <code>f(phi, model = "iid", hyper = list(prec = list(initial = -10, fixed = TRUE)))</code>; but we can instead use
+<code>f(phi, initial = -10, fixed = TRUE)</code> and get the same results.</p>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="ch-binary.html#cb231-1" aria-hidden="true" tabindex="-1"></a>model.rw1 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb231-2"><a href="ch-binary.html#cb231-2" aria-hidden="true" tabindex="-1"></a>  formula.rw1,</span>
+<span id="cb231-3"><a href="ch-binary.html#cb231-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;poisson&quot;</span>,</span>
+<span id="cb231-4"><a href="ch-binary.html#cb231-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> inla.dat,</span>
+<span id="cb231-5"><a href="ch-binary.html#cb231-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb231-6"><a href="ch-binary.html#cb231-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(<span class="at">dic =</span> <span class="cn">TRUE</span>, <span class="at">cpo =</span> <span class="cn">TRUE</span>, <span class="at">waic =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb231-7"><a href="ch-binary.html#cb231-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb231-8"><a href="ch-binary.html#cb231-8" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model.rw1)</span></span>
+<span id="cb231-9"><a href="ch-binary.html#cb231-9" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.rw1<span class="sc">$</span>summary.fixed[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb231-10"><a href="ch-binary.html#cb231-10" aria-hidden="true" tabindex="-1"></a><span class="do">##   name mean   sd    0.025q 0.5q   0.975q</span></span>
+<span id="cb231-11"><a href="ch-binary.html#cb231-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 C    -0.298 0.003 -0.304 -0.298 -0.292</span></span>
+<span id="cb231-12"><a href="ch-binary.html#cb231-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 U.1   0.960 0.030  0.901  0.960  1.019</span></span>
+<span id="cb231-13"><a href="ch-binary.html#cb231-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 U.2   3.957 0.028  3.902  3.957  4.012</span></span>
+<span id="cb231-14"><a href="ch-binary.html#cb231-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 U.3   2.951 0.024  2.905  2.951  2.997</span></span>
+<span id="cb231-15"><a href="ch-binary.html#cb231-15" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.rw1<span class="sc">$</span>summary.hyperpar[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb231-16"><a href="ch-binary.html#cb231-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                  mean  sd   </span></span>
+<span id="cb231-17"><a href="ch-binary.html#cb231-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for rw1.idx 119.4 24.95</span></span></code></pre></div>
+<p>The results show that the fixed effects and precision parameters from the simulation are recovered well. Figure <a href="ch-binary.html#fig:rwalk-D1">8.5</a> shows the simulated and fitted values of the random walk for <span class="math inline">\(\beta_{1,t,0}\)</span>. We also plot the observed and fitted values for each category in Figure <a href="ch-binary.html#fig:fits-D1">8.6</a>. We compute the in-sample MAE for each category, see Table <a href="ch-binary.html#tab:in-sample-mae-D1-D4">8.1</a>.</p>
+<div class="figure"><span id="fig:rwalk-D1"></span>
+<img src="gitbook_version_files/figure-html/rwalk-D1-1.png" alt="Actual values (red) and estimated (blue) random walk series for the dynamic intercept $\beta_{1,t,0}$ from Model D1." width="672" />
+<p class="caption">
+FIGURE 8.5: Actual values (red) and estimated (blue) random walk series for the dynamic intercept <span class="math inline">\(\beta_{1,t,0}\)</span> from Model D1.
+</p>
+</div>
+<div class="figure"><span id="fig:fits-D1"></span>
+<img src="gitbook_version_files/figure-html/fits-D1-1.png" alt="Actual values (red) and fitted (blue) responses from Model D1." width="672" />
+<p class="caption">
+FIGURE 8.6: Actual values (red) and fitted (blue) responses from Model D1.
+</p>
+</div>
+<p>Alternately, we can include the random intercept only in <span class="math inline">\(\eta_{2,t}\)</span> (Model D2) or only in <span class="math inline">\(\eta_{3,t}\)</span> (Model D3) instead of <span class="math inline">\(\eta_{1,t}\)</span>. The in-sample MAEs for these situations are shown in Table <a href="ch-binary.html#tab:in-sample-mae-D1-D4">8.1</a>. Detailed code can be seen in the GitHub link for the book.</p>
+</div>
+</div>
+<div id="model-d4-dynamic-coefficient-for-c_jt" class="section level3 unnumbered hasAnchor">
+<h3>Model D4: Dynamic coefficient for <span class="math inline">\(C_{j,t}\)</span><a href="ch-binary.html#model-d4-dynamic-coefficient-for-c_jt" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider the model with</p>
+<p><span class="math display" id="eq:mlogit-obsbeta">\[\begin{align}
+\eta_{j,t} &amp; = \beta_t C_{j,t} + \delta_j U_{j,t},~j=1,\ldots,3
+\tag{8.11}
+\end{align}\]</span>
+where the dynamic coefficient <span class="math inline">\(\beta_t\)</span> evolves as a random walk</p>
+<p><span class="math display" id="eq:mlogit-rw-beta">\[\begin{align}
+\beta_{t,0} = \beta_{t-1,0} + w_{t},
+\tag{8.12}
+\end{align}\]</span>
+with <span class="math inline">\(w_{t} \sim N(0, \sigma^2_w)\)</span>. We use the same true values of <span class="math inline">\(\delta_j\)</span>, <span class="math inline">\(C_{j,t}\)</span> and <span class="math inline">\(U_{j,t}\)</span> as before for the simulation. We source the function below for generating the multinomial responses corresponding to the model
+<a href="ch-binary.html#eq:mlogit-obsbeta">(8.11)</a> and <a href="ch-binary.html#eq:mlogit-rw-beta">(8.12)</a>.</p>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="ch-binary.html#cb232-1" aria-hidden="true" tabindex="-1"></a>Multinom.sample.rand <span class="ot">&lt;-</span> <span class="cf">function</span>(N, rw1.beta) {</span>
+<span id="cb232-2"><a href="ch-binary.html#cb232-2" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> n)</span>
+<span id="cb232-3"><a href="ch-binary.html#cb232-3" aria-hidden="true" tabindex="-1"></a>  eta<span class="fl">.1</span> <span class="ot">&lt;-</span> eta<span class="fl">.2</span> <span class="ot">&lt;-</span> eta<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>,n)</span>
+<span id="cb232-4"><a href="ch-binary.html#cb232-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb232-5"><a href="ch-binary.html#cb232-5" aria-hidden="true" tabindex="-1"></a>    eta<span class="fl">.1</span>[t] <span class="ot">&lt;-</span> rw1.beta[t] <span class="sc">*</span> C<span class="fl">.1</span>[t] <span class="sc">+</span> deltas[<span class="dv">1</span>] <span class="sc">*</span> U<span class="fl">.1</span>[t] </span>
+<span id="cb232-6"><a href="ch-binary.html#cb232-6" aria-hidden="true" tabindex="-1"></a>    eta<span class="fl">.2</span>[t] <span class="ot">&lt;-</span> rw1.beta[t] <span class="sc">*</span> C<span class="fl">.2</span>[t] <span class="sc">+</span> deltas[<span class="dv">2</span>] <span class="sc">*</span> U<span class="fl">.2</span>[t]  </span>
+<span id="cb232-7"><a href="ch-binary.html#cb232-7" aria-hidden="true" tabindex="-1"></a>    eta<span class="fl">.3</span>[t] <span class="ot">&lt;-</span> rw1.beta[t] <span class="sc">*</span> C<span class="fl">.3</span>[t] <span class="sc">+</span> deltas[<span class="dv">3</span>] <span class="sc">*</span> U<span class="fl">.3</span>[t] </span>
+<span id="cb232-8"><a href="ch-binary.html#cb232-8" aria-hidden="true" tabindex="-1"></a>    probs <span class="ot">&lt;-</span> <span class="fu">c</span>(eta<span class="fl">.1</span>[t], eta<span class="fl">.2</span>[t], eta<span class="fl">.3</span>[t])</span>
+<span id="cb232-9"><a href="ch-binary.html#cb232-9" aria-hidden="true" tabindex="-1"></a>    probs <span class="ot">&lt;-</span> <span class="fu">exp</span>(probs) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">exp</span>(probs))</span>
+<span id="cb232-10"><a href="ch-binary.html#cb232-10" aria-hidden="true" tabindex="-1"></a>    samp <span class="ot">&lt;-</span> <span class="fu">rmultinom</span>(<span class="dv">1</span>, N, <span class="at">prob =</span> probs)</span>
+<span id="cb232-11"><a href="ch-binary.html#cb232-11" aria-hidden="true" tabindex="-1"></a>    Y[t,] <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(samp)</span>
+<span id="cb232-12"><a href="ch-binary.html#cb232-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb232-13"><a href="ch-binary.html#cb232-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(Y) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Y.1&quot;</span>, <span class="st">&quot;Y.2&quot;</span>, <span class="st">&quot;Y.3&quot;</span>)</span>
+<span id="cb232-14"><a href="ch-binary.html#cb232-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(Y)</span>
+<span id="cb232-15"><a href="ch-binary.html#cb232-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We first generate a random walk series corresponding to <code>rw1.beta</code>. We then compute and plot the response series (plots are not shown here).</p>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="ch-binary.html#cb233-1" aria-hidden="true" tabindex="-1"></a>rw1.beta <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n)</span>
+<span id="cb233-2"><a href="ch-binary.html#cb233-2" aria-hidden="true" tabindex="-1"></a>rw1.beta[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb233-3"><a href="ch-binary.html#cb233-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n) {</span>
+<span id="cb233-4"><a href="ch-binary.html#cb233-4" aria-hidden="true" tabindex="-1"></a>  rw1.beta[t] <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> rw1.beta[t <span class="sc">-</span> <span class="dv">1</span>], <span class="at">sd =</span> <span class="fl">0.1</span>)</span>
+<span id="cb233-5"><a href="ch-binary.html#cb233-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb233-6"><a href="ch-binary.html#cb233-6" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb233-7"><a href="ch-binary.html#cb233-7" aria-hidden="true" tabindex="-1"></a>Y.rw1 <span class="ot">&lt;-</span> <span class="fu">Multinom.sample.rand</span>(N, rw1.beta)</span>
+<span id="cb233-8"><a href="ch-binary.html#cb233-8" aria-hidden="true" tabindex="-1"></a>df.rw1 <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(Y.rw1, C<span class="fl">.1</span>, C<span class="fl">.2</span>, C<span class="fl">.3</span>, U<span class="fl">.1</span>, U<span class="fl">.2</span>, U<span class="fl">.3</span>)</span></code></pre></div>
+<p>We construct necessary indexes and the data frame as shown below.</p>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="ch-binary.html#cb234-1" aria-hidden="true" tabindex="-1"></a>Y.new <span class="ot">&lt;-</span> <span class="fu">c</span>(Y.rw1[,<span class="dv">1</span>], Y.rw1[, <span class="dv">2</span>], Y.rw1[, <span class="dv">3</span>])</span>
+<span id="cb234-2"><a href="ch-binary.html#cb234-2" aria-hidden="true" tabindex="-1"></a>C.new <span class="ot">&lt;-</span> <span class="fu">c</span>(df.rw1<span class="sc">$</span>C<span class="fl">.1</span>, df.rw1<span class="sc">$</span>C<span class="fl">.2</span>, df.rw1<span class="sc">$</span>C<span class="fl">.3</span>)</span>
+<span id="cb234-3"><a href="ch-binary.html#cb234-3" aria-hidden="true" tabindex="-1"></a>C.<span class="fl">1.</span>new <span class="ot">&lt;-</span> <span class="fu">c</span>(C<span class="fl">.1</span>, <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">2</span><span class="sc">*</span>n))</span>
+<span id="cb234-4"><a href="ch-binary.html#cb234-4" aria-hidden="true" tabindex="-1"></a>C.<span class="fl">2.</span>new <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="cn">NA</span>, n), C<span class="fl">.2</span>, <span class="fu">rep</span>(<span class="cn">NA</span>, n))</span>
+<span id="cb234-5"><a href="ch-binary.html#cb234-5" aria-hidden="true" tabindex="-1"></a>C.<span class="fl">3.</span>new <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">2</span><span class="sc">*</span>n), C<span class="fl">.3</span>)</span>
+<span id="cb234-6"><a href="ch-binary.html#cb234-6" aria-hidden="true" tabindex="-1"></a>C.new <span class="ot">&lt;-</span> <span class="fu">c</span>(C<span class="fl">.1</span>, C<span class="fl">.2</span>, C<span class="fl">.3</span>)</span>
+<span id="cb234-7"><a href="ch-binary.html#cb234-7" aria-hidden="true" tabindex="-1"></a>U.<span class="fl">1.</span>new <span class="ot">&lt;-</span> <span class="fu">c</span>(U<span class="fl">.1</span>, <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">2</span><span class="sc">*</span>n))</span>
+<span id="cb234-8"><a href="ch-binary.html#cb234-8" aria-hidden="true" tabindex="-1"></a>U.<span class="fl">2.</span>new <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="cn">NA</span>, n), U<span class="fl">.2</span>, <span class="fu">rep</span>(<span class="cn">NA</span>, n))</span>
+<span id="cb234-9"><a href="ch-binary.html#cb234-9" aria-hidden="true" tabindex="-1"></a>U.<span class="fl">3.</span>new <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">2</span><span class="sc">*</span>n), U<span class="fl">.3</span>)</span>
+<span id="cb234-10"><a href="ch-binary.html#cb234-10" aria-hidden="true" tabindex="-1"></a>id.rw <span class="ot">&lt;-</span> phi.new <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="dv">3</span>))</span>
+<span id="cb234-11"><a href="ch-binary.html#cb234-11" aria-hidden="true" tabindex="-1"></a>rw1.idx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">2</span><span class="sc">*</span>n))</span>
+<span id="cb234-12"><a href="ch-binary.html#cb234-12" aria-hidden="true" tabindex="-1"></a>rw2.idx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="cn">NA</span>, n), <span class="dv">1</span><span class="sc">:</span>n, <span class="fu">rep</span>(<span class="cn">NA</span>, n))</span>
+<span id="cb234-13"><a href="ch-binary.html#cb234-13" aria-hidden="true" tabindex="-1"></a>rw3.idx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">2</span><span class="sc">*</span>n), <span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb234-14"><a href="ch-binary.html#cb234-14" aria-hidden="true" tabindex="-1"></a>re.idx <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, (<span class="dv">3</span><span class="sc">*</span>n))</span>
+<span id="cb234-15"><a href="ch-binary.html#cb234-15" aria-hidden="true" tabindex="-1"></a>id.re <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="dv">3</span>)</span>
+<span id="cb234-16"><a href="ch-binary.html#cb234-16" aria-hidden="true" tabindex="-1"></a>inla.dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Y.new, C.new, C.<span class="fl">1.</span>new, C.<span class="fl">2.</span>new, C.<span class="fl">3.</span>new,</span>
+<span id="cb234-17"><a href="ch-binary.html#cb234-17" aria-hidden="true" tabindex="-1"></a>                       U.<span class="fl">1.</span>new, U.<span class="fl">2.</span>new, U.<span class="fl">3.</span>new,</span>
+<span id="cb234-18"><a href="ch-binary.html#cb234-18" aria-hidden="true" tabindex="-1"></a>                       phi.new, id.rw, re.idx, id.re,</span>
+<span id="cb234-19"><a href="ch-binary.html#cb234-19" aria-hidden="true" tabindex="-1"></a>                       rw1.idx, rw2.idx, rw3.idx)</span></code></pre></div>
+<p>The formula and <code>inla()</code> call are shown below, followed by a summary of results.</p>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="ch-binary.html#cb235-1" aria-hidden="true" tabindex="-1"></a>formula.rw1 <span class="ot">&lt;-</span> Y.new <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span>  <span class="sc">+</span> U.<span class="fl">1.</span>new <span class="sc">+</span> U.<span class="fl">2.</span>new <span class="sc">+</span> U.<span class="fl">3.</span>new <span class="sc">+</span></span>
+<span id="cb235-2"><a href="ch-binary.html#cb235-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(phi.new, <span class="at">model =</span> <span class="st">&quot;iid&quot;</span>,</span>
+<span id="cb235-3"><a href="ch-binary.html#cb235-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">hyper =</span> <span class="fu">list</span>(<span class="at">prec =</span> <span class="fu">list</span>(<span class="at">initial =</span> <span class="sc">-</span><span class="dv">10</span>, <span class="at">fixed =</span> <span class="cn">TRUE</span>))) <span class="sc">+</span></span>
+<span id="cb235-4"><a href="ch-binary.html#cb235-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.rw, C.new, <span class="at">model =</span> <span class="st">&quot;rw1&quot;</span>, <span class="at">constr =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb235-5"><a href="ch-binary.html#cb235-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(</span>
+<span id="cb235-6"><a href="ch-binary.html#cb235-6" aria-hidden="true" tabindex="-1"></a>    id.re,</span>
+<span id="cb235-7"><a href="ch-binary.html#cb235-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">&quot;iid&quot;</span>,</span>
+<span id="cb235-8"><a href="ch-binary.html#cb235-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">replicate =</span> re.idx,</span>
+<span id="cb235-9"><a href="ch-binary.html#cb235-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">hyper =</span> <span class="fu">list</span>(<span class="at">theta =</span> <span class="fu">list</span>(<span class="at">initial =</span> <span class="dv">20</span>, <span class="at">fixed =</span> T))</span>
+<span id="cb235-10"><a href="ch-binary.html#cb235-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb235-11"><a href="ch-binary.html#cb235-11" aria-hidden="true" tabindex="-1"></a>model.rw1 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb235-12"><a href="ch-binary.html#cb235-12" aria-hidden="true" tabindex="-1"></a>  formula.rw1,</span>
+<span id="cb235-13"><a href="ch-binary.html#cb235-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;poisson&quot;</span>,</span>
+<span id="cb235-14"><a href="ch-binary.html#cb235-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> inla.dat,</span>
+<span id="cb235-15"><a href="ch-binary.html#cb235-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb235-16"><a href="ch-binary.html#cb235-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(<span class="at">dic =</span> <span class="cn">TRUE</span>, <span class="at">cpo =</span> <span class="cn">TRUE</span>, <span class="at">waic =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb235-17"><a href="ch-binary.html#cb235-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb235-18"><a href="ch-binary.html#cb235-18" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model.rw1)</span></span></code></pre></div>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="ch-binary.html#cb236-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.rw1<span class="sc">$</span>summary.fixed[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb236-2"><a href="ch-binary.html#cb236-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   name    mean  sd    0.025q 0.5q  0.975q</span></span>
+<span id="cb236-3"><a href="ch-binary.html#cb236-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 U.1.new 1.018 0.046 0.927  1.018 1.109 </span></span>
+<span id="cb236-4"><a href="ch-binary.html#cb236-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 U.2.new 3.975 0.039 3.899  3.975 4.051 </span></span>
+<span id="cb236-5"><a href="ch-binary.html#cb236-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 U.3.new 2.966 0.033 2.902  2.966 3.030</span></span>
+<span id="cb236-6"><a href="ch-binary.html#cb236-6" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.rw1<span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb236-7"><a href="ch-binary.html#cb236-7" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                mean  sd   </span></span>
+<span id="cb236-8"><a href="ch-binary.html#cb236-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for id.rw 116.9 10.01</span></span></code></pre></div>
+<p>The fixed and random coefficients are recovered well by the model fit. We can also plot the simulated and fitted values for the dynamic coefficient <span class="math inline">\(\beta_t\)</span> as shown in Figure
+<a href="ch-binary.html#fig:rwalk-D4">8.7</a> below.</p>
+<div class="figure"><span id="fig:rwalk-D4"></span>
+<img src="gitbook_version_files/figure-html/rwalk-D4-1.png" alt="Actual values (red) and estimated (blue) random walk series for $\beta_t$ from Model D4." width="672" />
+<p class="caption">
+FIGURE 8.7: Actual values (red) and estimated (blue) random walk series for <span class="math inline">\(\beta_t\)</span> from Model D4.
+</p>
+</div>
+<p>Plots of the observed and fitted responses are shown in Figure <a href="ch-binary.html#fig:fits-D4">8.8</a>. In-sample MAEs from all four models, Model D1–D4, are shown in Table <a href="ch-binary.html#tab:in-sample-mae-D1-D4">8.1</a>, suggesting that Model D4 performs the best.</p>
+<div class="figure"><span id="fig:fits-D4"></span>
+<img src="gitbook_version_files/figure-html/fits-D4-1.png" alt="Actual values (red) and fitted (blue) responses from Model D4." width="672" />
+<p class="caption">
+FIGURE 8.8: Actual values (red) and fitted (blue) responses from Model D4.
+</p>
+</div>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:in-sample-mae-D1-D4">TABLE 8.1: </span>In-sample MAE for model comparison.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Model
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MAE(Y.1)
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MAE(Y.2)
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MAE(Y.3)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+D1
+</td>
+<td style="text-align:right;">
+1.362
+</td>
+<td style="text-align:right;">
+2.058
+</td>
+<td style="text-align:right;">
+1.551
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D2
+</td>
+<td style="text-align:right;">
+0.852
+</td>
+<td style="text-align:right;">
+1.492
+</td>
+<td style="text-align:right;">
+1.278
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D3
+</td>
+<td style="text-align:right;">
+1.034
+</td>
+<td style="text-align:right;">
+1.969
+</td>
+<td style="text-align:right;">
+1.665
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+D4
+</td>
+<td style="text-align:right;">
+0.151
+</td>
+<td style="text-align:right;">
+1.383
+</td>
+<td style="text-align:right;">
+1.352
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="chapter-8-appendix" class="section level2 unnumbered hasAnchor">
+<h2>Chapter 8 – Appendix<a href="ch-binary.html#chapter-8-appendix" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="poisson-trick-for-multinomial-models" class="section level3 unnumbered hasAnchor">
+<h3>Poisson-trick for multinomial models<a href="ch-binary.html#poisson-trick-for-multinomial-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Given the multinomial likelihood in <a href="ch-binary.html#eq:cat-7">(8.6)</a>, assume that <span class="math inline">\(Y_{t+}\)</span> is a random variable with Poisson p.m.f. given in <a href="ch-binary.html#eq:cat-8">(8.7)</a>.
+For <span class="math inline">\(t=1,\ldots,n\)</span>, we can write</p>
+<p><span class="math display" id="eq:cat-9">\[\begin{align}
+P(\boldsymbol{y}_t, Y_{t+}=y_{t+}) =
+P(Y_{t+}=y_{t+})  P(\boldsymbol{y}_t |Y_{t+}=y_{t+}),
+\tag{8.13}
+\end{align}\]</span>
+where the first expression on the right side is given by <a href="ch-binary.html#eq:cat-8">(8.7)</a> and the second expression, by <a href="ch-binary.html#eq:cat-1">(8.4)</a>. The marginal p.m.f. of <span class="math inline">\(\boldsymbol{y}_t\)</span> can be obtained by summing the joint
+p.m.f. in <a href="ch-binary.html#eq:cat-9">(8.13)</a> over all possible values of <span class="math inline">\(Y_{t+}\)</span> to yield the <em>Poisson</em> likelihood (which was given in <a href="ch-binary.html#eq:cat-10">(8.8)</a>):</p>
+<p><span class="math display">\[\begin{align*}
+L_{\mathcal{P}}(\boldsymbol{\phi},\boldsymbol{\beta}; \boldsymbol{Y}^n) \propto
+\prod_{t=1}^n \prod_{j=1}^J
+[g_{j,t}(\boldsymbol{\beta}) e^{\phi_t}]^{y_{j,t}}
+\exp [- g_{j,t}(\boldsymbol{\beta}) e^{\phi_t}].
+\end{align*}\]</span></p>
+<p>Let</p>
+<p><span class="math display" id="eq:cat-11">\[\begin{align}
+{\widehat{\boldsymbol\phi}} (\boldsymbol{\beta}) = \underset{\boldsymbol \phi}{\text{arg max}}\ L_{\mathcal{P}}(\boldsymbol{\phi},\boldsymbol{\beta}; \boldsymbol{Y}^n)  
+\tag{8.14}
+\end{align}\]</span>
+denote the maximum of the profile likelihood function of <span class="math inline">\(\boldsymbol{\phi}\)</span> given <span class="math inline">\(\boldsymbol{\beta}\)</span>. It can be shown that for <span class="math inline">\(t=1,\ldots,n\)</span>,</p>
+<p><span class="math display" id="eq:phiMLE">\[\begin{align}
+\widehat{\phi}_t (\boldsymbol{\beta})=\frac{y_{t+}}{G_t(\boldsymbol{\beta})}.
+\tag{8.15}
+\end{align}\]</span></p>
+<p>Substituting <span class="math inline">\(\widehat{\phi}_t (\boldsymbol{\beta})\)</span> from <a href="ch-binary.html#eq:phiMLE">(8.15)</a> into
+<a href="ch-binary.html#eq:cat-10">(8.8)</a>, we can write <a href="ch-binary.html#eq:cat-10">(8.8)</a> as a function of only <span class="math inline">\(\boldsymbol{\beta}\)</span>,
+and show that the resulting expression
+<span class="math inline">\(L_{\mathcal{P}}(\boldsymbol{\beta}; \boldsymbol{Y}^n)\)</span> is equivalent to <span class="math inline">\(L_{\mathcal{M}}(\boldsymbol{\beta}; \boldsymbol{Y}^n)\)</span>.
+It follows that estimation based on <span class="math inline">\(L_{\mathcal{P}}(\boldsymbol{\phi, \beta}; \boldsymbol{Y}^n)\)</span> and <span class="math inline">\(L_{\mathcal{M}}(\boldsymbol{\beta}; \boldsymbol{Y}^n)\)</span> will be identical.</p>
+<!-- the maximum likelihood estimates of components of $\boldsymbol\beta$ and their asymptotic variances are identical under $L_{\mathcal{P}}(\boldsymbol{\phi, \beta}; \boldsymbol{Y}^n)$ and $L_{\mathcal{M}}(\boldsymbol{\beta}; \boldsymbol{Y}^n)$. -->
+
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-baker1994multinomial" class="csl-entry">
+Baker, Stuart G. 1994. <span>“The Multinomial-<span>P</span>oisson Transformation.”</span> <em>Journal of the Royal Statistical Society: Series D (The Statistician)</em> 43 (4): 495–504.
+</div>
+<div id="ref-cargnoni1997bayesian" class="csl-entry">
+Cargnoni, Claudia, Peter Müller, and Mike West. 1997. <span>“Bayesian Forecasting of Multinomial Time Series Through Conditionally Gaussian Dynamic Models.”</span> <em>Journal of the American Statistical Association</em> 92 (438): 640–47.
+</div>
+<div id="ref-chen1997poissontrick" class="csl-entry">
+Chen, Sean X., and Jun S. Liu. 1997. <span>“Statistical Applications of the <span>P</span>oisson-Binomial and Conditional <span>B</span>ernoulli Distributions.”</span> <em>Statistica Sinica</em> 7: 875–92.
+</div>
+<div id="ref-gamerman1998" class="csl-entry">
+Gamerman, Dani. 1998. <span>“Markov Chain <span>M</span>onte <span>C</span>arlo for Dynamic Generalised Linear Models.”</span> <em>Biometrika</em> 85 (1): 215–27.
+</div>
+<div id="ref-guimaraes2004MNPoisson" class="csl-entry">
+Guimaraes, Paulo. 2004. <span>“Understanding the Multinomial-<span>P</span>oisson Transformation.”</span> <em>The Stata Journal</em> 4 (3): 265–73.
+</div>
+<div id="ref-lee2017poissontrick" class="csl-entry">
+Lee, Jarod Y .L., Peter J. Green, and Louise M. Ryan. 2017. <span>“On the <span>‘<span>P</span>oisson Trick’</span> and Its Extensions for Fitting Multinomial Regression Models.”</span> <em>arXiv Preprint arXiv:1707.08538</em>.
+</div>
+<div id="ref-mccullaghnelder1989" class="csl-entry">
+McCullagh, Peter, and J. A. Nelder. 1989. <em>Generalized Linear Models</em>. 2nd ed. London: Chapman &amp; Hall.
+</div>
+<div id="ref-soyer2016bayesian" class="csl-entry">
+Soyer, R., T. Aktekin, and B. Kim. 2016. <span>“Bayesian Modeling of Time Series of Counts with Business Applications.”</span> In <em>Handbook of Discrete-Valued Time Series</em>, 265–84. Chapman; Hall/CRC: New York.
+</div>
+<div id="ref-soyer2013bayesian" class="csl-entry">
+Soyer, Refik, and Minje Sung. 2013. <span>“Bayesian Dynamic Probit Models for the Analysis of Longitudinal Data.”</span> <em>Computational Statistics &amp; Data Analysis</em> 68: 388–98.
+</div>
+<div id="ref-west2006bayesian" class="csl-entry">
+West, Mike, and Jeff Harrison. 1997. <em>Bayesian Forecasting and Dynamic Models</em>. 2nd ed. New York: Springer-Verlag.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ch-nongaus.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ch-count.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"split_by": "chapter",
+"split_bib": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 10 Modeling Stochastic Volatility | Dynamic Time Series Models using R-INLA: An Applied Perspective</title>
+  <meta name="description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 10 Modeling Stochastic Volatility | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA/" />
+  <meta property="og:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+  <meta property="og:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="github-repo" content="ramanbala/dynamic-time-series-models-R-INLA" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 10 Modeling Stochastic Volatility | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  
+  <meta name="twitter:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="twitter:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+
+<meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
+
+
+<meta name="date" content="2022-06-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ch-count.html"/>
+<link rel="next" href="ch-st.html"/>
+<script src="libs/header-attrs/header-attrs.js"></script>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+<script src="libs/kePrint/kePrint.js"></script>
+<link href="libs/lightable/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a></li>
+
+<li class="divider"></li>
+<li><a href="index.html#preface">Preface<span></span></a>
+<ul>
+<li><a href="index.html#why-read-this-book">Why read this book?<span></span></a></li>
+<li><a href="index.html#structure-of-the-book">Structure of the book<span></span></a></li>
+<li><a href="index.html#software-information-and-conventions">Software information and conventions<span></span></a></li>
+<li><a href="index.html#acknowledgments">Acknowledgments<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="chapter1.html"><a href="chapter1.html"><i class="fa fa-check"></i><b>1</b> Bayesian Analysis<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="chapter1.html"><a href="chapter1.html#intro-ch1"><i class="fa fa-check"></i><b>1.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="1.2" data-path="chapter1.html"><a href="chapter1.html#bayes-framework"><i class="fa fa-check"></i><b>1.2</b> Bayesian framework<span></span></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="chapter1.html"><a href="chapter1.html#bayesian-model-comparison"><i class="fa fa-check"></i><b>1.2.1</b> Bayesian model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="chapter1.html"><a href="chapter1.html#bayes-ts"><i class="fa fa-check"></i><b>1.3</b> Bayesian analysis of time series<span></span></a></li>
+<li class="chapter" data-level="1.4" data-path="chapter1.html"><a href="chapter1.html#dlms"><i class="fa fa-check"></i><b>1.4</b> Gaussian dynamic linear models (DLMs)<span></span></a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="chapter1.html"><a href="chapter1.html#constant-level-plus-noise-model"><i class="fa fa-check"></i><b>1.4.1</b> Constant level plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.2" data-path="chapter1.html"><a href="chapter1.html#local-level-model"><i class="fa fa-check"></i><b>1.4.2</b> Local level model<span></span></a></li>
+<li class="chapter" data-level="1.4.3" data-path="chapter1.html"><a href="chapter1.html#gaussian-dlm-framework-for-univariate-time-series"><i class="fa fa-check"></i><b>1.4.3</b> Gaussian DLM framework for univariate time series<span></span></a></li>
+<li class="chapter" data-level="1.4.4" data-path="chapter1.html"><a href="chapter1.html#ar1-plus-noise-model"><i class="fa fa-check"></i><b>1.4.4</b> AR(1) plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.5" data-path="chapter1.html"><a href="chapter1.html#dlm-for-vector-valued-time-series"><i class="fa fa-check"></i><b>1.4.5</b> DLM for vector-valued time series<span></span></a></li>
+<li class="chapter" data-level="1.4.6" data-path="chapter1.html"><a href="chapter1.html#kalman-filtering-and-smoothing"><i class="fa fa-check"></i><b>1.4.6</b> Kalman filtering and smoothing<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="chapter1.html"><a href="chapter1.html#beyonddlm"><i class="fa fa-check"></i><b>1.5</b> Beyond basic Gaussian DLMs<span></span></a></li>
+<li><a href="chapter1.html#chapter-1-appendix">Chapter 1 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter1.html#conditional-distributions">Conditional distributions<span></span></a></li>
+<li><a href="chapter1.html#exponential-family-of-distributions">Exponential family of distributions<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter2.html"><a href="chapter2.html"><i class="fa fa-check"></i><b>2</b> A Review of INLA<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="chapter2.html"><a href="chapter2.html#intro-ch2"><i class="fa fa-check"></i><b>2.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="2.2" data-path="chapter2.html"><a href="chapter2.html#laplace"><i class="fa fa-check"></i><b>2.2</b> Laplace approximation<span></span></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="chapter2.html"><a href="chapter2.html#simplaplace"><i class="fa fa-check"></i><b>2.2.1</b> Simplified Laplace approximation<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="chapter2.html"><a href="chapter2.html#inlats"><i class="fa fa-check"></i><b>2.3</b> INLA structure for time series<span></span></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="chapter2.html"><a href="chapter2.html#inla-steps"><i class="fa fa-check"></i><b>2.3.1</b> INLA steps<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="chapter2.html"><a href="chapter2.html#forecast"><i class="fa fa-check"></i><b>2.4</b> Forecasting in INLA<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="chapter2.html"><a href="chapter2.html#marglik"><i class="fa fa-check"></i><b>2.5</b> Marginal likelihood computation in INLA<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="chapter2.html"><a href="chapter2.html#rinlapkg"><i class="fa fa-check"></i><b>2.6</b> <code>R-INLA</code> package – some basics<span></span></a></li>
+<li><a href="chapter2.html#chapter-2-appendix">Chapter 2 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter2.html#gaussian-markov-random-field-gmrf">Gaussian Markov Random Field (GMRF)<span></span></a></li>
+<li><a href="chapter2.html#kullback-leibler-divergence">Kullback-Leibler divergence<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter3.html"><a href="chapter3.html"><i class="fa fa-check"></i><b>3</b> Details of R-INLA for Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="chapter3.html"><a href="chapter3.html#intro-ch3"><i class="fa fa-check"></i><b>3.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="3.2" data-path="chapter3.html"><a href="chapter3.html#ch3-rw1noise"><i class="fa fa-check"></i><b>3.2</b> Random walk plus noise model<span></span></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="chapter3.html"><a href="chapter3.html#inlaformula"><i class="fa fa-check"></i><b>3.2.1</b> <code>R-INLA</code> model formula<span></span></a></li>
+<li class="chapter" data-level="3.2.2" data-path="chapter3.html"><a href="chapter3.html#inlaexec"><i class="fa fa-check"></i><b>3.2.2</b> Model execution<span></span></a></li>
+<li class="chapter" data-level="3.2.3" data-path="chapter3.html"><a href="chapter3.html#inlaprior"><i class="fa fa-check"></i><b>3.2.3</b> Prior specifications for hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.4" data-path="chapter3.html"><a href="chapter3.html#inlaposterior"><i class="fa fa-check"></i><b>3.2.4</b> Posterior distributions of hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.5" data-path="chapter3.html"><a href="chapter3.html#fittedvalues"><i class="fa fa-check"></i><b>3.2.5</b> Fitted values for latent states and responses<span></span></a></li>
+<li class="chapter" data-level="3.2.6" data-path="chapter3.html"><a href="chapter3.html#filterestimate"><i class="fa fa-check"></i><b>3.2.6</b> Filtering and smoothing in DLM<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="chapter3.html"><a href="chapter3.html#ch3-ar1levelnoise"><i class="fa fa-check"></i><b>3.3</b> AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="chapter3.html"><a href="chapter3.html#ch3-high-lags"><i class="fa fa-check"></i><b>3.4</b> Dynamic linear models with higher order AR lags<span></span></a>
+<ul>
+<li><a href="chapter3.html#arp-with-level-plus-noise-model">AR<span class="math inline">\((p)\)</span> with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="chapter3.html"><a href="chapter3.html#ch3-rwdrift"><i class="fa fa-check"></i><b>3.5</b> Random walk with drift plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.6" data-path="chapter3.html"><a href="chapter3.html#ch3-rwtvdrift"><i class="fa fa-check"></i><b>3.6</b> Second-order polynomial model<span></span></a></li>
+<li class="chapter" data-level="3.7" data-path="chapter3.html"><a href="chapter3.html#forecasting"><i class="fa fa-check"></i><b>3.7</b> Forecasting states and observations<span></span></a></li>
+<li class="chapter" data-level="3.8" data-path="chapter3.html"><a href="chapter3.html#modsel"><i class="fa fa-check"></i><b>3.8</b> Model comparisons<span></span></a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="chapter3.html"><a href="chapter3.html#modsel-insamp-ch3"><i class="fa fa-check"></i><b>3.8.1</b> In-sample model comparisons<span></span></a></li>
+<li class="chapter" data-level="3.8.2" data-path="chapter3.html"><a href="chapter3.html#modsel-outsamp-ch3"><i class="fa fa-check"></i><b>3.8.2</b> Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="chapter3.html"><a href="chapter3.html#nondefault-priors"><i class="fa fa-check"></i><b>3.9</b> Non-default prior specifications<span></span></a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="chapter3.html"><a href="chapter3.html#custom-priors"><i class="fa fa-check"></i><b>3.9.1</b> Custom prior specifications<span></span></a></li>
+<li class="chapter" data-level="3.9.2" data-path="chapter3.html"><a href="chapter3.html#pc-priors"><i class="fa fa-check"></i><b>3.9.2</b> Penalized complexity (PC) priors<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="chapter3.html"><a href="chapter3.html#post-sampling"><i class="fa fa-check"></i><b>3.10</b> Posterior sampling of latent effects and hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.11" data-path="chapter3.html"><a href="chapter3.html#postpred-samples"><i class="fa fa-check"></i><b>3.11</b> Posterior predictive samples of unknown observations<span></span></a></li>
+<li><a href="chapter3.html#chapter-3-appendix">Chapter 3 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter3.html#sampling-properties-of-time-series">Sampling properties of time series<span></span></a></li>
+<li><a href="chapter3.html#autoregressive-models">Autoregressive models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter4.html"><a href="chapter4.html"><i class="fa fa-check"></i><b>4</b> Modeling Univariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="chapter4.html"><a href="chapter4.html#intro-ch4"><i class="fa fa-check"></i><b>4.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="4.2" data-path="chapter4.html"><a href="chapter4.html#dat-analysis"><i class="fa fa-check"></i><b>4.2</b> Example: A software engineering example – Musa data<span></span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="chapter4.html"><a href="chapter4.html#ch4-model1"><i class="fa fa-check"></i><b>4.2.1</b> Model 1. AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.2" data-path="chapter4.html"><a href="chapter4.html#ch4-model2"><i class="fa fa-check"></i><b>4.2.2</b> Model 2. Random walk plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.3" data-path="chapter4.html"><a href="chapter4.html#ch4-model3"><i class="fa fa-check"></i><b>4.2.3</b> Model 3. AR(1) with trend plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.4" data-path="chapter4.html"><a href="chapter4.html#ch4-model4"><i class="fa fa-check"></i><b>4.2.4</b> Model 4. AR(2) with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chapter4.html"><a href="chapter4.html#forecasting-musa"><i class="fa fa-check"></i><b>4.3</b> Forecasting future states and responses<span></span></a></li>
+<li class="chapter" data-level="4.4" data-path="chapter4.html"><a href="chapter4.html#modsel-ch4"><i class="fa fa-check"></i><b>4.4</b> Model comparisons<span></span></a>
+<ul>
+<li><a href="chapter4.html#in-sample-comparisons">In-sample comparisons<span></span></a></li>
+<li><a href="chapter4.html#out-of-sample-comparisons">Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter5.html"><a href="chapter5.html"><i class="fa fa-check"></i><b>5</b> Time Series Regression Models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="chapter5.html"><a href="chapter5.html#intro-ch5"><i class="fa fa-check"></i><b>5.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="5.2" data-path="chapter5.html"><a href="chapter5.html#ch5-strdecomp"><i class="fa fa-check"></i><b>5.2</b> Structural models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="chapter5.html"><a href="chapter5.html#hotelcost"><i class="fa fa-check"></i><b>5.2.1</b> Example: Monthly average cost of nightly hotel stay<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="chapter5.html"><a href="chapter5.html#ch5-exogpreds"><i class="fa fa-check"></i><b>5.3</b> Models with exogenous predictors<span></span></a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter5.html"><a href="chapter5.html#hourly-traffic"><i class="fa fa-check"></i><b>5.3.1</b> Example: Hourly traffic volumes<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="chapter5.html"><a href="chapter5.html#ar1c"><i class="fa fa-check"></i><b>5.4</b> Latent AR(1) model with covariates plus noise<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Hierarchical Dynamic Models for Panel Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#intro-ch6"><i class="fa fa-check"></i><b>6.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#homog-state"><i class="fa fa-check"></i><b>6.2</b> Models with homogenous state evolution<span></span></a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="chapter6.html"><a href="chapter6.html#simul1-panelts"><i class="fa fa-check"></i><b>6.2.1</b> Example: Simulated homogeneous panel time series with the same level<span></span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="chapter6.html"><a href="chapter6.html#simul2-panelts"><i class="fa fa-check"></i><b>6.2.2</b> Example: Simulated homogeneous panel time series with different levels<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#ridesource-hdlm"><i class="fa fa-check"></i><b>6.3</b> Example: Ridesourcing in NYC<span></span></a>
+<ul>
+<li><a href="chapter6.html#description-of-variables">Description of variables<span></span></a></li>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#hmod.H1"><i class="fa fa-check"></i><b>6.3.1</b> Model H1. Dynamic intercept and exogenous predictors<span></span></a></li>
+<li class="chapter" data-level="6.3.2" data-path="chapter6.html"><a href="chapter6.html#hmod.H2"><i class="fa fa-check"></i><b>6.3.2</b> Model H2. Dynamic intercept and Taxi usage<span></span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="chapter6.html"><a href="chapter6.html#hmod.H3"><i class="fa fa-check"></i><b>6.3.3</b> Model H3. Taxi usage varies by time and zone<span></span></a></li>
+<li class="chapter" data-level="6.3.4" data-path="chapter6.html"><a href="chapter6.html#hmod.H4"><i class="fa fa-check"></i><b>6.3.4</b> Model H4. Fixed intercept, Taxi usage varies over time and zones<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="chapter6.html"><a href="chapter6.html#model-comparison"><i class="fa fa-check"></i><b>6.4</b> Model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-nongaus.html"><a href="ch-nongaus.html"><i class="fa fa-check"></i><b>7</b> Non-Gaussian Continuous Responses<span></span></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#intro-nongaus"><i class="fa fa-check"></i><b>7.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="7.2" data-path="ch-nongaus.html"><a href="ch-nongaus.html#gamma-model"><i class="fa fa-check"></i><b>7.2</b> Gamma state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#vix"><i class="fa fa-check"></i><b>7.2.1</b> Example: Volatility index (VIX) time series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="ch-nongaus.html"><a href="ch-nongaus.html#weibull-model"><i class="fa fa-check"></i><b>7.3</b> Weibull state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#forecasting-from-weibull-models"><i class="fa fa-check"></i><b>7.3.1</b> Forecasting from Weibull models<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="ch-nongaus.html"><a href="ch-nongaus.html#beta-model"><i class="fa fa-check"></i><b>7.4</b> Beta state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#crest"><i class="fa fa-check"></i><b>7.4.1</b> Example: Crest market share<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ch-binary.html"><a href="ch-binary.html"><i class="fa fa-check"></i><b>8</b> Modeling Categorical Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="ch-binary.html"><a href="ch-binary.html#intro-ch-binary"><i class="fa fa-check"></i><b>8.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="8.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-model"><i class="fa fa-check"></i><b>8.2</b> Binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-bin"><i class="fa fa-check"></i><b>8.2.1</b> Example: Simulated single binomial response series<span></span></a></li>
+<li class="chapter" data-level="8.2.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-weekly-shopping"><i class="fa fa-check"></i><b>8.2.2</b> Example: Weekly shopping trips for a single household<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="ch-binary.html"><a href="ch-binary.html#hbin"><i class="fa fa-check"></i><b>8.3</b> Modeling multiple binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-hbin"><i class="fa fa-check"></i><b>8.3.1</b> Example: Dynamic aggregated model for multiple binomial response time series<span></span></a></li>
+<li class="chapter" data-level="8.3.2" data-path="ch-binary.html"><a href="ch-binary.html#hbin-weekly-shopping"><i class="fa fa-check"></i><b>8.3.2</b> Example: Weekly shopping trips for multiple households<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="ch-binary.html"><a href="ch-binary.html#cat-models"><i class="fa fa-check"></i><b>8.4</b> Multinomial time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-mn-p"><i class="fa fa-check"></i><b>8.4.1</b> Example: Simulated categorical time series<span></span></a></li>
+<li><a href="ch-binary.html#model-d4-dynamic-coefficient-for-c_jt">Model D4: Dynamic coefficient for <span class="math inline">\(C_{j,t}\)</span><span></span></a></li>
+</ul></li>
+<li><a href="ch-binary.html#chapter-8-appendix">Chapter 8 – Appendix<span></span></a>
+<ul>
+<li><a href="ch-binary.html#poisson-trick-for-multinomial-models">Poisson-trick for multinomial models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-count.html"><a href="ch-count.html"><i class="fa fa-check"></i><b>9</b> Modeling Count Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="ch-count.html"><a href="ch-count.html#intro-ch-count"><i class="fa fa-check"></i><b>9.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="9.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts"><i class="fa fa-check"></i><b>9.2</b> Univariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="ch-count.html"><a href="ch-count.html#uvcounts-simpois"><i class="fa fa-check"></i><b>9.2.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.2.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts-crashct"><i class="fa fa-check"></i><b>9.2.2</b> Example: Modeling crash counts in CT<span></span></a></li>
+<li class="chapter" data-level="9.2.3" data-path="ch-count.html"><a href="ch-count.html#uvcounts-bikerental"><i class="fa fa-check"></i><b>9.2.3</b> Example: Daily bike rentals in Washington D.C.<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="ch-count.html"><a href="ch-count.html#hieruvcounts"><i class="fa fa-check"></i><b>9.3</b> Hierarchical modeling of univariate count time series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="ch-count.html"><a href="ch-count.html#simul1-hcount"><i class="fa fa-check"></i><b>9.3.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.3.2" data-path="ch-count.html"><a href="ch-count.html#tnc-hcount"><i class="fa fa-check"></i><b>9.3.2</b> Example: Modeling daily TNC usage in NYC<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="ch-sv.html"><a href="ch-sv.html"><i class="fa fa-check"></i><b>10</b> Modeling Stochastic Volatility<span></span></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="ch-sv.html"><a href="ch-sv.html#ch-sv-intro"><i class="fa fa-check"></i><b>10.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="10.2" data-path="ch-sv.html"><a href="ch-sv.html#sv-uv"><i class="fa fa-check"></i><b>10.2</b> Univariate SV models<span></span></a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="ch-sv.html"><a href="ch-sv.html#simul-svnormal"><i class="fa fa-check"></i><b>10.2.1</b> Example: Simulated SV data with standard normal errors<span></span></a></li>
+<li class="chapter" data-level="10.2.2" data-path="ch-sv.html"><a href="ch-sv.html#simul-svt5"><i class="fa fa-check"></i><b>10.2.2</b> Example: Simulated SV data with Student-<span class="math inline">\(t_{\nu}\)</span> errors<span></span></a></li>
+<li class="chapter" data-level="10.2.3" data-path="ch-sv.html"><a href="ch-sv.html#stockrets"><i class="fa fa-check"></i><b>10.2.3</b> Example: IBM stock returns<span></span></a></li>
+<li class="chapter" data-level="10.2.4" data-path="ch-sv.html"><a href="ch-sv.html#nysestockrets"><i class="fa fa-check"></i><b>10.2.4</b> Example: NYSE returns<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="ch-st.html"><a href="ch-st.html"><i class="fa fa-check"></i><b>11</b> Spatio-temporal Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="ch-st.html"><a href="ch-st.html#ch-st-intro"><i class="fa fa-check"></i><b>11.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="11.2" data-path="ch-st.html"><a href="ch-st.html#st-process"><i class="fa fa-check"></i><b>11.2</b> Spatio-temporal process<span></span></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-st.html"><a href="ch-st.html#dyn-areal-model"><i class="fa fa-check"></i><b>11.3</b> Dynamic spatial models for areal data<span></span></a></li>
+<li class="chapter" data-level="11.4" data-path="ch-st.html"><a href="ch-st.html#st-tnc-example"><i class="fa fa-check"></i><b>11.4</b> Example: Monthly TNC usage in NYC taxi zones<span></span></a>
+<ul>
+<li><a href="ch-st.html#data-preprocessing">Data preprocessing<span></span></a></li>
+<li class="chapter" data-level="11.4.1" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh"><i class="fa fa-check"></i><b>11.4.1</b> Model 1. Knorr-Held additive effects model<span></span></a></li>
+<li class="chapter" data-level="11.4.2" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh-inter"><i class="fa fa-check"></i><b>11.4.2</b> Knorr-Held models with space-time interactions<span></span></a></li>
+<li><a href="ch-st.html#model-kh3.-knorr-held-model-with-interaction-between-epsilon_i-and-gamma_t">Model KH3. Knorr-Held model with interaction between <span class="math inline">\(\epsilon_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+<li><a href="ch-st.html#model-kh4.-knorr-held-model-with-interaction-between-nu_i-and-gamma_t">Model KH4. Knorr-Held model with interaction between <span class="math inline">\(\nu_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chmvdlm.html"><a href="chmvdlm.html"><i class="fa fa-check"></i><b>12</b> Multivariate Gaussian Dynamic Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="chmvdlm.html"><a href="chmvdlm.html#intro-chmvdlm"><i class="fa fa-check"></i><b>12.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="12.2" data-path="chmvdlm.html"><a href="chmvdlm.html#MVDiagWPhi"><i class="fa fa-check"></i><b>12.2</b> Model with diagonal <span class="math inline">\(\boldsymbol W\)</span> and <span class="math inline">\(\boldsymbol \Phi\)</span> matrices<span></span></a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="chmvdlm.html"><a href="chmvdlm.html#V-setup"><i class="fa fa-check"></i><b>12.2.1</b> Description of the setup for <span class="math inline">\(\boldsymbol V\)</span><span></span></a></li>
+<li class="chapter" data-level="12.2.2" data-path="chmvdlm.html"><a href="chmvdlm.html#simbivar1"><i class="fa fa-check"></i><b>12.2.2</b> Example: Simulated bivariate AR(1) series<span></span></a></li>
+<li class="chapter" data-level="12.2.3" data-path="chmvdlm.html"><a href="chmvdlm.html#tnctaxi-onezone"><i class="fa fa-check"></i><b>12.2.3</b> Example: Ridesourcing data in NYC for a single taxi zone<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="chmvdlm.html"><a href="chmvdlm.html#MVICCWPhi"><i class="fa fa-check"></i><b>12.3</b> Model with equicorrelated <span class="math inline">\(\boldsymbol{w}_t\)</span> and diagonal <span class="math inline">\(\boldsymbol \Phi\)</span><span></span></a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simtrivar1"><i class="fa fa-check"></i><b>12.3.1</b> Example: Simulated trivariate series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chmvdlm.html"><a href="chmvdlm.html#rgenericmv"><i class="fa fa-check"></i><b>12.4</b> Fitting multivariate models using <code>rgeneric</code><span></span></a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simulgen"><i class="fa fa-check"></i><b>12.4.1</b> Example: Simulated bivariate VAR(1) series<span></span></a></li>
+</ul></li>
+<li><a href="chmvdlm.html#chapter-12-appendix">Chapter 12 – Appendix<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="ch-hmv.html"><a href="ch-hmv.html"><i class="fa fa-check"></i><b>13</b> Hierarchical Multivariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="ch-hmv.html"><a href="ch-hmv.html#intro-ch-hmv"><i class="fa fa-check"></i><b>13.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="13.2" data-path="ch-hmv.html"><a href="ch-hmv.html#mvhdlm"><i class="fa fa-check"></i><b>13.2</b> Multivariate hierarchical dynamic linear model<span></span></a>
+<ul>
+<li><a href="ch-hmv.html#response-and-predictor-variables">Response and predictor variables<span></span></a></li>
+<li><a href="ch-hmv.html#model-setup">Model setup<span></span></a></li>
+<li class="chapter" data-level="13.2.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-hmv"><i class="fa fa-check"></i><b>13.2.1</b> Example: Analysis of TNC and Taxi as responses<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="ch-hmv.html"><a href="ch-hmv.html#lcmcounts"><i class="fa fa-check"></i><b>13.3</b> Level correlated models for multivariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-daily"><i class="fa fa-check"></i><b>13.3.1</b> Example: TNC and Taxi counts based on daily data<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>14</b> Resources for the User<span></span></a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="resources.html"><a href="resources.html#intro-resources"><i class="fa fa-check"></i><b>14.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="14.2" data-path="resources.html"><a href="resources.html#package-list"><i class="fa fa-check"></i><b>14.2</b> Packages used in the book<span></span></a></li>
+<li class="chapter" data-level="14.3" data-path="resources.html"><a href="resources.html#custom-functions"><i class="fa fa-check"></i><b>14.3</b> Custom functions used in the book<span></span></a>
+<ul>
+<li><a href="resources.html#basic-plotting-functions">Basic plotting functions<span></span></a></li>
+<li><a href="resources.html#functions-for-forecast-evaluation">Functions for forecast evaluation<span></span></a></li>
+<li><a href="resources.html#function-for-model-comparison">Function for model comparison<span></span></a></li>
+<li><a href="resources.html#function-for-the-filtering-algorithm-in-dlm">Function for the filtering algorithm in DLM<span></span></a></li>
+<li class="chapter" data-level="14.3.1" data-path="resources.html"><a href="resources.html#rgeneric-fn"><i class="fa fa-check"></i><b>14.3.1</b> <code>rgeneric()</code> function for DLM-VAR model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="resources.html"><a href="resources.html#items-often-used"><i class="fa fa-check"></i><b>14.4</b> Often used <code>R-INLA</code> items<span></span></a>
+<ul>
+<li><a href="resources.html#control-options">Control options<span></span></a></li>
+<li><a href="resources.html#options-for-computing-marginals">Options for computing marginals<span></span></a></li>
+<li><a href="resources.html#random-effect-specifications">Random effect specifications<span></span></a></li>
+<li><a href="resources.html#prior-specifications">Prior specifications<span></span></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ch-sv" class="section level1 hasAnchor" number="10">
+<h1><span class="header-section-number">Chapter 10</span> Modeling Stochastic Volatility<a href="ch-sv.html#ch-sv" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="ch-sv-intro" class="section level2 hasAnchor" number="10.1">
+<h2><span class="header-section-number">10.1</span> Introduction<a href="ch-sv.html#ch-sv-intro" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>An important task in analyzing financial data involves fitting models to study the volatility of asset returns. The class of
+autoregressive conditionally heteroscedastic (ARCH) models was proposed by
+<span class="citation">Engle (<a href="#ref-engle1982" role="doc-biblioref">1982</a>)</span>, and was extended by
+<span class="citation">Bollerslev (<a href="#ref-bollerslev1986" role="doc-biblioref">1986</a>)</span> to generalized ARCH (GARCH) models.
+
+The simple ARCH(1) model for time series of returns <span class="math inline">\(r_t\)</span> has the form</p>
+<p><span class="math display" id="eq:arch11">\[\begin{align}
+r_t &amp;= \sigma_t \varepsilon_t, \notag \\
+\sigma^2_t &amp;= \alpha_0 + \alpha_1 r^2_{t-1},
+\tag{10.1}
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\sigma^2_t\)</span> is the conditional variance of <span class="math inline">\(r_t\)</span> given the past history
+<span class="math inline">\(\{r_{t-1}, r_{t-2},\ldots\}\)</span>, <span class="math inline">\(\alpha_0 &gt;0\)</span>, <span class="math inline">\(0 \le \alpha_1 &lt; 1\)</span>, and
+<span class="math inline">\(\varepsilon_t\)</span> is an i.i.d. process with mean <span class="math inline">\(0\)</span> and variance <span class="math inline">\(1\)</span>. The GARCH(1,1) model generalizes the ARCH(1) model and is given by</p>
+<p><span class="math display" id="eq:garchmr">\[\begin{align}
+r_t &amp;= \sigma_t \varepsilon_t, \notag \\
+\sigma^2_t &amp;= \alpha_0 +\alpha_1 r^2_{t-1} +
+\beta_1 \sigma^2_{t-1},
+\tag{10.2}
+\end{align}\]</span>
+where <span class="math inline">\(\alpha_0 &gt;0\)</span>, and <span class="math inline">\(\alpha_1 + \beta_1 &lt;1\)</span>.
+These models are sometimes called <em>singly stochastic models</em> in the literature because they only have one error <span class="math inline">\(\varepsilon_t\)</span> in the multiplicative model equation for <span class="math inline">\(r_t\)</span>, but no
+error in the model for the latent conditional variances <span class="math inline">\(\sigma^2_t\)</span>.
+The GARCH<span class="math inline">\((m,r)\)</span> model generalizes these models to include <span class="math inline">\(m\)</span> ARCH and <span class="math inline">\(r\)</span> GARCH coefficients.
+There is an enormous literature on such models, especially in the econometrics domain.</p>
+<p>The stochastic volatility (SV) models that were
+introduced by <span class="citation">Taylor (<a href="#ref-taylor1982financial" role="doc-biblioref">1982</a>)</span>
+are alternatives to GARCH models and are widely used for modeling volatility in financial time series. SV models introduce an additional error in the (state) model for the latent conditional variance <span class="math inline">\(\sigma^2_t\)</span>, and are referred to in the literature as <em>doubly stochastic models</em>. This chapter describes a state space formulation for SV modeling of a time series.</p>
+<p>We source the custom functions.</p>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="ch-sv.html#cb284-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;functions_custom.R&quot;</span>)</span></code></pre></div>
+<p>This chapter uses the following packages.</p>
+<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb285-1"><a href="ch-sv.html#cb285-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quantmod)</span>
+<span id="cb285-2"><a href="ch-sv.html#cb285-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(INLA)</span>
+<span id="cb285-3"><a href="ch-sv.html#cb285-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb285-4"><a href="ch-sv.html#cb285-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa)</span>
+<span id="cb285-5"><a href="ch-sv.html#cb285-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span></code></pre></div>
+<p>We analyze the following data.</p>
+<ol style="list-style-type: decimal">
+<li><p>IBM returns from 2018-01-01 to 2020-12-31.</p></li>
+<li><p>NYSE returns from the <code>R</code> package <code>astsa</code>.</p></li>
+</ol>
+</div>
+<div id="sv-uv" class="section level2 hasAnchor" number="10.2">
+<h2><span class="header-section-number">10.2</span> Univariate SV models<a href="ch-sv.html#sv-uv" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><span class="citation">Jacquier, Polson, and Rossi (<a href="#ref-jacquier1994rossi" role="doc-biblioref">1994</a>)</span>
+described dynamic Bayesian modeling of an SV model.
+We follow the notation in <span class="citation">Martino et al. (<a href="#ref-martino2011" role="doc-biblioref">2011</a>)</span>, who described fitting SV models using <code>R-INLA</code>.
+The SV model for asset returns <span class="math inline">\(r_t\)</span> is defined by</p>
+<p><span class="math display" id="eq:martino">\[\begin{align}
+r_t &amp;= \exp(h_t/2)\varepsilon_t,   \notag \\
+h_t -\mu &amp; = \phi(h_{t-1}-\mu) + \sigma_w  w_t,
+\tag{10.3}
+\end{align}\]</span>
+where <span class="math inline">\(h_t\)</span> is the unobserved log volatility, <span class="math inline">\(\varepsilon_t\)</span> and <span class="math inline">\(w_t\)</span> are i.i.d. N<span class="math inline">\((0,1)\)</span> random errors which are independent of each other, <span class="math inline">\(|\phi| &lt;1\)</span>, and <span class="math inline">\(\mu \in \mathbb{R}\)</span>. The model assumes that the latent log volatility <span class="math inline">\(h_t\)</span> follows a stationary AR(1) process.
+Following the discussions in
+<span class="citation">Martino et al. (<a href="#ref-martino2011" role="doc-biblioref">2011</a>)</span>, we assume a normal prior with mean <span class="math inline">\(0\)</span> and
+a large variance for <span class="math inline">\(\mu\)</span>, an inverse Gamma prior for <span class="math inline">\(\sigma^2_w\)</span>, while
+<span class="math inline">\(\phi\)</span> has the usual logit prior.
+The following example illustrates the use of the <code>family="stochvol"</code> option for data simulated from an SV model with <span class="math inline">\(\varepsilon_t \sim N(0,1)\)</span>.</p>
+<div id="simul-svnormal" class="section level3 hasAnchor" number="10.2.1">
+<h3><span class="header-section-number">10.2.1</span> Example: Simulated SV data with standard normal errors<a href="ch-sv.html#simul-svnormal" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We simulate a time series following <a href="ch-sv.html#eq:martino">(10.3)</a>; see <code>inla.doc("stochvol")</code>. Here, <span class="math inline">\(\varepsilon_t \sim N(0,1)\)</span>, as indicated by <code>ret &lt;- exp(h/2) * rnorm(n)</code>. The parameter <span class="math inline">\(\phi = 0.9\)</span> generates a series with high persistence.</p>
+<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb286-1"><a href="ch-sv.html#cb286-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb286-2"><a href="ch-sv.html#cb286-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb286-3"><a href="ch-sv.html#cb286-3" aria-hidden="true" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
+<span id="cb286-4"><a href="ch-sv.html#cb286-4" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">2.0</span></span>
+<span id="cb286-5"><a href="ch-sv.html#cb286-5" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">rep</span>(mu, n)</span>
+<span id="cb286-6"><a href="ch-sv.html#cb286-6" aria-hidden="true" tabindex="-1"></a>sigma2.w <span class="ot">&lt;-</span> <span class="fl">0.25</span></span>
+<span id="cb286-7"><a href="ch-sv.html#cb286-7" aria-hidden="true" tabindex="-1"></a>prec.x <span class="ot">&lt;-</span> <span class="fu">prec.state.ar1</span>(sigma2.w, phi)</span>
+<span id="cb286-8"><a href="ch-sv.html#cb286-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n) {</span>
+<span id="cb286-9"><a href="ch-sv.html#cb286-9" aria-hidden="true" tabindex="-1"></a>  h[i] <span class="ot">&lt;-</span> mu <span class="sc">+</span> phi <span class="sc">*</span> (h[i <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">-</span> mu) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="fu">sqrt</span>(sigma2.w))</span>
+<span id="cb286-10"><a href="ch-sv.html#cb286-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb286-11"><a href="ch-sv.html#cb286-11" aria-hidden="true" tabindex="-1"></a>ret <span class="ot">&lt;-</span> <span class="fu">exp</span>(h<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> <span class="fu">rnorm</span>(n)</span></code></pre></div>
+<p>We use <code>family = "stochvol"</code> to model the SV model. The results are summarized below.</p>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb287-1"><a href="ch-sv.html#cb287-1" aria-hidden="true" tabindex="-1"></a>time <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>n</span>
+<span id="cb287-2"><a href="ch-sv.html#cb287-2" aria-hidden="true" tabindex="-1"></a>data.sim.sv <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(<span class="at">ret =</span> ret, <span class="at">time =</span> time)</span>
+<span id="cb287-3"><a href="ch-sv.html#cb287-3" aria-hidden="true" tabindex="-1"></a>formula.sim.sv <span class="ot">&lt;-</span> ret <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">f</span>(time, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb287-4"><a href="ch-sv.html#cb287-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hyper =</span> <span class="fu">list</span>(<span class="at">prec =</span> <span class="fu">list</span>(<span class="at">param=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="fl">0.0001</span>)),</span>
+<span id="cb287-5"><a href="ch-sv.html#cb287-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">mean =</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="cn">FALSE</span>)))</span>
+<span id="cb287-6"><a href="ch-sv.html#cb287-6" aria-hidden="true" tabindex="-1"></a>model.sim.g <span class="ot">&lt;-</span></span>
+<span id="cb287-7"><a href="ch-sv.html#cb287-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inla</span>(formula.sim.sv, <span class="at">family =</span> <span class="st">&quot;stochvol&quot;</span>, <span class="at">data =</span> data.sim.sv,</span>
+<span id="cb287-8"><a href="ch-sv.html#cb287-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb287-9"><a href="ch-sv.html#cb287-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb287-10"><a href="ch-sv.html#cb287-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb287-11"><a href="ch-sv.html#cb287-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb287-12"><a href="ch-sv.html#cb287-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb287-13"><a href="ch-sv.html#cb287-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb287-14"><a href="ch-sv.html#cb287-14" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model.sim.g)</span></span>
+<span id="cb287-15"><a href="ch-sv.html#cb287-15" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.sim.g<span class="sc">$</span>summary.hyperpar[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)])</span>
+<span id="cb287-16"><a href="ch-sv.html#cb287-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   name               mean   sd   </span></span>
+<span id="cb287-17"><a href="ch-sv.html#cb287-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for time  0.949 0.151</span></span>
+<span id="cb287-18"><a href="ch-sv.html#cb287-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Rho for time        0.888 0.026</span></span>
+<span id="cb287-19"><a href="ch-sv.html#cb287-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Mean for time      -2.133 0.139</span></span></code></pre></div>
+<p>Note that the mean <span class="math inline">\(\mu\)</span> of the log volatility <span class="math inline">\(h_t\)</span> in the latent AR(1) state equation <a href="ch-sv.html#eq:martino">(10.3)</a> is recovered from the estimate of “Mean for time” in the output, with posterior mean
+<span class="math inline">\(- 2.133\)</span>
+<!-- 2.133 -->
+and posterior standard deviation 0.139.
+If there are exogenous predictors, we can replace <code>model = "ar1"</code> by <code>model = "ar1c"</code>.</p>
+</div>
+<div id="simul-svt5" class="section level3 hasAnchor" number="10.2.2">
+<h3><span class="header-section-number">10.2.2</span> Example: Simulated SV data with Student-<span class="math inline">\(t_{\nu}\)</span> errors<a href="ch-sv.html#simul-svt5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The model generating mechanism is the same as in the previous example, except for assuming that
+<span class="math inline">\(\varepsilon_t \sim t_\nu\)</span>, i.e., a Student-<span class="math inline">\(t\)</span> distribution with <span class="math inline">\(\nu\)</span> degrees of freedom (d.f.), <span class="math inline">\(\nu\)</span> being treated as an unknown parameter. The <span class="math inline">\(t\)</span>-distribution allows for heavier tails than the normal and is widely used in modeling financial data <span class="citation">(<a href="#ref-tsay2005analysis" role="doc-biblioref">Tsay 2005</a>)</span>. The use of <code>stochvol_t</code> enables us to adequately recover the true values.
+The <em>dof-prior</em> has a tabulated density and is the PC prior for the degrees of freedom parameter in the Student-t distribution (see Section <a href="chapter3.html#pc-priors">3.9.2</a>). The parameters of this prior are <span class="math inline">\((u, \alpha)\)</span> with the interpretation that <span class="math inline">\(P(\nu &lt; u) = \alpha\)</span>. The code for data generation is the same as the code for the Gaussian case, except for replacing</p>
+<div class="sourceCode" id="cb288"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb288-1"><a href="ch-sv.html#cb288-1" aria-hidden="true" tabindex="-1"></a>ret <span class="ot">&lt;-</span> <span class="fu">exp</span>(h<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> <span class="fu">rnorm</span>(n)</span></code></pre></div>
+<p>by</p>
+<div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb289-1"><a href="ch-sv.html#cb289-1" aria-hidden="true" tabindex="-1"></a>ret <span class="ot">&lt;-</span> <span class="fu">exp</span>(h <span class="sc">/</span> <span class="dv">2</span>) <span class="sc">*</span><span class="fu">rt</span>(n, <span class="at">df=</span><span class="dv">5</span>)</span></code></pre></div>
+<p>The code for the formula and model fit are also similar to the Gaussian case, except for replacing
+<code>family = "stochvol"</code> by <code>family = "stochvol_t"</code> in the <code>inla()</code> call.</p>
+<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb290-1"><a href="ch-sv.html#cb290-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.sim.t<span class="sc">$</span>summary.hyperpar[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>)])</span>
+<span id="cb290-2"><a href="ch-sv.html#cb290-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                                      mean   sd    0.5q  </span></span>
+<span id="cb290-3"><a href="ch-sv.html#cb290-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 degrees of freedom for stochvol student-t 12.477 8.800  9.841</span></span>
+<span id="cb290-4"><a href="ch-sv.html#cb290-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for time                         0.837 0.161  0.826</span></span>
+<span id="cb290-5"><a href="ch-sv.html#cb290-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for time                               0.875 0.037  0.881</span></span>
+<span id="cb290-6"><a href="ch-sv.html#cb290-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Mean for time                             -1.796 0.162 -1.792</span></span></code></pre></div>
+<!--The DIC and WAIC are given by 1118.1399 and 1125.3684 respectively. We can compare models based on these criteria. -->
+</div>
+<div id="stockrets" class="section level3 hasAnchor" number="10.2.3">
+<h3><span class="header-section-number">10.2.3</span> Example: IBM stock returns<a href="ch-sv.html#stockrets" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We download daily prices <span class="math inline">\(P_t\)</span> for IBM using the <code>R</code> package
+<code>quantmod</code>, and compute the returns as
+<span class="math inline">\(r_t = \nabla \log P_t = (1-B)\log P_t\)</span>, where <span class="math inline">\(B\)</span> is the backshift operator.
+The IBM price data from 2018-01-01 to 2020-12-31 is shown in
+Figure <a href="ch-sv.html#fig:ibm-plots">10.1</a>, together with the returns (we dropped the first NA).</p>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="ch-sv.html#cb291-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb291-2"><a href="ch-sv.html#cb291-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getSymbols</span>(</span>
+<span id="cb291-3"><a href="ch-sv.html#cb291-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;IBM&quot;</span>,</span>
+<span id="cb291-4"><a href="ch-sv.html#cb291-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="st">&#39;2018-01-01&#39;</span>,</span>
+<span id="cb291-5"><a href="ch-sv.html#cb291-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> <span class="st">&quot;2020-12-31&quot;</span>,</span>
+<span id="cb291-6"><a href="ch-sv.html#cb291-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">warnings =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb291-7"><a href="ch-sv.html#cb291-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">auto.assign =</span> <span class="cn">TRUE</span></span>
+<span id="cb291-8"><a href="ch-sv.html#cb291-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb291-9"><a href="ch-sv.html#cb291-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;IBM&quot;</span></span>
+<span id="cb291-10"><a href="ch-sv.html#cb291-10" aria-hidden="true" tabindex="-1"></a>ret <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">diff</span>(<span class="fu">log</span>(IBM<span class="sc">$</span>IBM.Adjusted)))[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb291-11"><a href="ch-sv.html#cb291-11" aria-hidden="true" tabindex="-1"></a>adj.plot <span class="ot">&lt;-</span></span>
+<span id="cb291-12"><a href="ch-sv.html#cb291-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tsline</span>(</span>
+<span id="cb291-13"><a href="ch-sv.html#cb291-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.numeric</span>(IBM<span class="sc">$</span>IBM.Adjusted),</span>
+<span id="cb291-14"><a href="ch-sv.html#cb291-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>,</span>
+<span id="cb291-15"><a href="ch-sv.html#cb291-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylab =</span> <span class="st">&quot;Adjusted price&quot;</span>,</span>
+<span id="cb291-16"><a href="ch-sv.html#cb291-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">line.color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb291-17"><a href="ch-sv.html#cb291-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">line.size =</span> <span class="fl">0.6</span></span>
+<span id="cb291-18"><a href="ch-sv.html#cb291-18" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb291-19"><a href="ch-sv.html#cb291-19" aria-hidden="true" tabindex="-1"></a>ret.plot <span class="ot">&lt;-</span> <span class="fu">tsline</span>(</span>
+<span id="cb291-20"><a href="ch-sv.html#cb291-20" aria-hidden="true" tabindex="-1"></a>  ret,</span>
+<span id="cb291-21"><a href="ch-sv.html#cb291-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;t&quot;</span>,</span>
+<span id="cb291-22"><a href="ch-sv.html#cb291-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Returns&quot;</span>,</span>
+<span id="cb291-23"><a href="ch-sv.html#cb291-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">line.color =</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb291-24"><a href="ch-sv.html#cb291-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">line.size =</span> <span class="fl">0.6</span></span>
+<span id="cb291-25"><a href="ch-sv.html#cb291-25" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb291-26"><a href="ch-sv.html#cb291-26" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(adj.plot, ret.plot, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:ibm-plots"></span>
+<img src="gitbook_version_files/figure-html/ibm-plots-1.png" alt="Adjusted prices (left) and log returns (right) for IBM." width="672" />
+<p class="caption">
+FIGURE 10.1: Adjusted prices (left) and log returns (right) for IBM.
+</p>
+</div>
+<p>We fit the univariate SV model discussed in <a href="ch-sv.html#eq:martino">(10.3)</a> to the time series of length <span class="math inline">\(n=754\)</span> of daily returns for IBM, assuming three different possible distributions for <span class="math inline">\(\varepsilon_t\)</span>. The option <code>family = "stochvol"</code> fits an SV model <a href="ch-sv.html#eq:martino">(10.3)</a> with i.i.d. N(0,1) errors <span class="math inline">\(\varepsilon_t\)</span>.</p>
+<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="ch-sv.html#cb292-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb292-2"><a href="ch-sv.html#cb292-2" aria-hidden="true" tabindex="-1"></a>id<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(ret)</span>
+<span id="cb292-3"><a href="ch-sv.html#cb292-3" aria-hidden="true" tabindex="-1"></a>data.ret <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(ret, id<span class="fl">.1</span>)</span>
+<span id="cb292-4"><a href="ch-sv.html#cb292-4" aria-hidden="true" tabindex="-1"></a>formula.ret <span class="ot">&lt;-</span> ret <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">f</span>(id<span class="fl">.1</span>,<span class="at">model=</span><span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb292-5"><a href="ch-sv.html#cb292-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">hyper =</span> <span class="fu">list</span>(<span class="at">prec =</span> <span class="fu">list</span>(<span class="at">param=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="fl">0.0001</span>)),</span>
+<span id="cb292-6"><a href="ch-sv.html#cb292-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">mean =</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="cn">FALSE</span>)))</span>
+<span id="cb292-7"><a href="ch-sv.html#cb292-7" aria-hidden="true" tabindex="-1"></a>model.g <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb292-8"><a href="ch-sv.html#cb292-8" aria-hidden="true" tabindex="-1"></a>  formula.ret,</span>
+<span id="cb292-9"><a href="ch-sv.html#cb292-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;stochvol&quot;</span>,</span>
+<span id="cb292-10"><a href="ch-sv.html#cb292-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data.ret,</span>
+<span id="cb292-11"><a href="ch-sv.html#cb292-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb292-12"><a href="ch-sv.html#cb292-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb292-13"><a href="ch-sv.html#cb292-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb292-14"><a href="ch-sv.html#cb292-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb292-15"><a href="ch-sv.html#cb292-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb292-16"><a href="ch-sv.html#cb292-16" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb292-17"><a href="ch-sv.html#cb292-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>)</span>
+<span id="cb292-18"><a href="ch-sv.html#cb292-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb292-19"><a href="ch-sv.html#cb292-19" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model.g)</span></span>
+<span id="cb292-20"><a href="ch-sv.html#cb292-20" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.g<span class="sc">$</span>summary.hyperpar[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>)])</span>
+<span id="cb292-21"><a href="ch-sv.html#cb292-21" aria-hidden="true" tabindex="-1"></a><span class="do">##   name               mean   sd    0.5q  </span></span>
+<span id="cb292-22"><a href="ch-sv.html#cb292-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for id.1  0.038 0.020  0.035</span></span>
+<span id="cb292-23"><a href="ch-sv.html#cb292-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Rho for id.1        0.998 0.001  0.998</span></span>
+<span id="cb292-24"><a href="ch-sv.html#cb292-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Mean for id.1      -0.439 0.675 -0.463</span></span></code></pre></div>
+<p>The estimated posterior mean of <span class="math inline">\(\phi\)</span> is 0.998, which indicates very high persistence. Note that <code>summary.fitted.values</code> gives the fitted values of <span class="math inline">\(\sigma^2_t\)</span>.
+We can obtain fitted values of <span class="math inline">\(\exp(h_t)\)</span>
+using <code>summary.linear.predictor</code>.
+We overlay a plot of the squared returns <span class="math inline">\(r_t^2\)</span> and the posterior mean of <span class="math inline">\(\exp(h_t)\)</span>; see the top panel of Figure <a href="ch-sv.html#fig:stochvol-ibm-plots">10.2</a>.</p>
+<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="ch-sv.html#cb293-1" aria-hidden="true" tabindex="-1"></a>fit.model.g <span class="ot">&lt;-</span> <span class="fu">exp</span>(model.g<span class="sc">$</span>summary.linear.predictor<span class="sc">$</span>mean) </span></code></pre></div>
+<p>If we suspect that the assumption of standard normal errors <span class="math inline">\(\varepsilon_t\)</span> may not be suitable, we can also fit a model with i.i.d. Student-<span class="math inline">\(t\)</span> errors by
+replacing <code>family = "stochvol"</code> in the <code>model.g</code> call above by
+<code>family = "stochvol_t"</code> in <code>model.t</code>. The results are shown below.</p>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="ch-sv.html#cb294-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model.t)</span></span>
+<span id="cb294-2"><a href="ch-sv.html#cb294-2" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.t<span class="sc">$</span>summary.hyperpar[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)])</span>
+<span id="cb294-3"><a href="ch-sv.html#cb294-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                                      mean   sd   </span></span>
+<span id="cb294-4"><a href="ch-sv.html#cb294-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 degrees of freedom for stochvol student-t  5.842 1.225</span></span>
+<span id="cb294-5"><a href="ch-sv.html#cb294-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.1                         0.055 0.034</span></span>
+<span id="cb294-6"><a href="ch-sv.html#cb294-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.1                               0.999 0.001</span></span>
+<span id="cb294-7"><a href="ch-sv.html#cb294-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Mean for id.1                             -0.541 0.879</span></span></code></pre></div>
+<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="ch-sv.html#cb295-1" aria-hidden="true" tabindex="-1"></a>fit.model.t <span class="ot">&lt;-</span></span>
+<span id="cb295-2"><a href="ch-sv.html#cb295-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exp</span>(model.t<span class="sc">$</span>summary.linear.predictor<span class="sc">$</span>mean) </span></code></pre></div>
+<p>The high value of the estimated <span class="math inline">\(\phi\)</span> indicates a high degree of persistence. The estimated d.f. for the <span class="math inline">\(t\)</span>-distribution is about <span class="math inline">\(6\)</span>. Again, the fitted means of <span class="math inline">\(\exp(h_t)\)</span> are obtained as shown earlier for <code>model.g</code>. A plot of these values and <span class="math inline">\(r_t^2\)</span> is shown in the lower plot in Figure <a href="ch-sv.html#fig:stochvol-ibm-plots">10.2</a>.</p>
+<div class="figure"><span id="fig:stochvol-ibm-plots"></span>
+<img src="gitbook_version_files/figure-html/stochvol-ibm-plots-1.png" alt="Comparing observed squared returns (red) and fitted squared volatilities (blue) from the two models for the IBM data." width="672" />
+<p class="caption">
+FIGURE 10.2: Comparing observed squared returns (red) and fitted squared volatilities (blue) from the two models for the IBM data.
+</p>
+</div>
+<p>We note that due to Monte Carlo sampling which <code>INLA</code> uses internally, there are likely to be small differences in the results when running <code>family = stochvol_t</code> on different computers. But overall, the results should be more or less the same (in terms of reproducibility). <span class="citation">Martino et al. (<a href="#ref-martino2011" role="doc-biblioref">2011</a>)</span> also describe how to use <code>family = "stochvol_nig"</code> for SV modeling where <span class="math inline">\(\varepsilon_t\)</span> follows a normal inverse Gaussian distribution. See <span class="citation">Barndorff-Nielsen (<a href="#ref-barndorff1997NIG" role="doc-biblioref">1997</a>)</span> and <span class="citation">Andersson (<a href="#ref-andersson2001NIG" role="doc-biblioref">2001</a>)</span> who described the NIG distribution as a variance-mean mixture of a normal distribution with the inverse Gaussian distribution as the mixing distribution. We refer the reader to <span class="citation">Martino et al. (<a href="#ref-martino2011" role="doc-biblioref">2011</a>)</span> for more details.
+Table <a href="ch-sv.html#tab:compareIBM">10.1</a> shows the DIC, WAIC, and the marginal likelihoods for the two models. They are very close, with the values for <code>model.t</code> being slightly better.</p>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:compareIBM">TABLE 10.1: </span>In-sample model comparisons.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Model
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+DIC
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+WAIC
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Marginal Likelihood
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+model.g
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-4262.229\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-4238.847\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(2070.687\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+model.t
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-4260.186\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-4259.244\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(2084.249\)</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="nysestockrets" class="section level3 hasAnchor" number="10.2.4">
+<h3><span class="header-section-number">10.2.4</span> Example: NYSE returns<a href="ch-sv.html#nysestockrets" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To illustrate the approach on a longer time series, we run these codes on the <em>nyse</em> data of length <span class="math inline">\(n=2000\)</span> from the <code>R</code> package <code>astsa</code>. We are able to closely recover estimates of <span class="math inline">\(\sigma_w\)</span> and <span class="math inline">\(\phi\)</span> from <code>family = "stochvol_t"</code>, which were similar to the results in <span class="citation">Shumway and Stoffer (<a href="#ref-ss2017" role="doc-biblioref">2017</a>)</span>; however, unlike their setup, we do not include an <span class="math inline">\(\alpha\)</span> in the observation level equation, but only include a state level mean <span class="math inline">\(\mu\)</span>.</p>
+<div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb296-1"><a href="ch-sv.html#cb296-1" aria-hidden="true" tabindex="-1"></a>id<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(nyse)</span>
+<span id="cb296-2"><a href="ch-sv.html#cb296-2" aria-hidden="true" tabindex="-1"></a>data.nyse <span class="ot">&lt;-</span> <span class="fu">cbind.data.frame</span>(nyse, id<span class="fl">.1</span>)</span>
+<span id="cb296-3"><a href="ch-sv.html#cb296-3" aria-hidden="true" tabindex="-1"></a>formula.nyse <span class="ot">&lt;-</span> nyse <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">f</span>(id<span class="fl">.1</span>,<span class="at">model=</span><span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb296-4"><a href="ch-sv.html#cb296-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">hyper =</span> <span class="fu">list</span>(<span class="at">prec =</span> <span class="fu">list</span>(<span class="at">param=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="fl">0.001</span>)),</span>
+<span id="cb296-5"><a href="ch-sv.html#cb296-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">mean =</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="cn">FALSE</span>)))</span>
+<span id="cb296-6"><a href="ch-sv.html#cb296-6" aria-hidden="true" tabindex="-1"></a>model.nyse <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb296-7"><a href="ch-sv.html#cb296-7" aria-hidden="true" tabindex="-1"></a>  formula.nyse,</span>
+<span id="cb296-8"><a href="ch-sv.html#cb296-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;stochvol_t&quot;</span>,</span>
+<span id="cb296-9"><a href="ch-sv.html#cb296-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data.nyse,</span>
+<span id="cb296-10"><a href="ch-sv.html#cb296-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb296-11"><a href="ch-sv.html#cb296-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb296-12"><a href="ch-sv.html#cb296-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb296-13"><a href="ch-sv.html#cb296-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb296-14"><a href="ch-sv.html#cb296-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb296-15"><a href="ch-sv.html#cb296-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb296-16"><a href="ch-sv.html#cb296-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>)</span>
+<span id="cb296-17"><a href="ch-sv.html#cb296-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb296-18"><a href="ch-sv.html#cb296-18" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model.nyse)</span></span>
+<span id="cb296-19"><a href="ch-sv.html#cb296-19" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.nyse<span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb296-20"><a href="ch-sv.html#cb296-20" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                                      mean   sd   </span></span>
+<span id="cb296-21"><a href="ch-sv.html#cb296-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 degrees of freedom for stochvol student-t  5.144 0.664</span></span>
+<span id="cb296-22"><a href="ch-sv.html#cb296-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.1                         2.269 0.984</span></span>
+<span id="cb296-23"><a href="ch-sv.html#cb296-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.1                               0.994 0.005</span></span>
+<span id="cb296-24"><a href="ch-sv.html#cb296-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Mean for id.1                             -9.048 0.335</span></span></code></pre></div>
+
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-andersson2001NIG" class="csl-entry">
+Andersson, Jonas. 2001. <span>“On the Normal Inverse <span>G</span>aussian Stochastic Volatility Model.”</span> <em>Journal of Business &amp; Economic Statistics</em> 19 (1): 44–54.
+</div>
+<div id="ref-barndorff1997NIG" class="csl-entry">
+Barndorff-Nielsen, Ole E. 1997. <span>“Normal Inverse <span>G</span>aussian Distributions and Stochastic Volatility Modelling.”</span> <em>Scandinavian Journal of Statistics</em> 24 (1): 1–13.
+</div>
+<div id="ref-bollerslev1986" class="csl-entry">
+Bollerslev, Tim. 1986. <span>“Generalized Autoregressive Conditional Heteroscedasticity.”</span> <em>Journal of Econometrics</em> 31 (3): 307–27.
+</div>
+<div id="ref-engle1982" class="csl-entry">
+Engle, Robert F. 1982. <span>“Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of <span>U</span>nited <span>K</span>ingdom Inflation.”</span> <em>Econometrica: Journal of the Econometric Society</em>, 987–1007.
+</div>
+<div id="ref-jacquier1994rossi" class="csl-entry">
+Jacquier, Eric, Nicholas G Polson, and Peter E Rossi. 1994. <span>“Bayesian Analysis of Stochastic Volatility Models.”</span> <em>Journal of Business &amp; Economic Statistics</em>, 371–89.
+</div>
+<div id="ref-martino2011" class="csl-entry">
+Martino, Sara, Kjersti Aas, Ola Lindqvist, Linda R. Neef, and Håvard Rue. 2011. <span>“Estimating Stochastic Volatility Models Using Integrated Nested <span>L</span>aplace Approximations.”</span> <em>The European Journal of Finance</em> 17 (7): 487–503.
+</div>
+<div id="ref-ss2017" class="csl-entry">
+Shumway, Robert H., and David S. Stoffer. 2017. <em>Time Series Analysis and Its Applications: With r Examples</em>. Springer Texts in Statistics. New York: Springer International Publishing.
+</div>
+<div id="ref-taylor1982financial" class="csl-entry">
+Taylor, Stephen John. 1982. <span>“Financial Returns Modelled by the Product of Two Stochastic Processes – a Study of the Daily Sugar Prices 1961-75.”</span> <em>Time Series Analysis: Theory and Practice</em> 1: 203–26.
+</div>
+<div id="ref-tsay2005analysis" class="csl-entry">
+Tsay, Ruey S. 2005. <em>Analysis of Financial Time Series</em>. New York: John Wiley &amp; Sons.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ch-count.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ch-st.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"split_by": "chapter",
+"split_bib": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

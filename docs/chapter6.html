@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Hierarchical Dynamic Models for Panel Time Series | Dynamic Time Series Models using R-INLA: An Applied Perspective</title>
+  <meta name="description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Hierarchical Dynamic Models for Panel Time Series | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA/" />
+  <meta property="og:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+  <meta property="og:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="github-repo" content="ramanbala/dynamic-time-series-models-R-INLA" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Hierarchical Dynamic Models for Panel Time Series | Dynamic Time Series Models using R-INLA: An Applied Perspective" />
+  
+  <meta name="twitter:description" content="This book provides examples of modeling time series data using R-INLA." />
+  <meta name="twitter:image" content="https://ramanbala.github.io/dynamic-time-series-models-R-INLA//book_cover_image.png" />
+
+<meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
+
+
+<meta name="date" content="2022-06-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chapter5.html"/>
+<link rel="next" href="ch-nongaus.html"/>
+<script src="libs/header-attrs/header-attrs.js"></script>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+<script src="libs/kePrint/kePrint.js"></script>
+<link href="libs/lightable/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a></li>
+
+<li class="divider"></li>
+<li><a href="index.html#preface">Preface<span></span></a>
+<ul>
+<li><a href="index.html#why-read-this-book">Why read this book?<span></span></a></li>
+<li><a href="index.html#structure-of-the-book">Structure of the book<span></span></a></li>
+<li><a href="index.html#software-information-and-conventions">Software information and conventions<span></span></a></li>
+<li><a href="index.html#acknowledgments">Acknowledgments<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="chapter1.html"><a href="chapter1.html"><i class="fa fa-check"></i><b>1</b> Bayesian Analysis<span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="chapter1.html"><a href="chapter1.html#intro-ch1"><i class="fa fa-check"></i><b>1.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="1.2" data-path="chapter1.html"><a href="chapter1.html#bayes-framework"><i class="fa fa-check"></i><b>1.2</b> Bayesian framework<span></span></a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="chapter1.html"><a href="chapter1.html#bayesian-model-comparison"><i class="fa fa-check"></i><b>1.2.1</b> Bayesian model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="chapter1.html"><a href="chapter1.html#bayes-ts"><i class="fa fa-check"></i><b>1.3</b> Bayesian analysis of time series<span></span></a></li>
+<li class="chapter" data-level="1.4" data-path="chapter1.html"><a href="chapter1.html#dlms"><i class="fa fa-check"></i><b>1.4</b> Gaussian dynamic linear models (DLMs)<span></span></a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="chapter1.html"><a href="chapter1.html#constant-level-plus-noise-model"><i class="fa fa-check"></i><b>1.4.1</b> Constant level plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.2" data-path="chapter1.html"><a href="chapter1.html#local-level-model"><i class="fa fa-check"></i><b>1.4.2</b> Local level model<span></span></a></li>
+<li class="chapter" data-level="1.4.3" data-path="chapter1.html"><a href="chapter1.html#gaussian-dlm-framework-for-univariate-time-series"><i class="fa fa-check"></i><b>1.4.3</b> Gaussian DLM framework for univariate time series<span></span></a></li>
+<li class="chapter" data-level="1.4.4" data-path="chapter1.html"><a href="chapter1.html#ar1-plus-noise-model"><i class="fa fa-check"></i><b>1.4.4</b> AR(1) plus noise model<span></span></a></li>
+<li class="chapter" data-level="1.4.5" data-path="chapter1.html"><a href="chapter1.html#dlm-for-vector-valued-time-series"><i class="fa fa-check"></i><b>1.4.5</b> DLM for vector-valued time series<span></span></a></li>
+<li class="chapter" data-level="1.4.6" data-path="chapter1.html"><a href="chapter1.html#kalman-filtering-and-smoothing"><i class="fa fa-check"></i><b>1.4.6</b> Kalman filtering and smoothing<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="chapter1.html"><a href="chapter1.html#beyonddlm"><i class="fa fa-check"></i><b>1.5</b> Beyond basic Gaussian DLMs<span></span></a></li>
+<li><a href="chapter1.html#chapter-1-appendix">Chapter 1 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter1.html#conditional-distributions">Conditional distributions<span></span></a></li>
+<li><a href="chapter1.html#exponential-family-of-distributions">Exponential family of distributions<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter2.html"><a href="chapter2.html"><i class="fa fa-check"></i><b>2</b> A Review of INLA<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="chapter2.html"><a href="chapter2.html#intro-ch2"><i class="fa fa-check"></i><b>2.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="2.2" data-path="chapter2.html"><a href="chapter2.html#laplace"><i class="fa fa-check"></i><b>2.2</b> Laplace approximation<span></span></a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="chapter2.html"><a href="chapter2.html#simplaplace"><i class="fa fa-check"></i><b>2.2.1</b> Simplified Laplace approximation<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="chapter2.html"><a href="chapter2.html#inlats"><i class="fa fa-check"></i><b>2.3</b> INLA structure for time series<span></span></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="chapter2.html"><a href="chapter2.html#inla-steps"><i class="fa fa-check"></i><b>2.3.1</b> INLA steps<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="chapter2.html"><a href="chapter2.html#forecast"><i class="fa fa-check"></i><b>2.4</b> Forecasting in INLA<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="chapter2.html"><a href="chapter2.html#marglik"><i class="fa fa-check"></i><b>2.5</b> Marginal likelihood computation in INLA<span></span></a></li>
+<li class="chapter" data-level="2.6" data-path="chapter2.html"><a href="chapter2.html#rinlapkg"><i class="fa fa-check"></i><b>2.6</b> <code>R-INLA</code> package – some basics<span></span></a></li>
+<li><a href="chapter2.html#chapter-2-appendix">Chapter 2 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter2.html#gaussian-markov-random-field-gmrf">Gaussian Markov Random Field (GMRF)<span></span></a></li>
+<li><a href="chapter2.html#kullback-leibler-divergence">Kullback-Leibler divergence<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter3.html"><a href="chapter3.html"><i class="fa fa-check"></i><b>3</b> Details of R-INLA for Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="chapter3.html"><a href="chapter3.html#intro-ch3"><i class="fa fa-check"></i><b>3.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="3.2" data-path="chapter3.html"><a href="chapter3.html#ch3-rw1noise"><i class="fa fa-check"></i><b>3.2</b> Random walk plus noise model<span></span></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="chapter3.html"><a href="chapter3.html#inlaformula"><i class="fa fa-check"></i><b>3.2.1</b> <code>R-INLA</code> model formula<span></span></a></li>
+<li class="chapter" data-level="3.2.2" data-path="chapter3.html"><a href="chapter3.html#inlaexec"><i class="fa fa-check"></i><b>3.2.2</b> Model execution<span></span></a></li>
+<li class="chapter" data-level="3.2.3" data-path="chapter3.html"><a href="chapter3.html#inlaprior"><i class="fa fa-check"></i><b>3.2.3</b> Prior specifications for hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.4" data-path="chapter3.html"><a href="chapter3.html#inlaposterior"><i class="fa fa-check"></i><b>3.2.4</b> Posterior distributions of hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.2.5" data-path="chapter3.html"><a href="chapter3.html#fittedvalues"><i class="fa fa-check"></i><b>3.2.5</b> Fitted values for latent states and responses<span></span></a></li>
+<li class="chapter" data-level="3.2.6" data-path="chapter3.html"><a href="chapter3.html#filterestimate"><i class="fa fa-check"></i><b>3.2.6</b> Filtering and smoothing in DLM<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="chapter3.html"><a href="chapter3.html#ch3-ar1levelnoise"><i class="fa fa-check"></i><b>3.3</b> AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="chapter3.html"><a href="chapter3.html#ch3-high-lags"><i class="fa fa-check"></i><b>3.4</b> Dynamic linear models with higher order AR lags<span></span></a>
+<ul>
+<li><a href="chapter3.html#arp-with-level-plus-noise-model">AR<span class="math inline">\((p)\)</span> with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="chapter3.html"><a href="chapter3.html#ch3-rwdrift"><i class="fa fa-check"></i><b>3.5</b> Random walk with drift plus noise model<span></span></a></li>
+<li class="chapter" data-level="3.6" data-path="chapter3.html"><a href="chapter3.html#ch3-rwtvdrift"><i class="fa fa-check"></i><b>3.6</b> Second-order polynomial model<span></span></a></li>
+<li class="chapter" data-level="3.7" data-path="chapter3.html"><a href="chapter3.html#forecasting"><i class="fa fa-check"></i><b>3.7</b> Forecasting states and observations<span></span></a></li>
+<li class="chapter" data-level="3.8" data-path="chapter3.html"><a href="chapter3.html#modsel"><i class="fa fa-check"></i><b>3.8</b> Model comparisons<span></span></a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="chapter3.html"><a href="chapter3.html#modsel-insamp-ch3"><i class="fa fa-check"></i><b>3.8.1</b> In-sample model comparisons<span></span></a></li>
+<li class="chapter" data-level="3.8.2" data-path="chapter3.html"><a href="chapter3.html#modsel-outsamp-ch3"><i class="fa fa-check"></i><b>3.8.2</b> Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="chapter3.html"><a href="chapter3.html#nondefault-priors"><i class="fa fa-check"></i><b>3.9</b> Non-default prior specifications<span></span></a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="chapter3.html"><a href="chapter3.html#custom-priors"><i class="fa fa-check"></i><b>3.9.1</b> Custom prior specifications<span></span></a></li>
+<li class="chapter" data-level="3.9.2" data-path="chapter3.html"><a href="chapter3.html#pc-priors"><i class="fa fa-check"></i><b>3.9.2</b> Penalized complexity (PC) priors<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="chapter3.html"><a href="chapter3.html#post-sampling"><i class="fa fa-check"></i><b>3.10</b> Posterior sampling of latent effects and hyperparameters<span></span></a></li>
+<li class="chapter" data-level="3.11" data-path="chapter3.html"><a href="chapter3.html#postpred-samples"><i class="fa fa-check"></i><b>3.11</b> Posterior predictive samples of unknown observations<span></span></a></li>
+<li><a href="chapter3.html#chapter-3-appendix">Chapter 3 – Appendix<span></span></a>
+<ul>
+<li><a href="chapter3.html#sampling-properties-of-time-series">Sampling properties of time series<span></span></a></li>
+<li><a href="chapter3.html#autoregressive-models">Autoregressive models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter4.html"><a href="chapter4.html"><i class="fa fa-check"></i><b>4</b> Modeling Univariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="chapter4.html"><a href="chapter4.html#intro-ch4"><i class="fa fa-check"></i><b>4.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="4.2" data-path="chapter4.html"><a href="chapter4.html#dat-analysis"><i class="fa fa-check"></i><b>4.2</b> Example: A software engineering example – Musa data<span></span></a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="chapter4.html"><a href="chapter4.html#ch4-model1"><i class="fa fa-check"></i><b>4.2.1</b> Model 1. AR(1) with level plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.2" data-path="chapter4.html"><a href="chapter4.html#ch4-model2"><i class="fa fa-check"></i><b>4.2.2</b> Model 2. Random walk plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.3" data-path="chapter4.html"><a href="chapter4.html#ch4-model3"><i class="fa fa-check"></i><b>4.2.3</b> Model 3. AR(1) with trend plus noise model<span></span></a></li>
+<li class="chapter" data-level="4.2.4" data-path="chapter4.html"><a href="chapter4.html#ch4-model4"><i class="fa fa-check"></i><b>4.2.4</b> Model 4. AR(2) with level plus noise model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chapter4.html"><a href="chapter4.html#forecasting-musa"><i class="fa fa-check"></i><b>4.3</b> Forecasting future states and responses<span></span></a></li>
+<li class="chapter" data-level="4.4" data-path="chapter4.html"><a href="chapter4.html#modsel-ch4"><i class="fa fa-check"></i><b>4.4</b> Model comparisons<span></span></a>
+<ul>
+<li><a href="chapter4.html#in-sample-comparisons">In-sample comparisons<span></span></a></li>
+<li><a href="chapter4.html#out-of-sample-comparisons">Out-of-sample comparisons<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter5.html"><a href="chapter5.html"><i class="fa fa-check"></i><b>5</b> Time Series Regression Models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="chapter5.html"><a href="chapter5.html#intro-ch5"><i class="fa fa-check"></i><b>5.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="5.2" data-path="chapter5.html"><a href="chapter5.html#ch5-strdecomp"><i class="fa fa-check"></i><b>5.2</b> Structural models<span></span></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="chapter5.html"><a href="chapter5.html#hotelcost"><i class="fa fa-check"></i><b>5.2.1</b> Example: Monthly average cost of nightly hotel stay<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="chapter5.html"><a href="chapter5.html#ch5-exogpreds"><i class="fa fa-check"></i><b>5.3</b> Models with exogenous predictors<span></span></a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter5.html"><a href="chapter5.html#hourly-traffic"><i class="fa fa-check"></i><b>5.3.1</b> Example: Hourly traffic volumes<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="chapter5.html"><a href="chapter5.html#ar1c"><i class="fa fa-check"></i><b>5.4</b> Latent AR(1) model with covariates plus noise<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Hierarchical Dynamic Models for Panel Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#intro-ch6"><i class="fa fa-check"></i><b>6.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#homog-state"><i class="fa fa-check"></i><b>6.2</b> Models with homogenous state evolution<span></span></a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="chapter6.html"><a href="chapter6.html#simul1-panelts"><i class="fa fa-check"></i><b>6.2.1</b> Example: Simulated homogeneous panel time series with the same level<span></span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="chapter6.html"><a href="chapter6.html#simul2-panelts"><i class="fa fa-check"></i><b>6.2.2</b> Example: Simulated homogeneous panel time series with different levels<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#ridesource-hdlm"><i class="fa fa-check"></i><b>6.3</b> Example: Ridesourcing in NYC<span></span></a>
+<ul>
+<li><a href="chapter6.html#description-of-variables">Description of variables<span></span></a></li>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#hmod.H1"><i class="fa fa-check"></i><b>6.3.1</b> Model H1. Dynamic intercept and exogenous predictors<span></span></a></li>
+<li class="chapter" data-level="6.3.2" data-path="chapter6.html"><a href="chapter6.html#hmod.H2"><i class="fa fa-check"></i><b>6.3.2</b> Model H2. Dynamic intercept and Taxi usage<span></span></a></li>
+<li class="chapter" data-level="6.3.3" data-path="chapter6.html"><a href="chapter6.html#hmod.H3"><i class="fa fa-check"></i><b>6.3.3</b> Model H3. Taxi usage varies by time and zone<span></span></a></li>
+<li class="chapter" data-level="6.3.4" data-path="chapter6.html"><a href="chapter6.html#hmod.H4"><i class="fa fa-check"></i><b>6.3.4</b> Model H4. Fixed intercept, Taxi usage varies over time and zones<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="chapter6.html"><a href="chapter6.html#model-comparison"><i class="fa fa-check"></i><b>6.4</b> Model comparison<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-nongaus.html"><a href="ch-nongaus.html"><i class="fa fa-check"></i><b>7</b> Non-Gaussian Continuous Responses<span></span></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#intro-nongaus"><i class="fa fa-check"></i><b>7.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="7.2" data-path="ch-nongaus.html"><a href="ch-nongaus.html#gamma-model"><i class="fa fa-check"></i><b>7.2</b> Gamma state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#vix"><i class="fa fa-check"></i><b>7.2.1</b> Example: Volatility index (VIX) time series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="ch-nongaus.html"><a href="ch-nongaus.html#weibull-model"><i class="fa fa-check"></i><b>7.3</b> Weibull state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#forecasting-from-weibull-models"><i class="fa fa-check"></i><b>7.3.1</b> Forecasting from Weibull models<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="ch-nongaus.html"><a href="ch-nongaus.html#beta-model"><i class="fa fa-check"></i><b>7.4</b> Beta state space model<span></span></a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="ch-nongaus.html"><a href="ch-nongaus.html#crest"><i class="fa fa-check"></i><b>7.4.1</b> Example: Crest market share<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ch-binary.html"><a href="ch-binary.html"><i class="fa fa-check"></i><b>8</b> Modeling Categorical Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="ch-binary.html"><a href="ch-binary.html#intro-ch-binary"><i class="fa fa-check"></i><b>8.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="8.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-model"><i class="fa fa-check"></i><b>8.2</b> Binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-bin"><i class="fa fa-check"></i><b>8.2.1</b> Example: Simulated single binomial response series<span></span></a></li>
+<li class="chapter" data-level="8.2.2" data-path="ch-binary.html"><a href="ch-binary.html#bin-weekly-shopping"><i class="fa fa-check"></i><b>8.2.2</b> Example: Weekly shopping trips for a single household<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="ch-binary.html"><a href="ch-binary.html#hbin"><i class="fa fa-check"></i><b>8.3</b> Modeling multiple binomial response time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-hbin"><i class="fa fa-check"></i><b>8.3.1</b> Example: Dynamic aggregated model for multiple binomial response time series<span></span></a></li>
+<li class="chapter" data-level="8.3.2" data-path="ch-binary.html"><a href="ch-binary.html#hbin-weekly-shopping"><i class="fa fa-check"></i><b>8.3.2</b> Example: Weekly shopping trips for multiple households<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="ch-binary.html"><a href="ch-binary.html#cat-models"><i class="fa fa-check"></i><b>8.4</b> Multinomial time series<span></span></a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="ch-binary.html"><a href="ch-binary.html#simul-mn-p"><i class="fa fa-check"></i><b>8.4.1</b> Example: Simulated categorical time series<span></span></a></li>
+<li><a href="ch-binary.html#model-d4-dynamic-coefficient-for-c_jt">Model D4: Dynamic coefficient for <span class="math inline">\(C_{j,t}\)</span><span></span></a></li>
+</ul></li>
+<li><a href="ch-binary.html#chapter-8-appendix">Chapter 8 – Appendix<span></span></a>
+<ul>
+<li><a href="ch-binary.html#poisson-trick-for-multinomial-models">Poisson-trick for multinomial models<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-count.html"><a href="ch-count.html"><i class="fa fa-check"></i><b>9</b> Modeling Count Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="ch-count.html"><a href="ch-count.html#intro-ch-count"><i class="fa fa-check"></i><b>9.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="9.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts"><i class="fa fa-check"></i><b>9.2</b> Univariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="ch-count.html"><a href="ch-count.html#uvcounts-simpois"><i class="fa fa-check"></i><b>9.2.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.2.2" data-path="ch-count.html"><a href="ch-count.html#uvcounts-crashct"><i class="fa fa-check"></i><b>9.2.2</b> Example: Modeling crash counts in CT<span></span></a></li>
+<li class="chapter" data-level="9.2.3" data-path="ch-count.html"><a href="ch-count.html#uvcounts-bikerental"><i class="fa fa-check"></i><b>9.2.3</b> Example: Daily bike rentals in Washington D.C.<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="ch-count.html"><a href="ch-count.html#hieruvcounts"><i class="fa fa-check"></i><b>9.3</b> Hierarchical modeling of univariate count time series<span></span></a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="ch-count.html"><a href="ch-count.html#simul1-hcount"><i class="fa fa-check"></i><b>9.3.1</b> Example: Simulated univariate Poisson counts<span></span></a></li>
+<li class="chapter" data-level="9.3.2" data-path="ch-count.html"><a href="ch-count.html#tnc-hcount"><i class="fa fa-check"></i><b>9.3.2</b> Example: Modeling daily TNC usage in NYC<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="ch-sv.html"><a href="ch-sv.html"><i class="fa fa-check"></i><b>10</b> Modeling Stochastic Volatility<span></span></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="ch-sv.html"><a href="ch-sv.html#ch-sv-intro"><i class="fa fa-check"></i><b>10.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="10.2" data-path="ch-sv.html"><a href="ch-sv.html#sv-uv"><i class="fa fa-check"></i><b>10.2</b> Univariate SV models<span></span></a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="ch-sv.html"><a href="ch-sv.html#simul-svnormal"><i class="fa fa-check"></i><b>10.2.1</b> Example: Simulated SV data with standard normal errors<span></span></a></li>
+<li class="chapter" data-level="10.2.2" data-path="ch-sv.html"><a href="ch-sv.html#simul-svt5"><i class="fa fa-check"></i><b>10.2.2</b> Example: Simulated SV data with Student-<span class="math inline">\(t_{\nu}\)</span> errors<span></span></a></li>
+<li class="chapter" data-level="10.2.3" data-path="ch-sv.html"><a href="ch-sv.html#stockrets"><i class="fa fa-check"></i><b>10.2.3</b> Example: IBM stock returns<span></span></a></li>
+<li class="chapter" data-level="10.2.4" data-path="ch-sv.html"><a href="ch-sv.html#nysestockrets"><i class="fa fa-check"></i><b>10.2.4</b> Example: NYSE returns<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="ch-st.html"><a href="ch-st.html"><i class="fa fa-check"></i><b>11</b> Spatio-temporal Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="ch-st.html"><a href="ch-st.html#ch-st-intro"><i class="fa fa-check"></i><b>11.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="11.2" data-path="ch-st.html"><a href="ch-st.html#st-process"><i class="fa fa-check"></i><b>11.2</b> Spatio-temporal process<span></span></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-st.html"><a href="ch-st.html#dyn-areal-model"><i class="fa fa-check"></i><b>11.3</b> Dynamic spatial models for areal data<span></span></a></li>
+<li class="chapter" data-level="11.4" data-path="ch-st.html"><a href="ch-st.html#st-tnc-example"><i class="fa fa-check"></i><b>11.4</b> Example: Monthly TNC usage in NYC taxi zones<span></span></a>
+<ul>
+<li><a href="ch-st.html#data-preprocessing">Data preprocessing<span></span></a></li>
+<li class="chapter" data-level="11.4.1" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh"><i class="fa fa-check"></i><b>11.4.1</b> Model 1. Knorr-Held additive effects model<span></span></a></li>
+<li class="chapter" data-level="11.4.2" data-path="ch-st.html"><a href="ch-st.html#st-tnc-kh-inter"><i class="fa fa-check"></i><b>11.4.2</b> Knorr-Held models with space-time interactions<span></span></a></li>
+<li><a href="ch-st.html#model-kh3.-knorr-held-model-with-interaction-between-epsilon_i-and-gamma_t">Model KH3. Knorr-Held model with interaction between <span class="math inline">\(\epsilon_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+<li><a href="ch-st.html#model-kh4.-knorr-held-model-with-interaction-between-nu_i-and-gamma_t">Model KH4. Knorr-Held model with interaction between <span class="math inline">\(\nu_i\)</span> and <span class="math inline">\(\gamma_t\)</span><span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chmvdlm.html"><a href="chmvdlm.html"><i class="fa fa-check"></i><b>12</b> Multivariate Gaussian Dynamic Modeling<span></span></a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="chmvdlm.html"><a href="chmvdlm.html#intro-chmvdlm"><i class="fa fa-check"></i><b>12.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="12.2" data-path="chmvdlm.html"><a href="chmvdlm.html#MVDiagWPhi"><i class="fa fa-check"></i><b>12.2</b> Model with diagonal <span class="math inline">\(\boldsymbol W\)</span> and <span class="math inline">\(\boldsymbol \Phi\)</span> matrices<span></span></a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="chmvdlm.html"><a href="chmvdlm.html#V-setup"><i class="fa fa-check"></i><b>12.2.1</b> Description of the setup for <span class="math inline">\(\boldsymbol V\)</span><span></span></a></li>
+<li class="chapter" data-level="12.2.2" data-path="chmvdlm.html"><a href="chmvdlm.html#simbivar1"><i class="fa fa-check"></i><b>12.2.2</b> Example: Simulated bivariate AR(1) series<span></span></a></li>
+<li class="chapter" data-level="12.2.3" data-path="chmvdlm.html"><a href="chmvdlm.html#tnctaxi-onezone"><i class="fa fa-check"></i><b>12.2.3</b> Example: Ridesourcing data in NYC for a single taxi zone<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="chmvdlm.html"><a href="chmvdlm.html#MVICCWPhi"><i class="fa fa-check"></i><b>12.3</b> Model with equicorrelated <span class="math inline">\(\boldsymbol{w}_t\)</span> and diagonal <span class="math inline">\(\boldsymbol \Phi\)</span><span></span></a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simtrivar1"><i class="fa fa-check"></i><b>12.3.1</b> Example: Simulated trivariate series<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chmvdlm.html"><a href="chmvdlm.html#rgenericmv"><i class="fa fa-check"></i><b>12.4</b> Fitting multivariate models using <code>rgeneric</code><span></span></a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="chmvdlm.html"><a href="chmvdlm.html#simulgen"><i class="fa fa-check"></i><b>12.4.1</b> Example: Simulated bivariate VAR(1) series<span></span></a></li>
+</ul></li>
+<li><a href="chmvdlm.html#chapter-12-appendix">Chapter 12 – Appendix<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="ch-hmv.html"><a href="ch-hmv.html"><i class="fa fa-check"></i><b>13</b> Hierarchical Multivariate Time Series<span></span></a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="ch-hmv.html"><a href="ch-hmv.html#intro-ch-hmv"><i class="fa fa-check"></i><b>13.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="13.2" data-path="ch-hmv.html"><a href="ch-hmv.html#mvhdlm"><i class="fa fa-check"></i><b>13.2</b> Multivariate hierarchical dynamic linear model<span></span></a>
+<ul>
+<li><a href="ch-hmv.html#response-and-predictor-variables">Response and predictor variables<span></span></a></li>
+<li><a href="ch-hmv.html#model-setup">Model setup<span></span></a></li>
+<li class="chapter" data-level="13.2.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-hmv"><i class="fa fa-check"></i><b>13.2.1</b> Example: Analysis of TNC and Taxi as responses<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="ch-hmv.html"><a href="ch-hmv.html#lcmcounts"><i class="fa fa-check"></i><b>13.3</b> Level correlated models for multivariate time series of counts<span></span></a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="ch-hmv.html"><a href="ch-hmv.html#tnc-taxi-daily"><i class="fa fa-check"></i><b>13.3.1</b> Example: TNC and Taxi counts based on daily data<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>14</b> Resources for the User<span></span></a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="resources.html"><a href="resources.html#intro-resources"><i class="fa fa-check"></i><b>14.1</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="14.2" data-path="resources.html"><a href="resources.html#package-list"><i class="fa fa-check"></i><b>14.2</b> Packages used in the book<span></span></a></li>
+<li class="chapter" data-level="14.3" data-path="resources.html"><a href="resources.html#custom-functions"><i class="fa fa-check"></i><b>14.3</b> Custom functions used in the book<span></span></a>
+<ul>
+<li><a href="resources.html#basic-plotting-functions">Basic plotting functions<span></span></a></li>
+<li><a href="resources.html#functions-for-forecast-evaluation">Functions for forecast evaluation<span></span></a></li>
+<li><a href="resources.html#function-for-model-comparison">Function for model comparison<span></span></a></li>
+<li><a href="resources.html#function-for-the-filtering-algorithm-in-dlm">Function for the filtering algorithm in DLM<span></span></a></li>
+<li class="chapter" data-level="14.3.1" data-path="resources.html"><a href="resources.html#rgeneric-fn"><i class="fa fa-check"></i><b>14.3.1</b> <code>rgeneric()</code> function for DLM-VAR model<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="resources.html"><a href="resources.html#items-often-used"><i class="fa fa-check"></i><b>14.4</b> Often used <code>R-INLA</code> items<span></span></a>
+<ul>
+<li><a href="resources.html#control-options">Control options<span></span></a></li>
+<li><a href="resources.html#options-for-computing-marginals">Options for computing marginals<span></span></a></li>
+<li><a href="resources.html#random-effect-specifications">Random effect specifications<span></span></a></li>
+<li><a href="resources.html#prior-specifications">Prior specifications<span></span></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chapter6" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Hierarchical Dynamic Models for Panel Time Series<a href="chapter6.html#chapter6" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="intro-ch6" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Introduction<a href="chapter6.html#intro-ch6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Multilevel or hierarchical models are widely used and have also been implemented in <code>R</code> <span class="citation">(<a href="#ref-gelman2006data" role="doc-biblioref">Gelman and Hill 2006</a>)</span>. In Chapter 4 of their book, <span class="citation">Gómez-Rubio (<a href="#ref-gomez2020bayesian" role="doc-biblioref">2020</a>)</span> discuss <code>R-INLA</code> implementation for hierarchical models, including longitudinal data models; also see <span class="citation">Krainski et al. (<a href="#ref-krainski2018advanced" role="doc-biblioref">2018</a>)</span>. In this chapter, we describe approximate dynamic Bayesian analysis
+for a set of <span class="math inline">\(g\)</span> univariate time series. Such time series are also referred to as <em>panel time series</em> in the literature. <span class="citation">Balaji Raman et al. (<a href="#ref-ramanetalasmbi" role="doc-biblioref">2021</a>)</span> describe an interesting application in the marketing domain. An alternate hierarchical Bayesian DLM framework for Gaussian time series has been discussed in <span class="citation">D. Gamerman and Migon (<a href="#ref-gamerman1993dynamic" role="doc-biblioref">1993</a>)</span>.</p>
+<p>In Section <a href="chapter6.html#homog-state">6.2</a>, we use simulated data to show how to fit models to <span class="math inline">\(g\)</span> time series when we assume that the parameters in the AR(1) state evolution equation are assumed to be the same. Parameters such as the level <span class="math inline">\(\alpha\)</span> in the observation equation can exhibit considerable variation, and may be modeled as a fixed or random effect.
+Section <a href="chapter6.html#ridesource-hdlm">6.3</a> shows a few plausible hierarchical models for NYC ridesourcing usage data.</p>
+<p>The custom functions must first be sourced by the user.</p>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="chapter6.html#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;functions_custom.R&quot;</span>)</span></code></pre></div>
+<p>We use the following packages.</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="chapter6.html#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tables)</span>
+<span id="cb150-2"><a href="chapter6.html#cb150-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb150-3"><a href="chapter6.html#cb150-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(INLA)</span></code></pre></div>
+<p>We analyze the following data.</p>
+<ol style="list-style-type: decimal">
+<li>Ridesourcing in NYC</li>
+</ol>
+</div>
+<div id="homog-state" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Models with homogenous state evolution<a href="chapter6.html#homog-state" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Consider <span class="math inline">\(g\)</span> time series each of length <span class="math inline">\(n\)</span>.
+Let <span class="math inline">\(Y_{it}\)</span> denote the continuous-valued response at time <span class="math inline">\(t\)</span> for the <span class="math inline">\(i\)</span>th series, <span class="math inline">\(i=1,\ldots,g\)</span> and <span class="math inline">\(t=1,\ldots,n\)</span>. The response can be written as a data matrix <span class="math inline">\(\boldsymbol Y\)</span> with <span class="math inline">\(g\)</span> rows (subjects/locations) and <span class="math inline">\(n\)</span> columns (time points):</p>
+<p><span class="math display" id="eq:panel-datamatrix">\[\begin{align}
+  \boldsymbol Y = \begin{pmatrix}
+     y_{11} &amp;  y_{12} &amp; \ldots &amp;  y_{1n} \\
+     y_{21} &amp;  y_{22} &amp; \ldots &amp;  y_{2n} \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+     y_{g1} &amp;  y_{g2} &amp; \ldots &amp;  y_{gn}
+  \end{pmatrix}.
+  \tag{6.1}
+\end{align}\]</span>
+In all the models below, <span class="math inline">\(v_{it}\)</span> and <span class="math inline">\(w_{it}\)</span> are uncorrelated, with <span class="math inline">\(v_{it}\)</span> being i.i.d. N<span class="math inline">\((0,\sigma^2_v)\)</span> and <span class="math inline">\(w_{it}\)</span> being i.i.d. N<span class="math inline">\((0,\sigma^2_w)\)</span></p>
+<div id="simul1-panelts" class="section level3 hasAnchor" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> Example: Simulated homogeneous panel time series with the same level<a href="chapter6.html#simul1-panelts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider the following model for <span class="math inline">\(y_{it}\)</span>:</p>
+<p><span class="math display" id="eq:hcounts-1a">\[\begin{align}
+y_{it} &amp;= \alpha + \beta_{it,1} Z_{it} + v_{it},  \notag \\
+\beta_{it,1} &amp;=  \phi \beta_{i,t-1,1}+ w_{it},
+\tag{6.2}
+\end{align}\]</span>
+where the coefficient <span class="math inline">\(\beta_{it,1}\)</span> corresponding to the exogenous predictor <span class="math inline">\(Z_{it}\)</span> evolves over time as an AR(1) process for each <span class="math inline">\(i\)</span>. The <span class="math inline">\(g\)</span> series have very similar stochastic behavior as indicated by having (nearly) the same values of <span class="math inline">\(\phi\)</span>, <span class="math inline">\(\sigma^2_v\)</span>, and <span class="math inline">\(\sigma^2_w\)</span>. The level of each series is assumed to be the same value <span class="math inline">\(\alpha\)</span>.</p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="chapter6.html#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123457</span>)</span>
+<span id="cb151-2"><a href="chapter6.html#cb151-2" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb151-3"><a href="chapter6.html#cb151-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">250</span></span>
+<span id="cb151-4"><a href="chapter6.html#cb151-4" aria-hidden="true" tabindex="-1"></a>burn.in <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb151-5"><a href="chapter6.html#cb151-5" aria-hidden="true" tabindex="-1"></a>n.tot <span class="ot">&lt;-</span> n <span class="sc">+</span> burn.in</span>
+<span id="cb151-6"><a href="chapter6.html#cb151-6" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">10.0</span></span>
+<span id="cb151-7"><a href="chapter6.html#cb151-7" aria-hidden="true" tabindex="-1"></a>sigma2.w0 <span class="ot">&lt;-</span> <span class="fl">0.25</span></span>
+<span id="cb151-8"><a href="chapter6.html#cb151-8" aria-hidden="true" tabindex="-1"></a>sigma2.v0 <span class="ot">&lt;-</span> <span class="fl">1.0</span></span>
+<span id="cb151-9"><a href="chapter6.html#cb151-9" aria-hidden="true" tabindex="-1"></a>phi<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fl">0.8</span></span></code></pre></div>
+<p>The code below generates the response and predictors.</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="chapter6.html#cb152-1" aria-hidden="true" tabindex="-1"></a>yit.all <span class="ot">&lt;-</span></span>
+<span id="cb152-2"><a href="chapter6.html#cb152-2" aria-hidden="true" tabindex="-1"></a>  yit.all.list <span class="ot">&lt;-</span></span>
+<span id="cb152-3"><a href="chapter6.html#cb152-3" aria-hidden="true" tabindex="-1"></a>  z1.all <span class="ot">&lt;-</span> z2.all <span class="ot">&lt;-</span> z.all <span class="ot">&lt;-</span> sigma2.w <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, g)</span>
+<span id="cb152-4"><a href="chapter6.html#cb152-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>g) {</span>
+<span id="cb152-5"><a href="chapter6.html#cb152-5" aria-hidden="true" tabindex="-1"></a>  yit <span class="ot">&lt;-</span> beta<span class="fl">.1</span>t  <span class="ot">&lt;-</span> z <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;double&quot;</span>, n.tot)</span>
+<span id="cb152-6"><a href="chapter6.html#cb152-6" aria-hidden="true" tabindex="-1"></a>  u <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="sc">-</span><span class="fl">0.1</span>, <span class="at">max =</span> <span class="fl">0.05</span>)</span>
+<span id="cb152-7"><a href="chapter6.html#cb152-7" aria-hidden="true" tabindex="-1"></a>  phi <span class="ot">&lt;-</span> phi<span class="fl">.0</span> <span class="sc">+</span> u</span>
+<span id="cb152-8"><a href="chapter6.html#cb152-8" aria-hidden="true" tabindex="-1"></a>  us <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="sc">-</span><span class="fl">0.15</span>, <span class="at">max =</span> <span class="fl">0.25</span>)</span>
+<span id="cb152-9"><a href="chapter6.html#cb152-9" aria-hidden="true" tabindex="-1"></a>  sigma2.w[[j]] <span class="ot">&lt;-</span> sigma2.w0 <span class="sc">+</span> us</span>
+<span id="cb152-10"><a href="chapter6.html#cb152-10" aria-hidden="true" tabindex="-1"></a>  beta<span class="fl">.1</span>t <span class="ot">&lt;-</span></span>
+<span id="cb152-11"><a href="chapter6.html#cb152-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar =</span> phi, <span class="at">ma =</span> <span class="dv">0</span>), <span class="at">n =</span> n.tot, <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma2.w[[j]]))</span>
+<span id="cb152-12"><a href="chapter6.html#cb152-12" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n.tot)</span>
+<span id="cb152-13"><a href="chapter6.html#cb152-13" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n.tot)</span>
+<span id="cb152-14"><a href="chapter6.html#cb152-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n.tot) {</span>
+<span id="cb152-15"><a href="chapter6.html#cb152-15" aria-hidden="true" tabindex="-1"></a>    yit[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta<span class="fl">.1</span>t[i]  <span class="sc">*</span> z[i] <span class="sc">+</span> v[i]</span>
+<span id="cb152-16"><a href="chapter6.html#cb152-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb152-17"><a href="chapter6.html#cb152-17" aria-hidden="true" tabindex="-1"></a>  yit.all.list[[j]] <span class="ot">&lt;-</span> <span class="fu">tail</span>(yit, n)</span>
+<span id="cb152-18"><a href="chapter6.html#cb152-18" aria-hidden="true" tabindex="-1"></a>  z.all[[j]] <span class="ot">&lt;-</span> <span class="fu">tail</span>(z, n)</span>
+<span id="cb152-19"><a href="chapter6.html#cb152-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb152-20"><a href="chapter6.html#cb152-20" aria-hidden="true" tabindex="-1"></a>yit.all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(yit.all.list)</span>
+<span id="cb152-21"><a href="chapter6.html#cb152-21" aria-hidden="true" tabindex="-1"></a>z.all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(z.all)</span></code></pre></div>
+<p>We set up indexes, replicates, data frame, and the formula.</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="chapter6.html#cb153-1" aria-hidden="true" tabindex="-1"></a>id.beta1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, g)</span>
+<span id="cb153-2"><a href="chapter6.html#cb153-2" aria-hidden="true" tabindex="-1"></a>re.beta1  <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>g, <span class="at">each =</span> n)</span>
+<span id="cb153-3"><a href="chapter6.html#cb153-3" aria-hidden="true" tabindex="-1"></a>data.panelts<span class="fl">.1</span> <span class="ot">&lt;-</span></span>
+<span id="cb153-4"><a href="chapter6.html#cb153-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(id.beta1, z.all, yit.all, re.beta1)</span>
+<span id="cb153-5"><a href="chapter6.html#cb153-5" aria-hidden="true" tabindex="-1"></a>formula.panelts<span class="fl">.1</span> <span class="ot">&lt;-</span></span>
+<span id="cb153-6"><a href="chapter6.html#cb153-6" aria-hidden="true" tabindex="-1"></a>  yit.all <span class="sc">~</span> <span class="dv">1</span>  <span class="sc">+</span></span>
+<span id="cb153-7"><a href="chapter6.html#cb153-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.beta1, z.all, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>, <span class="at">replicate =</span> re.beta1)</span></code></pre></div>
+<p>We fit the model and summarize the results.</p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="chapter6.html#cb154-1" aria-hidden="true" tabindex="-1"></a>model.panelts<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb154-2"><a href="chapter6.html#cb154-2" aria-hidden="true" tabindex="-1"></a>  formula.panelts<span class="fl">.1</span>,</span>
+<span id="cb154-3"><a href="chapter6.html#cb154-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb154-4"><a href="chapter6.html#cb154-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data.panelts<span class="fl">.1</span>,</span>
+<span id="cb154-5"><a href="chapter6.html#cb154-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>),</span>
+<span id="cb154-6"><a href="chapter6.html#cb154-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb154-7"><a href="chapter6.html#cb154-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb154-8"><a href="chapter6.html#cb154-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb154-9"><a href="chapter6.html#cb154-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb154-10"><a href="chapter6.html#cb154-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb154-11"><a href="chapter6.html#cb154-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span></span>
+<span id="cb154-12"><a href="chapter6.html#cb154-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb154-13"><a href="chapter6.html#cb154-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="chapter6.html#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.panelts<span class="fl">.1</span><span class="sc">$</span>summary.fixed)</span>
+<span id="cb155-2"><a href="chapter6.html#cb155-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   name      mean  sd    0.025q 0.5q  0.975q mode  kld</span></span>
+<span id="cb155-3"><a href="chapter6.html#cb155-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Intercept 9.999 0.007 9.985  9.999 10.01  9.999 0</span></span>
+<span id="cb155-4"><a href="chapter6.html#cb155-4" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.panelts<span class="fl">.1</span><span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb155-5"><a href="chapter6.html#cb155-5" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                       mean  sd   </span></span>
+<span id="cb155-6"><a href="chapter6.html#cb155-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs 1.009 0.012</span></span>
+<span id="cb155-7"><a href="chapter6.html#cb155-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.beta1     1.302 0.036</span></span>
+<span id="cb155-8"><a href="chapter6.html#cb155-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.beta1           0.778 0.009</span></span></code></pre></div>
+<p>The results for the fixed and random parameters show that all the parameters are adequately recovered.</p>
+</div>
+<div id="simul2-panelts" class="section level3 hasAnchor" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> Example: Simulated homogeneous panel time series with different levels<a href="chapter6.html#simul2-panelts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider the following model:</p>
+<p><span class="math display" id="eq:hcounts-2">\[\begin{align}
+y_{it} &amp;= \alpha_i + \beta_{it,1} Z_{it} + v_{it},  \notag \\
+\beta_{it,1} &amp;=  \phi \beta_{i,t-1,1}+ w_{it},
+\tag{6.3}
+\end{align}\]</span>
+where the coefficient <span class="math inline">\(\beta_{it,1}\)</span> corresponding to the exogenous predictor <span class="math inline">\(Z_{it}\)</span> evolves over time as an AR(1) process for each <span class="math inline">\(i\)</span>. The <span class="math inline">\(g\)</span> series have very similar stochastic behavior as indicated by having (nearly) the same values of <span class="math inline">\(\phi\)</span>, <span class="math inline">\(\sigma^2_v\)</span>, and <span class="math inline">\(\sigma^2_w\)</span>. The levels <span class="math inline">\(\alpha_i\)</span> are assumed to be possibly different across the <span class="math inline">\(g\)</span> series. If <span class="math inline">\(g\)</span> is small, the <span class="math inline">\(\alpha_i\)</span> coefficients may be treated as fixed effects. On the other hand, when <span class="math inline">\(g\)</span> is large, it is usual to assume that <span class="math inline">\(\alpha_i\)</span> are random effects assumed to follow a N<span class="math inline">\((0,\sigma^2_\alpha)\)</span> distribution, with unknown <span class="math inline">\(\sigma^2_\alpha\)</span>.</p>
+<p><strong>Case 1</strong>
+Assume that <span class="math inline">\(g=10\)</span>, and <span class="math inline">\(\alpha_i\)</span> are fixed effects. We employ the
+<code>fact.alpha &lt;- as.factor(id.alpha)</code> to set up the <span class="math inline">\(g\)</span> levels to include in the formula. The true parameters
+<code>sigma2.w0</code>, <code>sigma2.v0</code>, <code>phi.0</code>, <code>n</code>, and <code>burn.in</code> are the same as in the previous example. The response and predictors are generated as follows.</p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="chapter6.html#cb156-1" aria-hidden="true" tabindex="-1"></a>yit.all <span class="ot">&lt;-</span></span>
+<span id="cb156-2"><a href="chapter6.html#cb156-2" aria-hidden="true" tabindex="-1"></a>  yit.all.list <span class="ot">&lt;-</span></span>
+<span id="cb156-3"><a href="chapter6.html#cb156-3" aria-hidden="true" tabindex="-1"></a>  z1.all <span class="ot">&lt;-</span> z2.all <span class="ot">&lt;-</span> alpha <span class="ot">&lt;-</span> z.all <span class="ot">&lt;-</span> sigma2.w <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, g)</span>
+<span id="cb156-4"><a href="chapter6.html#cb156-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>g) {</span>
+<span id="cb156-5"><a href="chapter6.html#cb156-5" aria-hidden="true" tabindex="-1"></a>  yit <span class="ot">&lt;-</span> beta<span class="fl">.1</span>t  <span class="ot">&lt;-</span> z <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;double&quot;</span>, n.tot)</span>
+<span id="cb156-6"><a href="chapter6.html#cb156-6" aria-hidden="true" tabindex="-1"></a>  u <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="sc">-</span><span class="fl">0.1</span>, <span class="at">max =</span> <span class="fl">0.05</span>)</span>
+<span id="cb156-7"><a href="chapter6.html#cb156-7" aria-hidden="true" tabindex="-1"></a>  phi <span class="ot">&lt;-</span> phi<span class="fl">.0</span> <span class="sc">+</span> u</span>
+<span id="cb156-8"><a href="chapter6.html#cb156-8" aria-hidden="true" tabindex="-1"></a>  us <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="sc">-</span><span class="fl">0.15</span>, <span class="at">max =</span> <span class="fl">0.25</span>)</span>
+<span id="cb156-9"><a href="chapter6.html#cb156-9" aria-hidden="true" tabindex="-1"></a>  sigma2.w[[j]] <span class="ot">&lt;-</span> sigma2.w0 <span class="sc">+</span> us</span>
+<span id="cb156-10"><a href="chapter6.html#cb156-10" aria-hidden="true" tabindex="-1"></a>  beta<span class="fl">.1</span>t <span class="ot">&lt;-</span></span>
+<span id="cb156-11"><a href="chapter6.html#cb156-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar =</span> phi, <span class="at">ma =</span> <span class="dv">0</span>), <span class="at">n =</span> n.tot, <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma2.w[[j]]))</span>
+<span id="cb156-12"><a href="chapter6.html#cb156-12" aria-hidden="true" tabindex="-1"></a>  alpha[[j]] <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">by =</span> <span class="fl">0.1</span>), <span class="dv">1</span>)</span>
+<span id="cb156-13"><a href="chapter6.html#cb156-13" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n.tot)</span>
+<span id="cb156-14"><a href="chapter6.html#cb156-14" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n.tot)</span>
+<span id="cb156-15"><a href="chapter6.html#cb156-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n.tot) {</span>
+<span id="cb156-16"><a href="chapter6.html#cb156-16" aria-hidden="true" tabindex="-1"></a>    yit[i] <span class="ot">&lt;-</span> alpha[[j]] <span class="sc">+</span> beta<span class="fl">.1</span>t[i]  <span class="sc">*</span> z[i] <span class="sc">+</span> v[i]</span>
+<span id="cb156-17"><a href="chapter6.html#cb156-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb156-18"><a href="chapter6.html#cb156-18" aria-hidden="true" tabindex="-1"></a>  yit.all.list[[j]] <span class="ot">&lt;-</span> <span class="fu">tail</span>(yit, n)</span>
+<span id="cb156-19"><a href="chapter6.html#cb156-19" aria-hidden="true" tabindex="-1"></a>  z.all[[j]] <span class="ot">&lt;-</span> <span class="fu">tail</span>(z, n)</span>
+<span id="cb156-20"><a href="chapter6.html#cb156-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb156-21"><a href="chapter6.html#cb156-21" aria-hidden="true" tabindex="-1"></a>yit.all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(yit.all.list)</span>
+<span id="cb156-22"><a href="chapter6.html#cb156-22" aria-hidden="true" tabindex="-1"></a>z.all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(z.all)</span></code></pre></div>
+<p>The indexes, replicates, data frame, and the formula follow.</p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="chapter6.html#cb157-1" aria-hidden="true" tabindex="-1"></a>id.beta1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, g)</span>
+<span id="cb157-2"><a href="chapter6.html#cb157-2" aria-hidden="true" tabindex="-1"></a>re.beta1 <span class="ot">&lt;-</span> id.alpha <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>g, <span class="at">each =</span> n)</span>
+<span id="cb157-3"><a href="chapter6.html#cb157-3" aria-hidden="true" tabindex="-1"></a>fact.alpha <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(id.alpha)</span>
+<span id="cb157-4"><a href="chapter6.html#cb157-4" aria-hidden="true" tabindex="-1"></a>data.panelts<span class="fl">.2</span> <span class="ot">&lt;-</span></span>
+<span id="cb157-5"><a href="chapter6.html#cb157-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(id.beta1, z.all, yit.all, re.beta1, fact.alpha)</span>
+<span id="cb157-6"><a href="chapter6.html#cb157-6" aria-hidden="true" tabindex="-1"></a>formula.panelts<span class="fl">.2</span> <span class="ot">&lt;-</span></span>
+<span id="cb157-7"><a href="chapter6.html#cb157-7" aria-hidden="true" tabindex="-1"></a>  yit.all <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> fact.alpha <span class="sc">+</span></span>
+<span id="cb157-8"><a href="chapter6.html#cb157-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.beta1, z.all, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>, <span class="at">replicate =</span> re.beta1)</span></code></pre></div>
+<p>We save the output from the fit in <code>model.panelts.2</code> using code similar to that in the previous example, but using <code>formula.panelts.2</code> and <code>data.panelts.2</code> as inputs.</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="chapter6.html#cb158-1" aria-hidden="true" tabindex="-1"></a>model.panelts<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb158-2"><a href="chapter6.html#cb158-2" aria-hidden="true" tabindex="-1"></a>  formula.panelts<span class="fl">.2</span>,</span>
+<span id="cb158-3"><a href="chapter6.html#cb158-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb158-4"><a href="chapter6.html#cb158-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data.panelts<span class="fl">.2</span>,</span>
+<span id="cb158-5"><a href="chapter6.html#cb158-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>),</span>
+<span id="cb158-6"><a href="chapter6.html#cb158-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb158-7"><a href="chapter6.html#cb158-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb158-8"><a href="chapter6.html#cb158-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb158-9"><a href="chapter6.html#cb158-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb158-10"><a href="chapter6.html#cb158-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb158-11"><a href="chapter6.html#cb158-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span></span>
+<span id="cb158-12"><a href="chapter6.html#cb158-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb158-13"><a href="chapter6.html#cb158-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="chapter6.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(summary.model.panelts<span class="fl">.2</span><span class="sc">$</span>fixed[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>)])</span>
+<span id="cb159-2"><a href="chapter6.html#cb159-2" aria-hidden="true" tabindex="-1"></a><span class="do">##    name         mean   sd    0.5q  </span></span>
+<span id="cb159-3"><a href="chapter6.html#cb159-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  fact.alpha1  -1.626 0.070 -1.626</span></span>
+<span id="cb159-4"><a href="chapter6.html#cb159-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  fact.alpha2  -1.569 0.072 -1.569</span></span>
+<span id="cb159-5"><a href="chapter6.html#cb159-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  fact.alpha3   1.919 0.072  1.919</span></span>
+<span id="cb159-6"><a href="chapter6.html#cb159-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  fact.alpha4  -0.181 0.070 -0.181</span></span>
+<span id="cb159-7"><a href="chapter6.html#cb159-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 5  fact.alpha5  -1.883 0.071 -1.883</span></span>
+<span id="cb159-8"><a href="chapter6.html#cb159-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  fact.alpha6   1.050 0.070  1.050</span></span>
+<span id="cb159-9"><a href="chapter6.html#cb159-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 7  fact.alpha7   0.373 0.070  0.373</span></span>
+<span id="cb159-10"><a href="chapter6.html#cb159-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 8  fact.alpha8  -1.023 0.071 -1.023</span></span>
+<span id="cb159-11"><a href="chapter6.html#cb159-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 9  fact.alpha9   1.088 0.071  1.088</span></span>
+<span id="cb159-12"><a href="chapter6.html#cb159-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 fact.alpha10 -0.928 0.072 -0.928</span></span>
+<span id="cb159-13"><a href="chapter6.html#cb159-13" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(summary.model.panelts<span class="fl">.2</span><span class="sc">$</span>hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb159-14"><a href="chapter6.html#cb159-14" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                       mean  sd   </span></span>
+<span id="cb159-15"><a href="chapter6.html#cb159-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs 0.997 0.038</span></span>
+<span id="cb159-16"><a href="chapter6.html#cb159-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.beta1     1.719 0.164</span></span>
+<span id="cb159-17"><a href="chapter6.html#cb159-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.beta1           0.765 0.030</span></span></code></pre></div>
+<p>The posterior means of <span class="math inline">\(\alpha_i\)</span> are close to the true values given by</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="chapter6.html#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unlist</span>(alpha)</span>
+<span id="cb160-2"><a href="chapter6.html#cb160-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1]  0.4 -0.5  0.2  0.8  1.5 -1.4 -0.6  0.9 -1.1 -0.4</span></span></code></pre></div>
+<p><strong>Case 2</strong></p>
+<p>We next show the code for treating <span class="math inline">\(\alpha_i\)</span>’s as independent N<span class="math inline">\((0,\sigma^2_\alpha)\)</span> random variables, instead of treating them as fixed coefficients. This is useful when <span class="math inline">\(g\)</span> is large; here <span class="math inline">\(g=100\)</span>.
+In this case, we model the random levels via <code>f(id.alpha, model="iid")</code>, as shown below. The true parameters
+<code>sigma2.w0</code>, <code>sigma2.v0</code>, <code>phi.0</code>, <code>n</code>, and <code>burn.in</code> are the same as in the previous example. The response and predictors are generated as follows.</p>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="chapter6.html#cb161-1" aria-hidden="true" tabindex="-1"></a>yit.all <span class="ot">&lt;-</span></span>
+<span id="cb161-2"><a href="chapter6.html#cb161-2" aria-hidden="true" tabindex="-1"></a>  yit.all.list <span class="ot">&lt;-</span></span>
+<span id="cb161-3"><a href="chapter6.html#cb161-3" aria-hidden="true" tabindex="-1"></a>  z1.all <span class="ot">&lt;-</span> z2.all <span class="ot">&lt;-</span> alpha <span class="ot">&lt;-</span> z.all <span class="ot">&lt;-</span> sigma2.w <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, g)</span>
+<span id="cb161-4"><a href="chapter6.html#cb161-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>g) {</span>
+<span id="cb161-5"><a href="chapter6.html#cb161-5" aria-hidden="true" tabindex="-1"></a>  yit <span class="ot">&lt;-</span> beta<span class="fl">.1</span>t  <span class="ot">&lt;-</span> z <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;double&quot;</span>, n.tot)</span>
+<span id="cb161-6"><a href="chapter6.html#cb161-6" aria-hidden="true" tabindex="-1"></a>  u <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="sc">-</span><span class="fl">0.1</span>, <span class="at">max =</span> <span class="fl">0.05</span>)</span>
+<span id="cb161-7"><a href="chapter6.html#cb161-7" aria-hidden="true" tabindex="-1"></a>  phi <span class="ot">&lt;-</span> phi<span class="fl">.0</span> <span class="sc">+</span> u</span>
+<span id="cb161-8"><a href="chapter6.html#cb161-8" aria-hidden="true" tabindex="-1"></a>  us <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> <span class="sc">-</span><span class="fl">0.15</span>, <span class="at">max =</span> <span class="fl">0.25</span>)</span>
+<span id="cb161-9"><a href="chapter6.html#cb161-9" aria-hidden="true" tabindex="-1"></a>  sigma2.w[[j]] <span class="ot">&lt;-</span> sigma2.w0 <span class="sc">+</span> us</span>
+<span id="cb161-10"><a href="chapter6.html#cb161-10" aria-hidden="true" tabindex="-1"></a>  beta<span class="fl">.1</span>t <span class="ot">&lt;-</span></span>
+<span id="cb161-11"><a href="chapter6.html#cb161-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar =</span> phi, <span class="at">ma =</span> <span class="dv">0</span>), <span class="at">n =</span> n.tot, <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma2.w[[j]]))</span>
+<span id="cb161-12"><a href="chapter6.html#cb161-12" aria-hidden="true" tabindex="-1"></a>  alpha[[j]] <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">by =</span> <span class="fl">0.1</span>), <span class="dv">1</span>)</span>
+<span id="cb161-13"><a href="chapter6.html#cb161-13" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n.tot)</span>
+<span id="cb161-14"><a href="chapter6.html#cb161-14" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n.tot)</span>
+<span id="cb161-15"><a href="chapter6.html#cb161-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n.tot) {</span>
+<span id="cb161-16"><a href="chapter6.html#cb161-16" aria-hidden="true" tabindex="-1"></a>    yit[i] <span class="ot">&lt;-</span> alpha[[j]] <span class="sc">+</span> beta<span class="fl">.1</span>t[i]  <span class="sc">*</span> z[i] <span class="sc">+</span> v[i]</span>
+<span id="cb161-17"><a href="chapter6.html#cb161-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb161-18"><a href="chapter6.html#cb161-18" aria-hidden="true" tabindex="-1"></a>  yit.all.list[[j]] <span class="ot">&lt;-</span> <span class="fu">tail</span>(yit, n)</span>
+<span id="cb161-19"><a href="chapter6.html#cb161-19" aria-hidden="true" tabindex="-1"></a>  z.all[[j]] <span class="ot">&lt;-</span> <span class="fu">tail</span>(z, n)</span>
+<span id="cb161-20"><a href="chapter6.html#cb161-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb161-21"><a href="chapter6.html#cb161-21" aria-hidden="true" tabindex="-1"></a>yit.all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(yit.all.list)</span>
+<span id="cb161-22"><a href="chapter6.html#cb161-22" aria-hidden="true" tabindex="-1"></a>z.all <span class="ot">&lt;-</span> <span class="fu">unlist</span>(z.all)</span></code></pre></div>
+<p>The indexes, replicates, data frame, and formula follow.</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="chapter6.html#cb162-1" aria-hidden="true" tabindex="-1"></a>id.beta1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, g)</span>
+<span id="cb162-2"><a href="chapter6.html#cb162-2" aria-hidden="true" tabindex="-1"></a>re.beta1 <span class="ot">&lt;-</span> id.alpha <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>g, <span class="at">each =</span> n)</span>
+<span id="cb162-3"><a href="chapter6.html#cb162-3" aria-hidden="true" tabindex="-1"></a>data.panelts<span class="fl">.3</span> <span class="ot">&lt;-</span></span>
+<span id="cb162-4"><a href="chapter6.html#cb162-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(id.beta1, z.all, yit.all, re.beta1, id.alpha)</span>
+<span id="cb162-5"><a href="chapter6.html#cb162-5" aria-hidden="true" tabindex="-1"></a>formula.panelts<span class="fl">.3</span> <span class="ot">&lt;-</span></span>
+<span id="cb162-6"><a href="chapter6.html#cb162-6" aria-hidden="true" tabindex="-1"></a>  yit.all <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(id.alpha, <span class="at">model=</span><span class="st">&quot;iid&quot;</span>) <span class="sc">+</span></span>
+<span id="cb162-7"><a href="chapter6.html#cb162-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.beta1, z.all, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>, <span class="at">replicate =</span> re.beta1)</span></code></pre></div>
+<p>We save the output from the fit in <code>model.panelts.3</code> using code similar to that in the previous example, but using <code>formula.panelts.3</code> and <code>data.panelts.3</code> as inputs.</p>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="chapter6.html#cb163-1" aria-hidden="true" tabindex="-1"></a>model.panelts<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb163-2"><a href="chapter6.html#cb163-2" aria-hidden="true" tabindex="-1"></a>  formula.panelts<span class="fl">.3</span>,</span>
+<span id="cb163-3"><a href="chapter6.html#cb163-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb163-4"><a href="chapter6.html#cb163-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data.panelts<span class="fl">.3</span>,</span>
+<span id="cb163-5"><a href="chapter6.html#cb163-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>, <span class="at">link =</span> <span class="dv">1</span>),</span>
+<span id="cb163-6"><a href="chapter6.html#cb163-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb163-7"><a href="chapter6.html#cb163-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb163-8"><a href="chapter6.html#cb163-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb163-9"><a href="chapter6.html#cb163-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb163-10"><a href="chapter6.html#cb163-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb163-11"><a href="chapter6.html#cb163-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span></span>
+<span id="cb163-12"><a href="chapter6.html#cb163-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb163-13"><a href="chapter6.html#cb163-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="chapter6.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.panelts<span class="fl">.3</span><span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
+<span id="cb164-2"><a href="chapter6.html#cb164-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                       mean  sd   </span></span>
+<span id="cb164-3"><a href="chapter6.html#cb164-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs 1.006 0.013</span></span>
+<span id="cb164-4"><a href="chapter6.html#cb164-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.alpha     0.577 0.075</span></span>
+<span id="cb164-5"><a href="chapter6.html#cb164-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Precision for id.beta1     1.349 0.051</span></span>
+<span id="cb164-6"><a href="chapter6.html#cb164-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Rho for id.beta1           0.789 0.008</span></span></code></pre></div>
+<p>Note that in this case, as in the case of treating the levels as fixed effects, we recover the true
+<span class="math inline">\(\phi\)</span>, <span class="math inline">\(\sigma_v^2\)</span> and <span class="math inline">\(\sigma_w^2\)</span>. For random <span class="math inline">\(\alpha_i\)</span>, we notice that the estimated posterior precision matches the true precision of the simulated random <span class="math inline">\(\alpha\)</span>’s shown below. The overall estimation accuracy should increase as <span class="math inline">\(g\)</span> increases.</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="chapter6.html#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span><span class="fu">var</span>(<span class="fu">unlist</span>(alpha))</span>
+<span id="cb165-2"><a href="chapter6.html#cb165-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.8016</span></span></code></pre></div>
+<p>In practice, we may often need to model multiple time series for which the stochastic behavior may differ between series. For instance, in <a href="chapter6.html#eq:hcounts-2">(6.3)</a>, we may wish to model the state equation as</p>
+<p><span class="math display" id="eq:hcounts-3">\[\begin{align}
+\beta_{it,1} =  \phi_i \beta_{i,t-1,1}+ w_{it},
+\tag{6.4}
+\end{align}\]</span>
+where <span class="math inline">\(w_{it}\)</span> are N<span class="math inline">\((0,\sigma^2_{w_i})\)</span> variables. We discuss such models after describing an approach for multivariate time series in Chapter <a href="chmvdlm.html#chmvdlm">12</a>.</p>
+<p><strong>Remark: More on the <code>replicate</code> argument.</strong>
+Recall that we used the <code>copy</code> option in Chapter <a href="chapter5.html#chapter5">5</a>. If a model includes several likelihood terms, it may be necessary to share some terms among different parts of the model.
+In <code>R-INLA</code>, we can use the <code>replicate</code> feature to enable the linear predictors of the different likelihoods to share the same type of latent effect.
+Unlike the <code>copy</code> feature, <code>replicate</code> allows different hyperparameters for each replicate of an effect.
+The hyperparameter estimation will be based on all the data, but estimates of the latent effects are allowed to vary between the groups.
+<!--Using `replicate` in defining the latent effect enables us to define 
+replicates of the same latent effect via a vector of integer values with the different groups that define the replicates. --></p>
+</div>
+</div>
+<div id="ridesource-hdlm" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Example: Ridesourcing in NYC<a href="chapter6.html#ridesource-hdlm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Transportation Network Companies (TNCs) provide ridesourcing services by allowing passengers to use their smart phone apps to connect with nearby drivers who typically drive part-time using their own car.
+We consider weekly ridesourcing usage data from <span class="math inline">\(g=105\)</span>
+different taxi zones in NYC from January 2015 until June 2017, providing data for <span class="math inline">\(n=129\)</span> weeks. The data consists of TNC, Taxi, and Subway usage by taxi zones for each week.
+TNC usage aggregates three ride modes: Uber, Lyft, and Via.
+Taxi usage aggregates Yellow and Green Cabs.
+In most of the zones, TNC usage shows a continuous increase over time, while Taxi usage exhibits a decreasing trend.
+Subway usage, as expected for NYC, dominates the other two in most zones.
+The data set also includes data on potential predictors, obtained from various sources such as the <em>NYC Open Data Portal</em>, <em>National Oceanic and Atmospheric Administration (NOAA)</em>, the <em>U.S. Census Bureau</em>, etc.; see <span class="citation">Gerte et al. (<a href="#ref-gerte2019ridesourcing" role="doc-biblioref">2019</a>)</span> and <span class="citation">Toman et al. (<a href="#ref-toman2020spatiotemporal" role="doc-biblioref">2020</a>)</span> for details. They include:
+(a) data that varies by week but remains constant across all taxi zones for any given week, such as holidays (an indicator) and precipitation (inches), and
+(b) data on socio-economic and land-use variables which we assume vary by taxi zones
+and consists of Total Population/No. of Buildings, Fulltime Employed/No. of Buildings, Median Age, and Median Earnings.
+<span class="citation">Toman et al. (<a href="#ref-toman2020spatiotemporal" role="doc-biblioref">2020</a>)</span> described time series (ARIMA-GARCH) models to weekly ridesourcing usage within taxi zones in NYC, followed by an investigation into the existence of spatial dependence between the taxi zones. Since the stochastic patterns appear to be varying over time, use of hierarchical dynamic models is a natural choice for such data. Hierarchical models <span class="citation">(<a href="#ref-gelman2006data" role="doc-biblioref">Gelman and Hill 2006</a>)</span> enable us to pool information from <span class="math inline">\(g\)</span> groups or individuals (taxi zones in our example) to estimate common coefficients as well as estimating group/zone-specific coefficients. Including time-varying effects in dynamic hierarchical models adds another level of complexity, as we show below.</p>
+<p>In the dataset, we have divided each observed count by <span class="math inline">\(k=10,000\)</span> and split the panel time series data into training (or calibration) and hold-out (or test) portions. Specifically, we set aside <span class="math inline">\(n_h=5\)</span> weeks from each of the <span class="math inline">\(g=105\)</span> taxi zones.</p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="chapter6.html#cb166-1" aria-hidden="true" tabindex="-1"></a>ride <span class="ot">&lt;-</span></span>
+<span id="cb166-2"><a href="chapter6.html#cb166-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read.csv</span>(<span class="st">&quot;tnc_weekly_data.csv&quot;</span>,</span>
+<span id="cb166-3"><a href="chapter6.html#cb166-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb166-4"><a href="chapter6.html#cb166-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb166-5"><a href="chapter6.html#cb166-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(ride<span class="sc">$</span>date)</span>
+<span id="cb166-6"><a href="chapter6.html#cb166-6" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(ride<span class="sc">$</span>zoneid)</span>
+<span id="cb166-7"><a href="chapter6.html#cb166-7" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb166-8"><a href="chapter6.html#cb166-8" aria-hidden="true" tabindex="-1"></a>ride<span class="sc">$</span>tnc <span class="ot">&lt;-</span> ride<span class="sc">$</span>tnc <span class="sc">/</span> k</span>
+<span id="cb166-9"><a href="chapter6.html#cb166-9" aria-hidden="true" tabindex="-1"></a>ride<span class="sc">$</span>taxi <span class="ot">&lt;-</span> ride<span class="sc">$</span>taxi <span class="sc">/</span> k</span>
+<span id="cb166-10"><a href="chapter6.html#cb166-10" aria-hidden="true" tabindex="-1"></a>ride<span class="sc">$</span>subway <span class="ot">&lt;-</span> ride<span class="sc">$</span>subway <span class="sc">/</span> k</span>
+<span id="cb166-11"><a href="chapter6.html#cb166-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Train and test data</span></span>
+<span id="cb166-12"><a href="chapter6.html#cb166-12" aria-hidden="true" tabindex="-1"></a>n.hold <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb166-13"><a href="chapter6.html#cb166-13" aria-hidden="true" tabindex="-1"></a>n.train <span class="ot">&lt;-</span> n <span class="sc">-</span> n.hold</span>
+<span id="cb166-14"><a href="chapter6.html#cb166-14" aria-hidden="true" tabindex="-1"></a>df.zone <span class="ot">&lt;-</span> ride <span class="sc">%&gt;%</span></span>
+<span id="cb166-15"><a href="chapter6.html#cb166-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_split</span>(zoneid)</span>
+<span id="cb166-16"><a href="chapter6.html#cb166-16" aria-hidden="true" tabindex="-1"></a>train.df <span class="ot">&lt;-</span> df.zone <span class="sc">%&gt;%</span></span>
+<span id="cb166-17"><a href="chapter6.html#cb166-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="cf">function</span>(x)</span>
+<span id="cb166-18"><a href="chapter6.html#cb166-18" aria-hidden="true" tabindex="-1"></a>    x[<span class="dv">1</span><span class="sc">:</span>n.train,]) <span class="sc">%&gt;%</span></span>
+<span id="cb166-19"><a href="chapter6.html#cb166-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>()</span>
+<span id="cb166-20"><a href="chapter6.html#cb166-20" aria-hidden="true" tabindex="-1"></a>test.df <span class="ot">&lt;-</span> df.zone <span class="sc">%&gt;%</span></span>
+<span id="cb166-21"><a href="chapter6.html#cb166-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="cf">function</span>(x)</span>
+<span id="cb166-22"><a href="chapter6.html#cb166-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tail</span>(x, n.hold)) <span class="sc">%&gt;%</span></span>
+<span id="cb166-23"><a href="chapter6.html#cb166-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>()</span></code></pre></div>
+<div class="figure"><span id="fig:tnc-eda-plot"></span>
+<img src="gitbook_version_files/figure-html/tnc-eda-plot-1.png" alt="Scaled TNC and Taxi usage across eight taxi zones." width="672" />
+<p class="caption">
+FIGURE 6.1: Scaled TNC and Taxi usage across eight taxi zones.
+</p>
+</div>
+<p>Figure <a href="chapter6.html#fig:tnc-eda-plot">6.1</a> shows the scaled weekly usage of TNC and Taxi in two randomly selected taxi zones from four boroughs in NYC. We see that TNC usage shows an upward trend whereas Taxi usage exhibits an overall downward trend with some fluctuation. There are some similarities and differences in temporal patterns in the different zones, which we explore using hierarchical dynamic models. We first describe the variables used in these models.</p>
+<div id="description-of-variables" class="section level3 unnumbered hasAnchor">
+<h3>Description of variables<a href="chapter6.html#description-of-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The response time series <span class="math inline">\(Y_{it}\)</span> are the scaled TNC usage in week <span class="math inline">\(t\)</span> in zone <span class="math inline">\(i\)</span>, with <span class="math inline">\(n=129\)</span> and <span class="math inline">\(g=105\)</span>. The response can be written as a data matrix <span class="math inline">\(\boldsymbol Y\)</span> with <span class="math inline">\(g\)</span> rows (subjects/locations) and <span class="math inline">\(n\)</span> columns (time points); see <a href="chapter6.html#eq:panel-datamatrix">(6.1)</a>. We consider three types of predictors:</p>
+<ol style="list-style-type: decimal">
+<li><p>Predictors that vary by week <span class="math inline">\(t\)</span> and zone <span class="math inline">\(i\)</span>: these include Subway usage and Taxi usage, denoted by <span class="math inline">\(b_{it,1}\)</span> and <span class="math inline">\(b_{it,2}\)</span>; let <span class="math inline">\(\boldsymbol{b}_{it} = (b_{it,1},b_{it,2})&#39;\)</span>. In general, we can assume that there are <span class="math inline">\(c\)</span> such predictors, indexed by <span class="math inline">\(h =1,\ldots,c\)</span>.</p></li>
+<li><p>Predictors that only vary by week <span class="math inline">\(t\)</span>: these variables are constant across all taxi zones <span class="math inline">\(i\)</span> for any given <span class="math inline">\(t\)</span>. They include <em>holidays</em> (an indicator) and <em>precipitation</em> (inches), which we denote by <span class="math inline">\(d_{t,1}\)</span>, and <span class="math inline">\(d_{t,2}\)</span> respectively. Let <span class="math inline">\(\boldsymbol{d}_{t} = (d_{t,1},d_{t,2})&#39;\)</span>. In general, we can assume that there are <span class="math inline">\(a\)</span> such predictors, indexed by <span class="math inline">\(\ell =1,\ldots,a\)</span>.</p></li>
+<li><p>Predictors that only vary by zone <span class="math inline">\(i\)</span>: these are assumed to stay constant week by week. They include
+<em>scaled.population</em>, <em>scaled.employment</em>, <em>median.age</em>, and <em>median.earnings</em>, and are denoted by <span class="math inline">\(s_{i,1}, s_{i,2}, s_{i,3}\)</span>, and <span class="math inline">\(s_{i,4}\)</span> respectively; let <span class="math inline">\(\boldsymbol{s}_{i} = (s_{i,1}, s_{i,2}, s_{i,3},s_{i,4})&#39;\)</span>.
+In general, we can assume that there are <span class="math inline">\(b\)</span> such predictors.</p></li>
+</ol>
+<p>Below, we describe and fit the most general hierarchical dynamic model for the ridesourcing data, i.e., Model H1.</p>
+</div>
+<div id="hmod.H1" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Model H1. Dynamic intercept and exogenous predictors<a href="chapter6.html#hmod.H1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider the following model for <span class="math inline">\(Y_{it}\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+Y_{it} &amp;=  \alpha + \beta_{it,0}+\boldsymbol{b}&#39;_{it}\boldsymbol{\beta}_{it}+
+\boldsymbol{d}&#39;_{t}\boldsymbol{\gamma}_{t}+
+\boldsymbol{s}&#39;_{i}\boldsymbol{\eta}_{i}+ v_{it} \notag \\
+\beta_{it,0} &amp;= \phi_0 \beta_{i,t-1,0}+w_{it,0}, \notag  \\
+\beta_{it,h} &amp;= \phi_h^{(\beta)} \beta_{i,t-1,h}+w^{(\beta)}_{it,h},~h=1,2, \notag \\
+\gamma_{t,\ell} &amp;= \phi_\ell^{(\gamma)} \gamma_{t-1,\ell}+w^{(\gamma)}_{t,\ell},~\ell=1,2. \label{tnc-stgamma}
+\end{align}\]</span>
+We have included a level <span class="math inline">\(\alpha\)</span>, and a time-varying intercept <span class="math inline">\(\beta_{it,0}\)</span> which is modeled as a latent zero-mean AR(1) process with coefficient <span class="math inline">\(\phi_0\)</span>. The coefficients corresponding to Subway usage and Taxi usage are
+<span class="math inline">\(\beta_{it,h},~h=1,2\)</span>, each of which evolves as a latent Gaussian AR(1) process with coefficients <span class="math inline">\(\phi_1^{(\beta)}\)</span> and <span class="math inline">\(\phi_2^{(\beta)}\)</span> respectively.
+The coefficients corresponding to holidays and precipitation are
+<span class="math inline">\(\gamma_{t,\ell},~\ell=1,2\)</span>, and evolve as latent Gaussian AR(1) processes with
+coefficients <span class="math inline">\(\phi_1^{(\gamma)}\)</span> and <span class="math inline">\(\phi_2^{(\gamma)}\)</span>
+respectively.
+The <span class="math inline">\(\boldsymbol{\eta}_{i}\)</span> coefficients corresponding to the demographic and land-use predictors are only taxi-zone specific and do not follow any dynamic model. We assume that all the AR(1) coefficients lie between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span>.
+The observation errors <span class="math inline">\(v_{it}\)</span> are assumed to be
+N<span class="math inline">\((0, \sigma^2_v)\)</span>. The state errors
+<span class="math inline">\(w_{it,0}\)</span> are N<span class="math inline">\((0,\sigma^2_{w,0})\)</span>, the errors
+<span class="math inline">\(w^{(\beta)}_{it,h}\)</span> are
+N<span class="math inline">\((0,\sigma^2_{w,\beta_h}),~h=1,2\)</span>, and the errors
+<span class="math inline">\(w^{(\gamma)}_{t,\ell}\)</span> are N<span class="math inline">\((0,\sigma^2_{w,\gamma_\ell}),~\ell=1,2\)</span>. The errors are uncorrelated. For elements of <span class="math inline">\(\boldsymbol{\eta}_{i}\)</span> in the model, we assume independent normal priors. An important aspect of fitting Model H1
+is the creation of indexes to handle the different types of coefficients described above (also see Chapter 6 of <span class="citation">Gómez-Rubio (<a href="#ref-gomez2020bayesian" role="doc-biblioref">2020</a>)</span>).</p>
+<div id="model-h1-indexes-and-replicates" class="section level4 unnumbered hasAnchor">
+<h4>Model H1: indexes and replicates<a href="chapter6.html#model-h1-indexes-and-replicates" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ol style="list-style-type: decimal">
+<li><p><strong>Indexes for time and zone varying coefficients</strong>.
+The time index <em>id.b0</em> relates to the intercept <span class="math inline">\(\beta_{it,0}\)</span> which varies by week <span class="math inline">\(t\)</span> and zone <span class="math inline">\(i\)</span>.
+To capture the time-varying effect, we use <code>rep(1:n,g)</code>, which repeats the weeks <span class="math inline">\(1,\ldots,n\)</span> for all <span class="math inline">\(g=105\)</span> zones.
+To allow the intercept to vary by zones, we use the <code>replicate</code> argument in the function <code>f()</code>.
+Since the first set of times <span class="math inline">\(1,\ldots,n\)</span> belongs to the first zone, <span class="math inline">\(i=1\)</span>, the index has <span class="math inline">\(1\)</span> repeated <span class="math inline">\(n\)</span> times; the next set of <span class="math inline">\(1,\ldots,n\)</span> is for zone <span class="math inline">\(i=2\)</span>, so that the index is <span class="math inline">\(2\)</span> repeated <span class="math inline">\(n\)</span> times, and so on. This is represented by <code>rep(1:g, each = n)</code> for <em>re.b0</em> in the formula.
+We similarly set up the indexes <em>id.subway</em> and <em>id.taxi</em>, as well as the replicates <em>re.subway</em> and <em>re.taxi</em> corresponding to <span class="math inline">\(\beta_{it,1}\)</span> and <span class="math inline">\(\beta_{it,2}\)</span> respectively.</p></li>
+<li><p><strong>Indexes for time-varying coefficients</strong>.
+For the predictors <em>holidays</em> and <em>precip</em>, the <span class="math inline">\(\gamma\)</span> coefficients vary only by time <span class="math inline">\(t\)</span> and not by zone <span class="math inline">\(i\)</span>. The indexes <em>id.holiday</em> and <em>id.precip</em> are defined similar to <em>id.b0</em>, i.e., by <code>rep(1:n,g)</code>.
+However, the <code>replicate</code> argument must be different. We define <em>re.holiday</em> as a column of <span class="math inline">\(1\)</span>’s repeated <span class="math inline">\(n\times g\)</span> times, i.e.,
+by <code>rep(1, (n*g))</code>.
+In addition, we allow a large, fixed precision for the hyperparameter. The index and replicate arguments for
+<em>precip</em> are set up similarly.</p></li>
+<li><p><strong>Indexes for zone specific coefficients</strong>.
+Since the <span class="math inline">\(\boldsymbol{\eta}_{i}\)</span> coefficients corresponding to the demographic and land use predictors do not vary over time, but are zone specific, we do not need to set up indexes similar to <em>id.b0</em>.
+However, to indicate that they are random effects (by zone), we need to set up the replicate
+arguments <em>re.age</em>, <em>re.earn</em>, <em>re.pop</em>, and <em>re.emp</em> as repeating the sequence
+<span class="math inline">\(1,\ldots,g\)</span> for each <span class="math inline">\(t\)</span>, i.e., by <code>,rep(1:g, each = n)</code>.
+These indexes and replicates for Model H1 are shown in the code below.</p></li>
+</ol>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="chapter6.html#cb167-1" aria-hidden="true" tabindex="-1"></a>id.b0 <span class="ot">&lt;-</span> id.subway <span class="ot">&lt;-</span> id.taxi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, g)</span>
+<span id="cb167-2"><a href="chapter6.html#cb167-2" aria-hidden="true" tabindex="-1"></a>id.holiday <span class="ot">&lt;-</span> id.precip <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, g)</span>
+<span id="cb167-3"><a href="chapter6.html#cb167-3" aria-hidden="true" tabindex="-1"></a>re.b0 <span class="ot">&lt;-</span> re.subway <span class="ot">&lt;-</span> re.taxi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>g, <span class="at">each =</span> n)</span>
+<span id="cb167-4"><a href="chapter6.html#cb167-4" aria-hidden="true" tabindex="-1"></a>re.holiday <span class="ot">&lt;-</span> re.precip <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, (n <span class="sc">*</span> g))</span>
+<span id="cb167-5"><a href="chapter6.html#cb167-5" aria-hidden="true" tabindex="-1"></a>re.age <span class="ot">&lt;-</span> re.earn <span class="ot">&lt;-</span> re.pop <span class="ot">&lt;-</span> re.emp <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>g, <span class="at">each =</span> n)</span></code></pre></div>
+<p>We merge these with the scaled data to create a data frame <code>ride.data</code> that is used in the <code>inla()</code> fit.</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="chapter6.html#cb168-1" aria-hidden="true" tabindex="-1"></a>ride.data <span class="ot">&lt;-</span></span>
+<span id="cb168-2"><a href="chapter6.html#cb168-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(</span>
+<span id="cb168-3"><a href="chapter6.html#cb168-3" aria-hidden="true" tabindex="-1"></a>    ride,id.b0,id.subway,id.taxi,</span>
+<span id="cb168-4"><a href="chapter6.html#cb168-4" aria-hidden="true" tabindex="-1"></a>    id.holiday,id.precip,re.b0,</span>
+<span id="cb168-5"><a href="chapter6.html#cb168-5" aria-hidden="true" tabindex="-1"></a>    re.subway,re.taxi,re.holiday,</span>
+<span id="cb168-6"><a href="chapter6.html#cb168-6" aria-hidden="true" tabindex="-1"></a>    re.precip,re.age,re.earn,re.pop,re.emp</span>
+<span id="cb168-7"><a href="chapter6.html#cb168-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+</div>
+<div id="model-h1-formula-and-model-fitting" class="section level4 unnumbered hasAnchor">
+<h4>Model H1: formula and model fitting<a href="chapter6.html#model-h1-formula-and-model-fitting" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="chapter6.html#cb169-1" aria-hidden="true" tabindex="-1"></a>formula.tnc.H1 <span class="ot">&lt;-</span> tnc <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span></span>
+<span id="cb169-2"><a href="chapter6.html#cb169-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.b0, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>, <span class="at">replicate =</span> re.b0) <span class="sc">+</span></span>
+<span id="cb169-3"><a href="chapter6.html#cb169-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.subway, subway, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>, <span class="at">replicate =</span> re.subway) <span class="sc">+</span></span>
+<span id="cb169-4"><a href="chapter6.html#cb169-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.taxi, taxi, <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>, <span class="at">replicate =</span> re.taxi) <span class="sc">+</span></span>
+<span id="cb169-5"><a href="chapter6.html#cb169-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(</span>
+<span id="cb169-6"><a href="chapter6.html#cb169-6" aria-hidden="true" tabindex="-1"></a>    id.holiday,</span>
+<span id="cb169-7"><a href="chapter6.html#cb169-7" aria-hidden="true" tabindex="-1"></a>    holidays,</span>
+<span id="cb169-8"><a href="chapter6.html#cb169-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb169-9"><a href="chapter6.html#cb169-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">replicate =</span> re.holiday,</span>
+<span id="cb169-10"><a href="chapter6.html#cb169-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">hyper =</span> <span class="fu">list</span>(<span class="at">theta =</span> <span class="fu">list</span>(<span class="at">initial =</span> <span class="dv">20</span>, <span class="at">fixed =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb169-11"><a href="chapter6.html#cb169-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb169-12"><a href="chapter6.html#cb169-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(</span>
+<span id="cb169-13"><a href="chapter6.html#cb169-13" aria-hidden="true" tabindex="-1"></a>    id.precip,</span>
+<span id="cb169-14"><a href="chapter6.html#cb169-14" aria-hidden="true" tabindex="-1"></a>    precip,</span>
+<span id="cb169-15"><a href="chapter6.html#cb169-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">&quot;ar1&quot;</span>,</span>
+<span id="cb169-16"><a href="chapter6.html#cb169-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">replicate =</span> re.precip,</span>
+<span id="cb169-17"><a href="chapter6.html#cb169-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">hyper =</span> <span class="fu">list</span>(<span class="at">theta =</span> <span class="fu">list</span>(<span class="at">initial =</span> <span class="dv">20</span>, <span class="at">fixed =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb169-18"><a href="chapter6.html#cb169-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb169-19"><a href="chapter6.html#cb169-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(re.age, median.age, <span class="at">model =</span> <span class="st">&quot;iid&quot;</span>) <span class="sc">+</span></span>
+<span id="cb169-20"><a href="chapter6.html#cb169-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(re.earn, median.earnings, <span class="at">model =</span> <span class="st">&quot;iid&quot;</span>) <span class="sc">+</span></span>
+<span id="cb169-21"><a href="chapter6.html#cb169-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(re.pop, scaled.population, <span class="at">model =</span> <span class="st">&quot;iid&quot;</span>) <span class="sc">+</span></span>
+<span id="cb169-22"><a href="chapter6.html#cb169-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(re.emp, scaled.employment, <span class="at">model =</span> <span class="st">&quot;iid&quot;</span>)</span></code></pre></div>
+<p>We have used default <code>R-INLA</code> priors for all parameters. The condensed output shown below consists of posterior summaries from Model H1.</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="chapter6.html#cb170-1" aria-hidden="true" tabindex="-1"></a>model.tnc.H1 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb170-2"><a href="chapter6.html#cb170-2" aria-hidden="true" tabindex="-1"></a>  formula.tnc.H1,</span>
+<span id="cb170-3"><a href="chapter6.html#cb170-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ride.data,</span>
+<span id="cb170-4"><a href="chapter6.html#cb170-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb170-5"><a href="chapter6.html#cb170-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb170-6"><a href="chapter6.html#cb170-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb170-7"><a href="chapter6.html#cb170-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb170-8"><a href="chapter6.html#cb170-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb170-9"><a href="chapter6.html#cb170-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb170-10"><a href="chapter6.html#cb170-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb170-11"><a href="chapter6.html#cb170-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb170-12"><a href="chapter6.html#cb170-12" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(summary.model.tnc.H1<span class="sc">$</span>fixed)</span>
+<span id="cb170-13"><a href="chapter6.html#cb170-13" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.tnc.H1<span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span></code></pre></div>
+<pre><code>##   name      mean sd    0.025q 0.5q 0.975q mode kld
+## 1 Intercept -0.4 0.146 -0.686 -0.4 -0.114 -0.4 0</code></pre>
+<pre><code>##    name                       mean      sd       
+## 1  Precision for Gaussian obs 1.995e+03 7.805e+01
+## 2  Precision for id.b0        2.156e+00 7.540e-01
+## 3  Rho for id.b0              9.990e-01 0.000e+00
+## 4  Precision for id.subway    6.815e+03 1.298e+03
+## 5  Rho for id.subway          9.980e-01 0.000e+00
+## 6  Precision for id.taxi      1.690e+00 3.520e-01
+## 7  Rho for id.taxi            9.990e-01 0.000e+00
+## 8  Precision for id.holiday   6.484e+02 3.195e+02
+## 9  Rho for id.holiday         3.280e-01 4.610e-01
+## 10 Precision for id.precip    2.420e+02 6.784e+01
+## 11 Rho for id.precip          2.470e-01 1.030e-01
+## 12 Precision for re.age       9.849e+03 5.734e+03
+## 13 Precision for re.earn      1.068e+06 1.660e+05
+## 14 Precision for re.pop       3.820e+03 2.679e+03
+## 15 Precision for re.emp       4.898e+05 8.218e+04</code></pre>
+<p>From the output, we see that Model H1 estimates a significant negative level of <span class="math inline">\(-0.4\)</span>. The AR(1) coefficient estimates associated with the <span class="math inline">\(\beta\)</span> coefficients for Taxi and Subway usage and the intercept <span class="math inline">\(\beta_0\)</span> are concentrated in the vicinity of <span class="math inline">\(0.99\)</span>, (suggesting perhaps one can use a random walk model for these parameters). Furthermore, the estimated posterior precisions are high for most of the coefficients, suggesting that these can be treated as fixed effects (static), leading to simpler models than Model H1. We explore these scenarios below.</p>
+<p>Note that if the level <span class="math inline">\(\alpha\)</span> had been insignificant, we could fit a model excluding the level, by setting <code>formula.tnc.H1 &lt;- tnc ~ -1 + ...</code>in the formula, keeping all other entries the same as above. We do not show these results.
+<!--For completeness, we show the corresponding results below.-->
+<!--
+
+
+
+--></p>
+<p>For the model with level <span class="math inline">\(\alpha\)</span>, Figure <a href="chapter6.html#fig:fit-H1">6.2</a> compares observed and fitted values for the eight different zones that we discussed earlier. This plot indicates possible overfitting in all zones, as expected from the high <code>Precision for the Gaussian observations</code> in the output. Recall that the <code>config = TRUE</code> option enables us to obtain samples from approximate posterior distributions (see Section <a href="chapter3.html#post-sampling">3.10</a>).
+Using the default argument <code>line.type = "solid"</code> in the function <code>multiline.plot()</code> provides us with an overlay plot of the actual and fitted values. In order to distinguish them, we have used <code>line.type = "dotdash"</code>.</p>
+<div class="figure"><span id="fig:fit-H1"></span>
+<img src="gitbook_version_files/figure-html/fit-H1-1.png" alt="Observed (red) and fitted (blue) values from Model H1 for eight taxi zones." width="672" />
+<p class="caption">
+FIGURE 6.2: Observed (red) and fitted (blue) values from Model H1 for eight taxi zones.
+</p>
+</div>
+<p>In the rest of the chapter, we consider simpler models for TNC usage across zones and over time.</p>
+</div>
+</div>
+<div id="hmod.H2" class="section level3 hasAnchor" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Model H2. Dynamic intercept and Taxi usage<a href="chapter6.html#hmod.H2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In Model H2, we consider Subway usage and other exogenous variables as fixed effects, setting only the intercept and Taxi usage to be random, dynamic effects. Similar to Model H1, the estimated AR(1) coefficients in the state equations for the intercept and Taxi usage were close to <span class="math inline">\(1\)</span>, so that we show random walk evolutions for these state variables below. The overall level <span class="math inline">\(\alpha\)</span> is assumed to be a fixed value which is common across the <span class="math inline">\(g\)</span> zones.</p>
+<p><span class="math display">\[\begin{align}
+Y_{it} &amp;= \alpha + \beta_{it,0}+\beta_{it,1}b_{it,1}+ \beta_{2}b_{it,2}+
+\boldsymbol{d}&#39;_{t}\boldsymbol{\gamma}+
+\boldsymbol{s}&#39;_{i}\boldsymbol{\eta}+ v_{it}, \notag \\
+\beta_{it,0} &amp;= \beta_{i,t-1,0}+w_{it,0}, \notag \\
+\beta_{it,1} &amp;= \beta_{i,t-1,1}+w^{(\beta)}_{it,1}. \label{tnc-stbeta-H2}
+\end{align}\]</span>
+The formula and model fit are set up as follows.</p>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="chapter6.html#cb173-1" aria-hidden="true" tabindex="-1"></a>formula.tnc.H2 <span class="ot">&lt;-</span> tnc <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> subway <span class="sc">+</span> holidays <span class="sc">+</span> precip <span class="sc">+</span></span>
+<span id="cb173-2"><a href="chapter6.html#cb173-2" aria-hidden="true" tabindex="-1"></a>  median.age <span class="sc">+</span> median.earnings <span class="sc">+</span> scaled.population <span class="sc">+</span> scaled.employment <span class="sc">+</span></span>
+<span id="cb173-3"><a href="chapter6.html#cb173-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.b0,</span>
+<span id="cb173-4"><a href="chapter6.html#cb173-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">&quot;rw1&quot;</span>,</span>
+<span id="cb173-5"><a href="chapter6.html#cb173-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">constr =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb173-6"><a href="chapter6.html#cb173-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">replicate =</span> re.b0) <span class="sc">+</span></span>
+<span id="cb173-7"><a href="chapter6.html#cb173-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.taxi,</span>
+<span id="cb173-8"><a href="chapter6.html#cb173-8" aria-hidden="true" tabindex="-1"></a>    taxi,</span>
+<span id="cb173-9"><a href="chapter6.html#cb173-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">&quot;rw1&quot;</span>,</span>
+<span id="cb173-10"><a href="chapter6.html#cb173-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">constr =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb173-11"><a href="chapter6.html#cb173-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">replicate =</span> re.taxi)</span>
+<span id="cb173-12"><a href="chapter6.html#cb173-12" aria-hidden="true" tabindex="-1"></a>model.tnc.H2 <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
+<span id="cb173-13"><a href="chapter6.html#cb173-13" aria-hidden="true" tabindex="-1"></a>  formula.tnc.H2,</span>
+<span id="cb173-14"><a href="chapter6.html#cb173-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ride.data,</span>
+<span id="cb173-15"><a href="chapter6.html#cb173-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.predictor =</span> <span class="fu">list</span>(<span class="at">compute =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb173-16"><a href="chapter6.html#cb173-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(</span>
+<span id="cb173-17"><a href="chapter6.html#cb173-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">dic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb173-18"><a href="chapter6.html#cb173-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">waic =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb173-19"><a href="chapter6.html#cb173-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">cpo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb173-20"><a href="chapter6.html#cb173-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">config =</span> <span class="cn">TRUE</span></span>
+<span id="cb173-21"><a href="chapter6.html#cb173-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb173-22"><a href="chapter6.html#cb173-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb173-23"><a href="chapter6.html#cb173-23" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.tnc.H2<span class="sc">$</span>summary.fixed[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb173-24"><a href="chapter6.html#cb173-24" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.tnc.H2<span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span></code></pre></div>
+<pre><code>##   name              mean   sd      0.025q    0.5q   0.975q  
+## 1 Intercept         -2.736 559.697 -1102.662 -2.741 1096.100
+## 2 subway             0.002   0.000     0.002  0.002    0.003
+## 3 holidays           0.007   0.001     0.005  0.007    0.009
+## 4 precip             0.004   0.000     0.003  0.004    0.005
+## 5 median.age        -0.004   0.005    -0.013 -0.004    0.006
+## 6 median.earnings    0.000   0.000     0.000  0.000    0.000
+## 7 scaled.population -0.004   0.006    -0.016 -0.004    0.009
+## 8 scaled.employment  0.000   0.000     0.000  0.000    0.000
+##   name                       mean sd   
+## 1 Precision for Gaussian obs 1411 52.21
+## 2 Precision for id.b0        1096 37.43
+## 3 Precision for id.taxi      1252 45.33</code></pre>
+<p>Among the fixed effects, only Subway usage, holidays, precipitation, and scaled employment (see the result without <code>format.inla.out</code>) are significant. While we only show a few significant digits here, a more complete output can be obtained via <code>summary(model.tnc.H2)</code>. Figure <a href="chapter6.html#fig:fit-H2">6.3</a> shows the observed and fitted usage from Model H2 for eight taxi zones.</p>
+<div class="figure"><span id="fig:fit-H2"></span>
+<img src="gitbook_version_files/figure-html/fit-H2-1.png" alt="Observed (red) and fitted (blue) values from Model H2 for eight taxi zones." width="672" />
+<p class="caption">
+FIGURE 6.3: Observed (red) and fitted (blue) values from Model H2 for eight taxi zones.
+</p>
+</div>
+<p>In many situations, it may be naive to assume that the level is the same for all zones. To address this, we let the level vary across zones in Model H2, so that the observation equation in <strong>Model H2b</strong> becomes</p>
+<p><span class="math display">\[\begin{align}
+Y_{it} &amp;= \alpha_0 + \alpha_i + \beta_{it,0}+\beta_{it,1}b_{it,1}+ \beta_{2}b_{it,2}+
+\boldsymbol{d}&#39;_{t}\boldsymbol{\gamma}+
+\boldsymbol{s}&#39;_{i}\boldsymbol{\eta}+ v_{it}, \label{tnc-stbeta-H3}
+\end{align}\]</span>
+while the state equations are the same as under Model H2. We assume that <span class="math inline">\(\alpha_i \sim N(0, \sigma^2_{\alpha})\)</span>, a random effect across the <span class="math inline">\(g\)</span> zones. Including <code>+1</code> in the formula below allows us to include an overall fixed level <span class="math inline">\(\alpha_0\)</span>.</p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="chapter6.html#cb175-1" aria-hidden="true" tabindex="-1"></a>formula.tnc.H2b <span class="ot">&lt;-</span> tnc <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> subway <span class="sc">+</span> holidays <span class="sc">+</span> precip <span class="sc">+</span></span>
+<span id="cb175-2"><a href="chapter6.html#cb175-2" aria-hidden="true" tabindex="-1"></a>  median.age <span class="sc">+</span> median.earnings <span class="sc">+</span> scaled.population <span class="sc">+</span> scaled.employment <span class="sc">+</span></span>
+<span id="cb175-3"><a href="chapter6.html#cb175-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.alpha, <span class="at">model=</span><span class="st">&quot;iid&quot;</span>) <span class="sc">+</span></span>
+<span id="cb175-4"><a href="chapter6.html#cb175-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(id.taxi,</span>
+<span id="cb175-5"><a href="chapter6.html#cb175-5" aria-hidden="true" tabindex="-1"></a>    taxi,</span>
+<span id="cb175-6"><a href="chapter6.html#cb175-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">&quot;rw1&quot;</span>,</span>
+<span id="cb175-7"><a href="chapter6.html#cb175-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">constr =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb175-8"><a href="chapter6.html#cb175-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">replicate =</span> re.taxi)</span></code></pre></div>
+<p>We show a summary of results below. The precision for <span class="math inline">\(\alpha_i\)</span> is significantly higher than zero, implying that there may be some variation in the level between zones.</p>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="chapter6.html#cb176-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.tnc.H2b<span class="sc">$</span>summary.fixed[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)])</span>
+<span id="cb176-2"><a href="chapter6.html#cb176-2" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.tnc.H2b<span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)])</span></code></pre></div>
+<pre><code>##   name              mean   sd    0.025q 0.5q   0.975q
+## 1 Intercept         -3.422 0.214 -3.846 -3.421 -3.005
+## 2 subway             0.006 0.001  0.004  0.006  0.007
+## 3 holidays          -0.007 0.003 -0.012 -0.007 -0.002
+## 4 precip             0.015 0.001  0.012  0.015  0.017
+## 5 median.age         0.072 0.003  0.065  0.072  0.078
+## 6 median.earnings    0.000 0.000  0.000  0.000  0.000
+## 7 scaled.population -0.021 0.004 -0.030 -0.021 -0.012
+## 8 scaled.employment  0.001 0.000  0.001  0.001  0.001
+##   name                       mean    sd    
+## 1 Precision for Gaussian obs 108.368  2.011
+## 2 Precision for id.alpha       0.572  0.088
+## 3 Precision for id.taxi      531.451 24.098</code></pre>
+<p>Figure <a href="chapter6.html#fig:fit-H2b">6.4</a> shows observed and fitted values from Model H2b.</p>
+<div class="figure"><span id="fig:fit-H2b"></span>
+<img src="gitbook_version_files/figure-html/fit-H2b-1.png" alt="Observed (red) and fitted (blue) values from Model H2b for eight taxi zones." width="672" />
+<p class="caption">
+FIGURE 6.4: Observed (red) and fitted (blue) values from Model H2b for eight taxi zones.
+</p>
+</div>
+<p>Model comparisons are shown in Table <a href="chapter6.html#tab:modelcomp-table">6.1</a>. The data appears to prefer Model H2 as compared with Model H2b. Therefore, we will assume a fixed <span class="math inline">\(\alpha\)</span> across <span class="math inline">\(g\)</span> zones in the following models.</p>
+<p><strong>Remark.</strong> If the number of zones <span class="math inline">\(g\)</span> was small, we can model the <span class="math inline">\(\alpha_i\)</span> as fixed effects as shown in the model formula for simulated data in Section <a href="chapter6.html#simul2-panelts">6.2.2</a>, using <code>zone.alpha = as.factor(id.alpha)</code>.</p>
+</div>
+<div id="hmod.H3" class="section level3 hasAnchor" number="6.3.3">
+<h3><span class="header-section-number">6.3.3</span> Model H3. Taxi usage varies by time and zone<a href="chapter6.html#hmod.H3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In this model, the intercept is assumed to be a fixed effect and is merged into the level <span class="math inline">\(\alpha\)</span>.
+Subway usage, median age, median earnings, scaled population, and scaled employment are other fixed effects. Taxi usage is assumed to vary over time and by zone, while holiday, and precipitation are assumed to only vary over time; these effects are modeled by random walks. While we do not show the code and output (see the GitHub page), Figure <a href="chapter6.html#fig:fit-H3">6.5</a> shows the observed and fitted TNC usage from Model H3 for eight taxi zones.</p>
+<p><span class="math display">\[\begin{align}
+Y_{it} &amp;= \alpha + \beta_{it,1}b_{it,1}+ \beta_2 b_{it,2} +
+\boldsymbol{d}&#39;_{t}\boldsymbol{\gamma}_{t}+
+\boldsymbol{s}&#39;_{i}\boldsymbol{\eta_i} + v_{it}, \notag \\
+\beta_{it,1} &amp;=  \beta_{i,t-1,1}+w^{(\beta)}_{it,1}, \notag \\
+\gamma_{t,\ell} &amp;=  \gamma_{t-1,\ell}+w^{(\gamma)}_{t,\ell},~\ell=1,2. \label{tnc-stgamma-H3}
+\end{align}\]</span></p>
+<div class="figure"><span id="fig:fit-H3"></span>
+<img src="gitbook_version_files/figure-html/fit-H3-1.png" alt="Observed (red) and fitted (blue) values from Model H3 for eight taxi zones." width="672" />
+<p class="caption">
+FIGURE 6.5: Observed (red) and fitted (blue) values from Model H3 for eight taxi zones.
+</p>
+</div>
+</div>
+<div id="hmod.H4" class="section level3 hasAnchor" number="6.3.4">
+<h3><span class="header-section-number">6.3.4</span> Model H4. Fixed intercept, Taxi usage varies over time and zones<a href="chapter6.html#hmod.H4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Since the results from Model H1 shows high precisions for state errors corresponding to holiday and precipitation, we now treat these variables as static, fixed effects. That is, only Taxi usage varies over time and zones.</p>
+<p><span class="math display">\[\begin{align}
+Y_{it} &amp;= \alpha+\beta_{it,1} b_{it,1}+ \beta_2 b_{it,2}+
+\boldsymbol{d}&#39;_{t}\boldsymbol{\gamma}+
+\boldsymbol{s}&#39;_{i}\boldsymbol{\eta} + v_{it}, \notag \\
+\beta_{it,1} &amp;= \beta_{i,t-1,1}+w^{(\beta)}_{it,1}. \label{tnc-stbeta-H4}
+\end{align}\]</span></p>
+<p>Figure <a href="chapter6.html#fig:fit-h6">6.6</a> shows the observed and fitted usage from Model H4 for the eight taxi zones.</p>
+<div class="figure"><span id="fig:fit-h6"></span>
+<img src="gitbook_version_files/figure-html/fit-h6-1.png" alt="Observed (red) and fitted (blue) values from Model H4 for eight taxi zones." width="672" />
+<p class="caption">
+FIGURE 6.6: Observed (red) and fitted (blue) values from Model H4 for eight taxi zones.
+</p>
+</div>
+</div>
+</div>
+<div id="model-comparison" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Model comparison<a href="chapter6.html#model-comparison" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We compare the five models with respect to their in-sample and out of sample performance. In so doing, we first show plots of observed versus fitted values obtained from the five models for a specific zone (Brighton Beach) in Figure <a href="chapter6.html#fig:obs-fit-one-zone">6.7</a>. We also compute and display the in-sample MAPE based on training data for each model for Brighton Beach in Figure <a href="chapter6.html#fig:obs-fit-one-zone">6.7</a>. As suggested from the plot, the MAPE value from Model H1 is the lowest.</p>
+<div class="figure"><span id="fig:obs-fit-one-zone"></span>
+<img src="gitbook_version_files/figure-html/obs-fit-one-zone-1.png" alt="Plots of observed versus fitted values from all five models for the Brighton Beach taxi zone." width="672" />
+<p class="caption">
+FIGURE 6.7: Plots of observed versus fitted values from all five models for the Brighton Beach taxi zone.
+</p>
+</div>
+<p>In-sample model comparisons via DIC, WAIC, and PsBF, along with MAE and MAPE across zones are shown in Table <a href="chapter6.html#tab:modelcomp-table">6.1</a>. Note that the MAE (or MAPE) in the table is the average of the MAE (or MAPE) values across zones. The out-of-sample model comparisons via MAE and MAPE (computed based on hold-out data) are shown in Table <a href="chapter6.html#tab:modelcomp-table-outsample">6.2</a>. We can also look at the distribution of MAPE and MAE values from all zones and compare models. Figure <a href="chapter6.html#fig:boxplot-mape">6.8</a> shows boxplots of out-of-sample MAPE values for all zones from the five models; we have suppressed outliers in the boxplots for visual clarity. To see the outliers, set <code>outline = TRUE</code>. The figure shows that the median of MAPE values across zones is lowest from Model H2.</p>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:modelcomp-table">TABLE 6.1: </span>In-sample model comparisons.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Model
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+DIC
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+WAIC
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+PsBF
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Average in-sample MAE
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Average in-sample MAPE
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Model H1
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-56232.03\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-56568.628\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(106.996\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(0.007\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(2.798\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model H2
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-51565.851\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-51916.779\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(96.177\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(0.008\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(2.937\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model H2b
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-21612.062\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-22698.194\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(70.678\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(0.046\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(40.531\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model H3
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-33653.708\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-35396.272\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(12.06\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(0.02\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(20.346\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model H4
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-21371.145\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(-22998.43\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(7.905\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(0.038\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(46.034\)</span>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:modelcomp-table-outsample">TABLE 6.2: </span>Out-of-sample model comparisons.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Model
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Average out-of-sample MAE
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Average out-of-sample MAPE
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Model H1
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+2.635
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model H2
+</td>
+<td style="text-align:right;">
+0.022
+</td>
+<td style="text-align:right;">
+1.861
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model H2b
+</td>
+<td style="text-align:right;">
+0.112
+</td>
+<td style="text-align:right;">
+13.470
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model H3
+</td>
+<td style="text-align:right;">
+0.060
+</td>
+<td style="text-align:right;">
+11.318
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Model H4
+</td>
+<td style="text-align:right;">
+0.102
+</td>
+<td style="text-align:right;">
+12.666
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure"><span id="fig:boxplot-mape"></span>
+<img src="gitbook_version_files/figure-html/boxplot-mape-1.png" alt="Boxplots of out-of-sample MAPE values across zones from five models." width="672" />
+<p class="caption">
+FIGURE 6.8: Boxplots of out-of-sample MAPE values across zones from five models.
+</p>
+</div>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-gamerman1993dynamic" class="csl-entry">
+Gamerman, D., and Helio S. Migon. 1993. <span>“Dynamic Hierarchical Models.”</span> <em>Journal of the Royal Statistical Society: Series B (Methodological)</em> 55 (3): 629–42.
+</div>
+<div id="ref-gelman2006data" class="csl-entry">
+Gelman, Andrew, and Jennifer Hill. 2006. <em>Data <span>A</span>nalysis <span>U</span>sing <span>R</span>egression and <span>M</span>ultilevel/<span>H</span>ierarchical <span>M</span>odels</em>. New York: Cambridge University Press.
+</div>
+<div id="ref-gerte2019ridesourcing" class="csl-entry">
+Gerte, Raymond, Karthik C. Konduri, Nalini Ravishanker, Amit Mondal, and Naveen Eluru. 2019. <span>“Understanding the Relationships Between Demand for Shared Ride Modes: Case Study Using Open Data from <span>N</span>ew <span>Y</span>ork <span>C</span>ity.”</span> <em>Transportation Research Record</em> 2673 (12): 30–39.
+</div>
+<div id="ref-gomez2020bayesian" class="csl-entry">
+Gómez-Rubio, Virgilio. 2020. <em>Bayesian <span>I</span>nference with <span>INLA</span></em>. Boca Raton, Florida: CRC Press.
+</div>
+<div id="ref-krainski2018advanced" class="csl-entry">
+Krainski, Elias T., Virgilio Gómez-Rubio, Haakon Bakka, Amanda Lenzi, Daniela Castro-Camilo, Daniel Simpson, Finn Lindgren, and Håvard Rue. 2018. <em>Advanced Spatial Modeling with Stochastic Partial Differential Equations Using r and INLA</em>. New York: CRC Press.
+</div>
+<div id="ref-ramanetalasmbi" class="csl-entry">
+Raman, Balaji, Kamal Sen, Venu Gorti, and Nalini Ravishanker. 2021. <span>“Improving Promotional Effectiveness for Consumer Goods—a Dynamic Bayesian Approach.”</span> <em>Applied Stochastic Models in Business and Industry</em> 37 (4): 823–33.
+</div>
+<div id="ref-toman2020spatiotemporal" class="csl-entry">
+Toman, Patrick, Jingyue Zhang, Nalini Ravishanker, and Karthik C. Konduri. 2020. <span>“Spatiotemporal Analysis of Ridesourcing and Taxi Demand by Taxi Zones in <span>N</span>ew <span>Y</span>ork <span>C</span>ity.”</span> <em>Journal of the Indian Society for Probability and Statistics</em> 22: 231–49.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chapter5.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ch-nongaus.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"split_by": "chapter",
+"split_bib": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
