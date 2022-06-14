@@ -644,10 +644,10 @@ replacing <code>family = "stochvol"</code> in the <code>model.g</code> call abov
 <div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="ch-sv.html#cb294-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model.t)</span></span>
 <span id="cb294-2"><a href="ch-sv.html#cb294-2" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.t<span class="sc">$</span>summary.hyperpar[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)])</span>
 <span id="cb294-3"><a href="ch-sv.html#cb294-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                                      mean   sd   </span></span>
-<span id="cb294-4"><a href="ch-sv.html#cb294-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 degrees of freedom for stochvol student-t  5.842 1.225</span></span>
-<span id="cb294-5"><a href="ch-sv.html#cb294-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.1                         0.055 0.034</span></span>
+<span id="cb294-4"><a href="ch-sv.html#cb294-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 degrees of freedom for stochvol student-t  5.841 1.226</span></span>
+<span id="cb294-5"><a href="ch-sv.html#cb294-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.1                         0.052 0.029</span></span>
 <span id="cb294-6"><a href="ch-sv.html#cb294-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.1                               0.999 0.001</span></span>
-<span id="cb294-7"><a href="ch-sv.html#cb294-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Mean for id.1                             -0.541 0.879</span></span></code></pre></div>
+<span id="cb294-7"><a href="ch-sv.html#cb294-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Mean for id.1                             -0.620 1.000</span></span></code></pre></div>
 <div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="ch-sv.html#cb295-1" aria-hidden="true" tabindex="-1"></a>fit.model.t <span class="ot">&lt;-</span></span>
 <span id="cb295-2"><a href="ch-sv.html#cb295-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exp</span>(model.t<span class="sc">$</span>summary.linear.predictor<span class="sc">$</span>mean) </span></code></pre></div>
 <p>The high value of the estimated <span class="math inline">\(\phi\)</span> indicates a high degree of persistence. The estimated d.f. for the <span class="math inline">\(t\)</span>-distribution is about <span class="math inline">\(6\)</span>. Again, the fitted means of <span class="math inline">\(\exp(h_t)\)</span> are obtained as shown earlier for <code>model.g</code>. A plot of these values and <span class="math inline">\(r_t^2\)</span> is shown in the lower plot in Figure <a href="ch-sv.html#fig:stochvol-ibm-plots">10.2</a>.</p>
@@ -685,10 +685,10 @@ Marginal Likelihood
 model.g
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4262.229\)</span>
+<span class="math inline">\(-4262.231\)</span>
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4238.847\)</span>
+<span class="math inline">\(-4238.849\)</span>
 </td>
 <td style="text-align:left;">
 <span class="math inline">\(2070.687\)</span>
@@ -699,13 +699,13 @@ model.g
 model.t
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4260.186\)</span>
+<span class="math inline">\(-4260.28\)</span>
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4259.244\)</span>
+<span class="math inline">\(-4259.278\)</span>
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(2084.249\)</span>
+<span class="math inline">\(2084.564\)</span>
 </td>
 </tr>
 </tbody>
