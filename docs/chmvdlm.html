@@ -24,7 +24,7 @@
 <meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
 
 
-<meta name="date" content="2022-06-14" />
+<meta name="date" content="2022-07-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,12 +162,13 @@ div.csl-indent {
 <li><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#preface">Preface<span></span></a>
+<li><a href="index.html#helloவணககமmerhaba">Hello/வணக்கம்/Merhaba!<span></span></a></li>
+<li><a href="preface.html#preface">Preface<span></span></a>
 <ul>
-<li><a href="index.html#why-read-this-book">Why read this book?<span></span></a></li>
-<li><a href="index.html#structure-of-the-book">Structure of the book<span></span></a></li>
-<li><a href="index.html#software-information-and-conventions">Software information and conventions<span></span></a></li>
-<li><a href="index.html#acknowledgments">Acknowledgments<span></span></a></li>
+<li><a href="preface.html#why-read-this-book">Why read this book?<span></span></a></li>
+<li><a href="preface.html#structure-of-the-book">Structure of the book<span></span></a></li>
+<li><a href="preface.html#software-information-and-conventions">Software information and conventions<span></span></a></li>
+<li><a href="preface.html#acknowledgments">Acknowledgments<span></span></a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="chapter1.html"><a href="chapter1.html"><i class="fa fa-check"></i><b>1</b> Bayesian Analysis<span></span></a>
 <ul>
@@ -716,12 +717,12 @@ We also assume a Gaussian prior with high precision through the argument <code>c
 <span id="cb338-14"><a href="chmvdlm.html#cb338-14" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb338-15"><a href="chmvdlm.html#cb338-15" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(ride.mvn.model1<span class="sc">$</span>summary.hyperpar[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)])</span>
 <span id="cb338-16"><a href="chmvdlm.html#cb338-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                              mean    sd     </span></span>
-<span id="cb338-17"><a href="chmvdlm.html#cb338-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for t.index component 1  91.201  12.231</span></span>
-<span id="cb338-18"><a href="chmvdlm.html#cb338-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for t.index component 2  83.942  11.336</span></span>
+<span id="cb338-17"><a href="chmvdlm.html#cb338-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for t.index component 1  91.196  12.231</span></span>
+<span id="cb338-18"><a href="chmvdlm.html#cb338-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for t.index component 2  83.943  11.335</span></span>
 <span id="cb338-19"><a href="chmvdlm.html#cb338-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho1:2 for t.index                  0.088   0.093</span></span>
-<span id="cb338-20"><a href="chmvdlm.html#cb338-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Precision for b0.tnc               12.642   7.307</span></span>
-<span id="cb338-21"><a href="chmvdlm.html#cb338-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 Rho for b0.tnc                      0.995   0.003</span></span>
-<span id="cb338-22"><a href="chmvdlm.html#cb338-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 Precision for b0.taxi             262.978 163.411</span></span>
+<span id="cb338-20"><a href="chmvdlm.html#cb338-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Precision for b0.tnc               12.703   7.338</span></span>
+<span id="cb338-21"><a href="chmvdlm.html#cb338-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 Rho for b0.tnc                      0.994   0.003</span></span>
+<span id="cb338-22"><a href="chmvdlm.html#cb338-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 Precision for b0.taxi             263.615 164.235</span></span>
 <span id="cb338-23"><a href="chmvdlm.html#cb338-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 7 Rho for b0.taxi                     0.956   0.029</span></span></code></pre></div>
 <p>In the hyperparameter summary,
 <code>Precision for t.index (component 1)</code> estimates the precision for TNC, <span class="math inline">\(1/V_{11}\)</span>,
@@ -855,13 +856,13 @@ predictors, and latent intercepts <span class="math inline">\(\beta_{1,t,0}\)</s
 <span id="cb346-14"><a href="chmvdlm.html#cb346-14" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb346-15"><a href="chmvdlm.html#cb346-15" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(ride.mvn.model1<span class="sc">$</span>summary.hyperpar[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)])</span>
 <span id="cb346-16"><a href="chmvdlm.html#cb346-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                              mean    sd     </span></span>
-<span id="cb346-17"><a href="chmvdlm.html#cb346-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for t.index component 1  91.205  12.231</span></span>
-<span id="cb346-18"><a href="chmvdlm.html#cb346-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for t.index component 2  83.945  11.335</span></span>
+<span id="cb346-17"><a href="chmvdlm.html#cb346-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for t.index component 1  91.194  12.230</span></span>
+<span id="cb346-18"><a href="chmvdlm.html#cb346-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for t.index component 2  83.943  11.335</span></span>
 <span id="cb346-19"><a href="chmvdlm.html#cb346-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho1:2 for t.index                  0.088   0.093</span></span>
-<span id="cb346-20"><a href="chmvdlm.html#cb346-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Precision for b0.tnc               12.654   7.314</span></span>
-<span id="cb346-21"><a href="chmvdlm.html#cb346-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 Rho for b0.tnc                      0.995   0.003</span></span>
-<span id="cb346-22"><a href="chmvdlm.html#cb346-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 Precision for b0.taxi             263.200 163.609</span></span>
-<span id="cb346-23"><a href="chmvdlm.html#cb346-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 7 Rho for b0.taxi                     0.956   0.029</span></span></code></pre></div>
+<span id="cb346-20"><a href="chmvdlm.html#cb346-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Precision for b0.tnc               12.774   7.371</span></span>
+<span id="cb346-21"><a href="chmvdlm.html#cb346-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 Rho for b0.tnc                      0.994   0.003</span></span>
+<span id="cb346-22"><a href="chmvdlm.html#cb346-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 Precision for b0.taxi             264.413 165.234</span></span>
+<span id="cb346-23"><a href="chmvdlm.html#cb346-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 7 Rho for b0.taxi                     0.956   0.030</span></span></code></pre></div>
 <p>Plots of fitted versus observed usage for TNC and Taxi usage are shown in Figure <a href="chmvdlm.html#fig:tnc-taxi-fit">12.4</a>.</p>
 <div class="figure"><span id="fig:tnc-taxi-fit"></span>
 <img src="gitbook_version_files/figure-html/tnc-taxi-fit-1.png" alt="Observed (red) versus fitted (blue) TNC usage (top panel) and Taxi usage (bottom panel). Fits obtained using `inla.make.lincomb()`. The black vertical line divides the data into training and test portions." width="672" />
