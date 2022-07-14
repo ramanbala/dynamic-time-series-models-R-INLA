@@ -24,7 +24,7 @@
 <meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
 
 
-<meta name="date" content="2022-07-13" />
+<meta name="date" content="2022-07-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,7 +162,7 @@ div.csl-indent {
 <li><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#helloவணககமmerhaba">Hello/வணக்கம்/Merhaba!<span></span></a></li>
+<li><a href="index.html#hello">Hello!<span></span></a></li>
 <li><a href="preface.html#preface">Preface<span></span></a>
 <ul>
 <li><a href="preface.html#why-read-this-book">Why read this book?<span></span></a></li>
@@ -645,10 +645,10 @@ replacing <code>family = "stochvol"</code> in the <code>model.g</code> call abov
 <div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="ch-sv.html#cb294-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model.t)</span></span>
 <span id="cb294-2"><a href="ch-sv.html#cb294-2" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model.t<span class="sc">$</span>summary.hyperpar[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)])</span>
 <span id="cb294-3"><a href="ch-sv.html#cb294-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                                      mean   sd   </span></span>
-<span id="cb294-4"><a href="ch-sv.html#cb294-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 degrees of freedom for stochvol student-t  5.843 1.225</span></span>
+<span id="cb294-4"><a href="ch-sv.html#cb294-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 degrees of freedom for stochvol student-t  5.842 1.225</span></span>
 <span id="cb294-5"><a href="ch-sv.html#cb294-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.1                         0.055 0.034</span></span>
 <span id="cb294-6"><a href="ch-sv.html#cb294-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.1                               0.999 0.001</span></span>
-<span id="cb294-7"><a href="ch-sv.html#cb294-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Mean for id.1                             -0.541 0.881</span></span></code></pre></div>
+<span id="cb294-7"><a href="ch-sv.html#cb294-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Mean for id.1                             -0.541 0.880</span></span></code></pre></div>
 <div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="ch-sv.html#cb295-1" aria-hidden="true" tabindex="-1"></a>fit.model.t <span class="ot">&lt;-</span></span>
 <span id="cb295-2"><a href="ch-sv.html#cb295-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exp</span>(model.t<span class="sc">$</span>summary.linear.predictor<span class="sc">$</span>mean) </span></code></pre></div>
 <p>The high value of the estimated <span class="math inline">\(\phi\)</span> indicates a high degree of persistence. The estimated d.f. for the <span class="math inline">\(t\)</span>-distribution is about <span class="math inline">\(6\)</span>. Again, the fitted means of <span class="math inline">\(\exp(h_t)\)</span> are obtained as shown earlier for <code>model.g</code>. A plot of these values and <span class="math inline">\(r_t^2\)</span> is shown in the lower plot in Figure <a href="ch-sv.html#fig:stochvol-ibm-plots">10.2</a>.</p>
@@ -686,10 +686,10 @@ Marginal Likelihood
 model.g
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4262.23\)</span>
+<span class="math inline">\(-4262.231\)</span>
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4238.848\)</span>
+<span class="math inline">\(-4238.849\)</span>
 </td>
 <td style="text-align:left;">
 <span class="math inline">\(2070.688\)</span>
@@ -703,10 +703,10 @@ model.t
 <span class="math inline">\(-4260.188\)</span>
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4259.245\)</span>
+<span class="math inline">\(-4259.246\)</span>
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(2084.253\)</span>
+<span class="math inline">\(2084.251\)</span>
 </td>
 </tr>
 </tbody>

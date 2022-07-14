@@ -24,7 +24,7 @@
 <meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
 
 
-<meta name="date" content="2022-07-13" />
+<meta name="date" content="2022-07-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,7 +162,7 @@ div.csl-indent {
 <li><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#helloவணககமmerhaba">Hello/வணக்கம்/Merhaba!<span></span></a></li>
+<li><a href="index.html#hello">Hello!<span></span></a></li>
 <li><a href="preface.html#preface">Preface<span></span></a>
 <ul>
 <li><a href="preface.html#why-read-this-book">Why read this book?<span></span></a></li>
@@ -571,7 +571,7 @@ given by <a href="chapter5.html#eq:structts">(5.1)</a>. When we fitted a model w
 <span id="cb126-22"><a href="chapter5.html#cb126-22" aria-hidden="true" tabindex="-1"></a><span class="do">##    = TRUE, cpo = TRUE, &quot;, &quot; config = TRUE), control.predictor = </span></span>
 <span id="cb126-23"><a href="chapter5.html#cb126-23" aria-hidden="true" tabindex="-1"></a><span class="do">##    list(compute = TRUE))&quot; ) </span></span>
 <span id="cb126-24"><a href="chapter5.html#cb126-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Time used:</span></span>
-<span id="cb126-25"><a href="chapter5.html#cb126-25" aria-hidden="true" tabindex="-1"></a><span class="do">##     Pre = 4.6, Running = 0.298, Post = 0.246, Total = 5.15 </span></span>
+<span id="cb126-25"><a href="chapter5.html#cb126-25" aria-hidden="true" tabindex="-1"></a><span class="do">##     Pre = 4.67, Running = 0.318, Post = 0.254, Total = 5.24 </span></span>
 <span id="cb126-26"><a href="chapter5.html#cb126-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Random effects:</span></span>
 <span id="cb126-27"><a href="chapter5.html#cb126-27" aria-hidden="true" tabindex="-1"></a><span class="do">##   Name     Model</span></span>
 <span id="cb126-28"><a href="chapter5.html#cb126-28" aria-hidden="true" tabindex="-1"></a><span class="do">##     trend RW1 model</span></span>
@@ -893,21 +893,21 @@ The condensed summaries on estimated effects are shown below.
 ```r
 format.inla.out(model.soi$summary.fixed[,c(1:5)])
 ##   name      mean  sd    0.025q 0.5q  0.975q
-## 1 Intercept 0.099 0.217 -0.326 0.099 0.524
+## 1 Intercept 0.087 0.037 0.014  0.087 0.159
 format.inla.out(model.soi$summary.hyperpar[,c(1:2)])
-##   name                       mean     sd   
-## 1 Precision for Gaussian obs   42.082 0.036
-## 2 Precision for id1.seas     1067.742 0.896
-## 3 Precision for id2.seas      410.127 0.364
-## 4 Precision for id.trend        2.581 0.003
-## 5 Rho for id.trend              0.968 0.000
+##   name                       mean      sd    
+## 1 Precision for Gaussian obs    23.943  0.020
+## 2 Precision for id1.seas     12945.577 10.770
+## 3 Precision for id2.seas      2929.171  2.399
+## 4 Precision for id.trend        23.779  0.020
+## 5 Rho for id.trend               0.867  0.000
 ```
 
 
 
 
 
-For comparison, we also fit a model with just one seasonal component corresponding to $s = 12$. Figure \@ref(fig:fit-soi) shows the fits from both models, and shows that the model with two seasonal components gives a better fit to the SOI time series. The DIC value for the model with two seasonal components is -97.129, which is less than -18.281, the DIC value of the model with only $s=12$. 
+For comparison, we also fit a model with just one seasonal component corresponding to $s = 12$. Figure \@ref(fig:fit-soi) shows the fits from both models, and shows that the model with two seasonal components gives a better fit to the SOI time series. The DIC value for the model with two seasonal components is 14.56, which is less than -18.281, the DIC value of the model with only $s=12$. 
 
 <div class="figure">
 <img src="gitbook_version_files/figure-html/fit-soi-1.png" alt="Comparing fits from a model with one seasonal component, $s= 12$ (top plot) with fits from a model with two seasonal components, $s_1 = 12$ and $s_2 = 48$ (bottom plot) for the SOI data." width="672" />
@@ -1064,12 +1064,12 @@ as exogenous fixed predictors, and an AR(1) trend. Since we anticipate that the 
 <span id="cb141-15"><a href="chapter5.html#cb141-15" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb141-16"><a href="chapter5.html#cb141-16" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(model<span class="fl">.3</span>mth<span class="fl">.2</span><span class="sc">$</span>summary.hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
 <span id="cb141-17"><a href="chapter5.html#cb141-17" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                       mean      sd       </span></span>
-<span id="cb141-18"><a href="chapter5.html#cb141-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs 21123.199 19035.534</span></span>
-<span id="cb141-19"><a href="chapter5.html#cb141-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for trend            0.267     0.028</span></span>
-<span id="cb141-20"><a href="chapter5.html#cb141-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for trend                  0.919     0.009</span></span>
+<span id="cb141-18"><a href="chapter5.html#cb141-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs 21972.409 13874.995</span></span>
+<span id="cb141-19"><a href="chapter5.html#cb141-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for trend            0.262     0.026</span></span>
+<span id="cb141-20"><a href="chapter5.html#cb141-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for trend                  0.921     0.008</span></span>
 <span id="cb141-21"><a href="chapter5.html#cb141-21" aria-hidden="true" tabindex="-1"></a>model<span class="fl">.3</span>mth<span class="fl">.2</span><span class="sc">$</span>mlik  <span class="co"># marginal likelihood</span></span>
 <span id="cb141-22"><a href="chapter5.html#cb141-22" aria-hidden="true" tabindex="-1"></a><span class="do">##                                        [,1]</span></span>
-<span id="cb141-23"><a href="chapter5.html#cb141-23" aria-hidden="true" tabindex="-1"></a><span class="do">## log marginal-likelihood (integration) -2606</span></span>
+<span id="cb141-23"><a href="chapter5.html#cb141-23" aria-hidden="true" tabindex="-1"></a><span class="do">## log marginal-likelihood (integration) -2605</span></span>
 <span id="cb141-24"><a href="chapter5.html#cb141-24" aria-hidden="true" tabindex="-1"></a><span class="do">## log marginal-likelihood (Gaussian)    -2606</span></span></code></pre></div>
 <p>The DIC, WAIC, and PsBF values from the two models are displayed in Table <a href="chapter5.html#tab:mod-sel-traffic">5.1</a>. All these criteria prefer Model E2. The setup shown above can be used to investigate other models for the hourly traffic in order to identify the smallest significant model, but the details are not shown here.</p>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -1112,13 +1112,13 @@ Model E1
 Model E2
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(-12968.58\)</span>
+<span class="math inline">\(-13069.535\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(-13263.358\)</span>
+<span class="math inline">\(-13642.885\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(4696.426\)</span>
+<span class="math inline">\(4883.262\)</span>
 </td>
 </tr>
 </tbody>

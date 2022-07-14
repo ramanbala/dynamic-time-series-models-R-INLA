@@ -24,7 +24,7 @@
 <meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
 
 
-<meta name="date" content="2022-07-13" />
+<meta name="date" content="2022-07-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,7 +162,7 @@ div.csl-indent {
 <li><a href="./">Dynamic Time Series Models using R-INLA: An Applied Perspective</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#helloவணககமmerhaba">Hello/வணக்கம்/Merhaba!<span></span></a></li>
+<li><a href="index.html#hello">Hello!<span></span></a></li>
 <li><a href="preface.html#preface">Preface<span></span></a>
 <ul>
 <li><a href="preface.html#why-read-this-book">Why read this book?<span></span></a></li>
@@ -561,7 +561,7 @@ In later sections of this chapter and in later chapters, we discuss other contro
 <span id="cb18-4"><a href="chapter3.html#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    c(&quot;inla(formula = formula.rw1, family = \&quot;gaussian\&quot;, data = </span></span>
 <span id="cb18-5"><a href="chapter3.html#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="do">##    rw1.dat, &quot;, &quot; control.predictor = list(compute = TRUE))&quot;) </span></span>
 <span id="cb18-6"><a href="chapter3.html#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Time used:</span></span>
-<span id="cb18-7"><a href="chapter3.html#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     Pre = 4.01, Running = 0.559, Post = 0.391, Total = 4.96 </span></span>
+<span id="cb18-7"><a href="chapter3.html#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     Pre = 3.91, Running = 3.03, Post = 0.393, Total = 7.34 </span></span>
 <span id="cb18-8"><a href="chapter3.html#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Random effects:</span></span>
 <span id="cb18-9"><a href="chapter3.html#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="do">##   Name     Model</span></span>
 <span id="cb18-10"><a href="chapter3.html#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="do">##     id.w RW1 model</span></span>
@@ -593,7 +593,7 @@ In later sections of this chapter and in later chapters, we discuss other contro
 <li><em>Time used</em>: time taken by the system to execute the model fit. Here,</li>
 </ol>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="chapter3.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.rw1)<span class="sc">$</span>cpu.used</span>
-<span id="cb20-2"><a href="chapter3.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;Pre = 4.01, Running = 0.559, Post = 0.391, Total = 4.96&quot;</span></span></code></pre></div>
+<span id="cb20-2"><a href="chapter3.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;Pre = 3.91, Running = 3.03, Post = 0.393, Total = 7.34&quot;</span></span></code></pre></div>
 <p>We can also obtain the same output by using <code>model.rw1$cpu.used</code>.</p>
 <ol start="3" style="list-style-type: decimal">
 <li><p><em>The model has no fixed effects</em>: note that in the equations for the random walk plus noise model, <span class="math inline">\(x_t\)</span> is time varying, and there are no “fixed” effects in the model (such as the intercept, <span class="math inline">\(\alpha\)</span>, say).</p></li>
@@ -783,12 +783,12 @@ from <code>R-INLA</code> corresponds to the smoothed estimate of <span class="ma
 Posterior summaries of the state variable (the local level variable in the case of the random walk plus noise model) <span class="math inline">\(x_t\)</span> are stored in <em>summary.random</em>. We display the first few rows below.</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="chapter3.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(model.rw1<span class="sc">$</span>summary.random<span class="sc">$</span>id.w)</span>
 <span id="cb36-2"><a href="chapter3.html#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   ID  mean     sd 0.025quant 0.5quant 0.975quant  mode       kld</span></span>
-<span id="cb36-3"><a href="chapter3.html#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  1 2.488 0.5178     1.4718    2.488      3.505 2.487 8.687e-08</span></span>
+<span id="cb36-3"><a href="chapter3.html#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  1 2.488 0.5178     1.4718    2.488      3.505 2.487 8.692e-08</span></span>
 <span id="cb36-4"><a href="chapter3.html#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  2 2.428 0.4497     1.5453    2.428      3.311 2.428 1.188e-07</span></span>
 <span id="cb36-5"><a href="chapter3.html#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  3 2.331 0.4262     1.4943    2.331      3.168 2.330 9.244e-08</span></span>
-<span id="cb36-6"><a href="chapter3.html#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  4 2.270 0.4191     1.4475    2.269      3.093 2.268 1.318e-07</span></span>
+<span id="cb36-6"><a href="chapter3.html#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  4 2.270 0.4191     1.4475    2.269      3.093 2.268 1.319e-07</span></span>
 <span id="cb36-7"><a href="chapter3.html#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 5  5 1.918 0.4166     1.0983    1.918      2.734 1.919 8.678e-08</span></span>
-<span id="cb36-8"><a href="chapter3.html#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  6 1.745 0.4170     0.9234    1.746      2.561 1.747 2.460e-07</span></span></code></pre></div>
+<span id="cb36-8"><a href="chapter3.html#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  6 1.745 0.4170     0.9234    1.746      2.561 1.747 2.461e-07</span></span></code></pre></div>
 <p>A condensed output is shown below.</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="chapter3.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(<span class="fu">head</span>(model.rw1<span class="sc">$</span>summary.random<span class="sc">$</span>id[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)]))</span>
 <span id="cb37-2"><a href="chapter3.html#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   ID mean  sd    0.025q 0.5q </span></span>
@@ -1945,7 +1945,7 @@ FIGURE 3.19: Histograms of posterior predictive samples for holdout time points 
 <span id="cb91-3"><a href="chapter3.html#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(model.ar1.level<span class="sc">$</span>summary.fitted.values<span class="sc">$</span>mean, <span class="dv">5</span>)</span>
 <span id="cb91-4"><a href="chapter3.html#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1.526 1.409 1.583 1.549 1.547</span></span>
 <span id="cb91-5"><a href="chapter3.html#cb91-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unname</span>(<span class="fu">rowMeans</span>(pred.post))</span>
-<span id="cb91-6"><a href="chapter3.html#cb91-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1.521 1.412 1.621 1.558 1.565</span></span></code></pre></div>
+<span id="cb91-6"><a href="chapter3.html#cb91-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1.521 1.421 1.584 1.567 1.549</span></span></code></pre></div>
 <p>We end this chapter with Table <a href="chapter3.html#tab:explain-inla-out">3.1</a> that gives a quick reference for the correspondence between terms in <code>R-INLA</code> summaries in their output and the terms in the DLMs. As mentioned earlier, note that <em>Rho for id.x</em> denotes <span class="math inline">\(\phi\)</span> in the AR(1) model.</p>
 <table class="table table-striped" style="width: auto !important; ">
 <caption>
