@@ -24,7 +24,7 @@
 <meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
 
 
-<meta name="date" content="2022-07-14" />
+<meta name="date" content="2022-08-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -633,7 +633,7 @@ FIGURE 10.1: Adjusted prices (left) and log returns (right) for IBM.
 <span id="cb292-21"><a href="ch-sv.html#cb292-21" aria-hidden="true" tabindex="-1"></a><span class="do">##   name               mean   sd    0.5q  </span></span>
 <span id="cb292-22"><a href="ch-sv.html#cb292-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for id.1  0.038 0.020  0.035</span></span>
 <span id="cb292-23"><a href="ch-sv.html#cb292-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Rho for id.1        0.998 0.001  0.998</span></span>
-<span id="cb292-24"><a href="ch-sv.html#cb292-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Mean for id.1      -0.439 0.675 -0.463</span></span></code></pre></div>
+<span id="cb292-24"><a href="ch-sv.html#cb292-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Mean for id.1      -0.439 0.675 -0.464</span></span></code></pre></div>
 <p>The estimated posterior mean of <span class="math inline">\(\phi\)</span> is 0.998, which indicates very high persistence. Note that <code>summary.fitted.values</code> gives the fitted values of <span class="math inline">\(\sigma^2_t\)</span>.
 We can obtain fitted values of <span class="math inline">\(\exp(h_t)\)</span>
 using <code>summary.linear.predictor</code>.
@@ -648,7 +648,7 @@ replacing <code>family = "stochvol"</code> in the <code>model.g</code> call abov
 <span id="cb294-4"><a href="ch-sv.html#cb294-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 degrees of freedom for stochvol student-t  5.842 1.225</span></span>
 <span id="cb294-5"><a href="ch-sv.html#cb294-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.1                         0.055 0.034</span></span>
 <span id="cb294-6"><a href="ch-sv.html#cb294-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.1                               0.999 0.001</span></span>
-<span id="cb294-7"><a href="ch-sv.html#cb294-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Mean for id.1                             -0.541 0.880</span></span></code></pre></div>
+<span id="cb294-7"><a href="ch-sv.html#cb294-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 Mean for id.1                             -0.541 0.879</span></span></code></pre></div>
 <div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="ch-sv.html#cb295-1" aria-hidden="true" tabindex="-1"></a>fit.model.t <span class="ot">&lt;-</span></span>
 <span id="cb295-2"><a href="ch-sv.html#cb295-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exp</span>(model.t<span class="sc">$</span>summary.linear.predictor<span class="sc">$</span>mean) </span></code></pre></div>
 <p>The high value of the estimated <span class="math inline">\(\phi\)</span> indicates a high degree of persistence. The estimated d.f. for the <span class="math inline">\(t\)</span>-distribution is about <span class="math inline">\(6\)</span>. Again, the fitted means of <span class="math inline">\(\exp(h_t)\)</span> are obtained as shown earlier for <code>model.g</code>. A plot of these values and <span class="math inline">\(r_t^2\)</span> is shown in the lower plot in Figure <a href="ch-sv.html#fig:stochvol-ibm-plots">10.2</a>.</p>
@@ -686,10 +686,10 @@ Marginal Likelihood
 model.g
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4262.231\)</span>
+<span class="math inline">\(-4262.229\)</span>
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4238.849\)</span>
+<span class="math inline">\(-4238.847\)</span>
 </td>
 <td style="text-align:left;">
 <span class="math inline">\(2070.688\)</span>
@@ -700,13 +700,13 @@ model.g
 model.t
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4260.188\)</span>
+<span class="math inline">\(-4260.186\)</span>
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(-4259.246\)</span>
+<span class="math inline">\(-4259.244\)</span>
 </td>
 <td style="text-align:left;">
-<span class="math inline">\(2084.251\)</span>
+<span class="math inline">\(2084.248\)</span>
 </td>
 </tr>
 </tbody>

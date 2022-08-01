@@ -24,7 +24,7 @@
 <meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
 
 
-<meta name="date" content="2022-07-14" />
+<meta name="date" content="2022-08-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -540,7 +540,7 @@ compute its 95% HPD interval using <code>inla.hpdmarginal()</code> as shown belo
 <p>However, note that these cannot be obtained by directly applying the inverse transformation to <code>summary.linear.predictor</code>, which returns summaries of posterior marginals of the linear predictors in the model.. For example, under a log link, we cannot just apply the <code>exp()</code> function to <code>summary.linear.predictor$mean</code>, since this will not result in <code>summary.fitted.values$mean</code>.</p>
 <div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="ch-count.html#cb244-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">head</span>(model.sim.pois<span class="sc">$</span>summary.linear.predictor<span class="sc">$</span>mean)) <span class="sc">%&gt;%</span> </span>
 <span id="cb244-2"><a href="ch-count.html#cb244-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>)</span>
-<span id="cb244-3"><a href="ch-count.html#cb244-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.906 1.173 1.201 1.444 1.142 1.018</span></span></code></pre></div>
+<span id="cb244-3"><a href="ch-count.html#cb244-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.906 1.173 1.200 1.444 1.142 1.018</span></span></code></pre></div>
 <p>We must instead transform the marginals for the variable <em>fitted.from.lp</em>.</p>
 <div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="ch-count.html#cb245-1" aria-hidden="true" tabindex="-1"></a>fitted.from.lp <span class="ot">&lt;-</span> model.sim.pois<span class="sc">$</span>marginals.linear.predictor <span class="sc">%&gt;%</span></span>
 <span id="cb245-2"><a href="ch-count.html#cb245-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(<span class="cf">function</span>(x)</span>

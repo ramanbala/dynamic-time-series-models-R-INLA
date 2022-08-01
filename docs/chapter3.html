@@ -24,7 +24,7 @@
 <meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
 
 
-<meta name="date" content="2022-07-14" />
+<meta name="date" content="2022-08-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -561,7 +561,7 @@ In later sections of this chapter and in later chapters, we discuss other contro
 <span id="cb18-4"><a href="chapter3.html#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    c(&quot;inla(formula = formula.rw1, family = \&quot;gaussian\&quot;, data = </span></span>
 <span id="cb18-5"><a href="chapter3.html#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="do">##    rw1.dat, &quot;, &quot; control.predictor = list(compute = TRUE))&quot;) </span></span>
 <span id="cb18-6"><a href="chapter3.html#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Time used:</span></span>
-<span id="cb18-7"><a href="chapter3.html#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     Pre = 3.91, Running = 3.03, Post = 0.393, Total = 7.34 </span></span>
+<span id="cb18-7"><a href="chapter3.html#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     Pre = 4.66, Running = 0.569, Post = 0.411, Total = 5.64 </span></span>
 <span id="cb18-8"><a href="chapter3.html#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Random effects:</span></span>
 <span id="cb18-9"><a href="chapter3.html#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="do">##   Name     Model</span></span>
 <span id="cb18-10"><a href="chapter3.html#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="do">##     id.w RW1 model</span></span>
@@ -593,7 +593,7 @@ In later sections of this chapter and in later chapters, we discuss other contro
 <li><em>Time used</em>: time taken by the system to execute the model fit. Here,</li>
 </ol>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="chapter3.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.rw1)<span class="sc">$</span>cpu.used</span>
-<span id="cb20-2"><a href="chapter3.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;Pre = 3.91, Running = 3.03, Post = 0.393, Total = 7.34&quot;</span></span></code></pre></div>
+<span id="cb20-2"><a href="chapter3.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;Pre = 4.66, Running = 0.569, Post = 0.411, Total = 5.64&quot;</span></span></code></pre></div>
 <p>We can also obtain the same output by using <code>model.rw1$cpu.used</code>.</p>
 <ol start="3" style="list-style-type: decimal">
 <li><p><em>The model has no fixed effects</em>: note that in the equations for the random walk plus noise model, <span class="math inline">\(x_t\)</span> is time varying, and there are no “fixed” effects in the model (such as the intercept, <span class="math inline">\(\alpha\)</span>, say).</p></li>
@@ -622,7 +622,7 @@ precision for <em>id.w</em>, i.e., the precision of <span class="math inline">\(
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="chapter3.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.rw1)<span class="sc">$</span>neffp</span>
 <span id="cb23-2"><a href="chapter3.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="do">##                                      [,1]</span></span>
 <span id="cb23-3"><a href="chapter3.html#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Expectected  number of parameters 143.475</span></span>
-<span id="cb23-4"><a href="chapter3.html#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Stdev of the number of parameters  15.719</span></span>
+<span id="cb23-4"><a href="chapter3.html#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Stdev of the number of parameters  15.720</span></span>
 <span id="cb23-5"><a href="chapter3.html#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of equivalent replicates     3.485</span></span></code></pre></div>
 <ol start="7" style="list-style-type: decimal">
 <li><em>Marginal log-likelihood</em>: this was defined in Chapter <a href="chapter2.html#chapter2">2</a> and is used in model selection, as discussed in Section <a href="chapter3.html#modsel">3.8</a>.</li>
@@ -1945,7 +1945,7 @@ FIGURE 3.19: Histograms of posterior predictive samples for holdout time points 
 <span id="cb91-3"><a href="chapter3.html#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(model.ar1.level<span class="sc">$</span>summary.fitted.values<span class="sc">$</span>mean, <span class="dv">5</span>)</span>
 <span id="cb91-4"><a href="chapter3.html#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1.526 1.409 1.583 1.549 1.547</span></span>
 <span id="cb91-5"><a href="chapter3.html#cb91-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unname</span>(<span class="fu">rowMeans</span>(pred.post))</span>
-<span id="cb91-6"><a href="chapter3.html#cb91-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1.521 1.421 1.584 1.567 1.549</span></span></code></pre></div>
+<span id="cb91-6"><a href="chapter3.html#cb91-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1.509 1.415 1.591 1.550 1.534</span></span></code></pre></div>
 <p>We end this chapter with Table <a href="chapter3.html#tab:explain-inla-out">3.1</a> that gives a quick reference for the correspondence between terms in <code>R-INLA</code> summaries in their output and the terms in the DLMs. As mentioned earlier, note that <em>Rho for id.x</em> denotes <span class="math inline">\(\phi\)</span> in the AR(1) model.</p>
 <table class="table table-striped" style="width: auto !important; ">
 <caption>

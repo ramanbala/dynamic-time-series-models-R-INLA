@@ -24,7 +24,7 @@
 <meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
 
 
-<meta name="date" content="2022-07-14" />
+<meta name="date" content="2022-08-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -614,21 +614,21 @@ Assume that <span class="math inline">\(g=10\)</span>, and <span class="math inl
 <span id="cb158-13"><a href="chapter6.html#cb158-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="chapter6.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(summary.model.panelts<span class="fl">.2</span><span class="sc">$</span>fixed[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>)])</span>
 <span id="cb159-2"><a href="chapter6.html#cb159-2" aria-hidden="true" tabindex="-1"></a><span class="do">##    name         mean   sd    0.5q  </span></span>
-<span id="cb159-3"><a href="chapter6.html#cb159-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  fact.alpha1  -1.626 0.070 -1.626</span></span>
-<span id="cb159-4"><a href="chapter6.html#cb159-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  fact.alpha2  -1.569 0.072 -1.569</span></span>
-<span id="cb159-5"><a href="chapter6.html#cb159-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  fact.alpha3   1.919 0.072  1.919</span></span>
-<span id="cb159-6"><a href="chapter6.html#cb159-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  fact.alpha4  -0.181 0.070 -0.181</span></span>
-<span id="cb159-7"><a href="chapter6.html#cb159-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 5  fact.alpha5  -1.883 0.071 -1.883</span></span>
-<span id="cb159-8"><a href="chapter6.html#cb159-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  fact.alpha6   1.050 0.070  1.050</span></span>
-<span id="cb159-9"><a href="chapter6.html#cb159-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 7  fact.alpha7   0.373 0.070  0.373</span></span>
-<span id="cb159-10"><a href="chapter6.html#cb159-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 8  fact.alpha8  -1.023 0.071 -1.023</span></span>
-<span id="cb159-11"><a href="chapter6.html#cb159-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 9  fact.alpha9   1.088 0.071  1.088</span></span>
-<span id="cb159-12"><a href="chapter6.html#cb159-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 fact.alpha10 -0.928 0.072 -0.928</span></span>
+<span id="cb159-3"><a href="chapter6.html#cb159-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  fact.alpha1   0.470 0.070  0.470</span></span>
+<span id="cb159-4"><a href="chapter6.html#cb159-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  fact.alpha2  -0.511 0.072 -0.511</span></span>
+<span id="cb159-5"><a href="chapter6.html#cb159-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  fact.alpha3   0.162 0.071  0.162</span></span>
+<span id="cb159-6"><a href="chapter6.html#cb159-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  fact.alpha4   0.728 0.069  0.728</span></span>
+<span id="cb159-7"><a href="chapter6.html#cb159-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 5  fact.alpha5   1.395 0.070  1.395</span></span>
+<span id="cb159-8"><a href="chapter6.html#cb159-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  fact.alpha6  -1.311 0.070 -1.311</span></span>
+<span id="cb159-9"><a href="chapter6.html#cb159-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 7  fact.alpha7  -0.551 0.072 -0.551</span></span>
+<span id="cb159-10"><a href="chapter6.html#cb159-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 8  fact.alpha8   0.998 0.070  0.998</span></span>
+<span id="cb159-11"><a href="chapter6.html#cb159-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 9  fact.alpha9  -1.064 0.070 -1.064</span></span>
+<span id="cb159-12"><a href="chapter6.html#cb159-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 fact.alpha10 -0.352 0.072 -0.352</span></span>
 <span id="cb159-13"><a href="chapter6.html#cb159-13" aria-hidden="true" tabindex="-1"></a><span class="fu">format.inla.out</span>(summary.model.panelts<span class="fl">.2</span><span class="sc">$</span>hyperpar[,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)])</span>
 <span id="cb159-14"><a href="chapter6.html#cb159-14" aria-hidden="true" tabindex="-1"></a><span class="do">##   name                       mean  sd   </span></span>
-<span id="cb159-15"><a href="chapter6.html#cb159-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs 0.997 0.038</span></span>
-<span id="cb159-16"><a href="chapter6.html#cb159-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.beta1     1.719 0.164</span></span>
-<span id="cb159-17"><a href="chapter6.html#cb159-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.beta1           0.765 0.030</span></span></code></pre></div>
+<span id="cb159-15"><a href="chapter6.html#cb159-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 Precision for Gaussian obs 1.065 0.042</span></span>
+<span id="cb159-16"><a href="chapter6.html#cb159-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 Precision for id.beta1     1.230 0.103</span></span>
+<span id="cb159-17"><a href="chapter6.html#cb159-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 Rho for id.beta1           0.760 0.026</span></span></code></pre></div>
 <p>The posterior means of <span class="math inline">\(\alpha_i\)</span> are close to the true values given by</p>
 <div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="chapter6.html#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unlist</span>(alpha)</span>
 <span id="cb160-2"><a href="chapter6.html#cb160-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1]  0.4 -0.5  0.2  0.8  1.5 -1.4 -0.6  0.9 -1.1 -0.4</span></span></code></pre></div>
