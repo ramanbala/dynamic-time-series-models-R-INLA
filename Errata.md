@@ -1,6 +1,6 @@
 Errata
 ================
-2022-08-01
+2023-03-18
 
 <!-- [//]: # ({% raw %}) -->
 <!-- [//]: # ({% endraw %}) -->
@@ -36,3 +36,20 @@ format.inla.out(summary.model.panelts.2$hyperpar[,c(1:2)])
 ```
 
 <!-- [//]: # ({% endraw %}) -->
+
+### Chapter-11, Section 11.4.2
+
+In the code chunk following Figure 11.1 in the online version, replace
+*tnc.type3* with *tnc.kh3*, i.e. replace
+
+``` r
+post.sampletype3 <-
+  inla.posterior.sample(n = 500, tnc.type3, seed = 1234)
+```
+
+with
+
+``` r
+post.sampletype3 <-
+  inla.posterior.sample(n = 500, tnc.kh3, seed = 1234)
+```
