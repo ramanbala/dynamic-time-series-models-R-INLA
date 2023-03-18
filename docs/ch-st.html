@@ -24,7 +24,7 @@
 <meta name="author" content="Nalini Ravishanker, Balaji Raman, and Refik Soyer" />
 
 
-<meta name="date" content="2022-10-27" />
+<meta name="date" content="2023-03-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -168,7 +168,7 @@ div.csl-indent {
 <li><a href="preface.html#why-read-this-book" id="toc-why-read-this-book">Why read this book?<span></span></a></li>
 <li><a href="preface.html#structure-of-the-book" id="toc-structure-of-the-book">Structure of the book<span></span></a></li>
 <li><a href="preface.html#software-information-and-conventions" id="toc-software-information-and-conventions">Software information and conventions<span></span></a></li>
-<li><a href="preface.html#acknowledgements" id="toc-acknowledgements">Acknowledgements<span></span></a></li>
+<li><a href="preface.html#acknowledgments" id="toc-acknowledgments">Acknowledgments<span></span></a></li>
 </ul></li>
 <li><a href="chapter1.html#chapter1" id="toc-chapter1"><span class="toc-section-number">1</span> Bayesian Analysis<span></span></a>
 <ul>
@@ -883,7 +883,7 @@ FIGURE 11.1: Time averaged residuals across zones from different models.
 </div>
 <p>Next, we study the behavior of the posterior distributions of <span class="math inline">\(\nu_i\)</span> and <span class="math inline">\(\delta_{it}\)</span> under Model KH3. Using <code>inla.posterior.sample()</code>, we generate <span class="math inline">\(500\)</span> samples from the posterior distributions of <span class="math inline">\(\nu_i\)</span> and <span class="math inline">\(\delta_{it}\)</span> from Model KH3. The top panel in Figure <a href="ch-st.html#fig:boxplotkh3">11.2</a> shows parallel boxplots of the <span class="math inline">\(\nu_i\)</span> values across <span class="math inline">\(g=252\)</span> zones, while the bottom panel shows boxplots of time averages of the <span class="math inline">\(\delta_{it}\)</span> samples. While these boxplots are centered about zero for several zones, we also see non-zero effects in a few taxi zones. The code to obtain the posterior samples is shown below.</p>
 <div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="ch-st.html#cb320-1" aria-hidden="true" tabindex="-1"></a>post.sampletype3 <span class="ot">&lt;-</span></span>
-<span id="cb320-2"><a href="ch-st.html#cb320-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inla.posterior.sample</span>(<span class="at">n =</span> <span class="dv">500</span>, tnc.type3, <span class="at">seed =</span> <span class="dv">1234</span>)</span>
+<span id="cb320-2"><a href="ch-st.html#cb320-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inla.posterior.sample</span>(<span class="at">n =</span> <span class="dv">500</span>, tnc.kh3, <span class="at">seed =</span> <span class="dv">1234</span>)</span>
 <span id="cb320-3"><a href="ch-st.html#cb320-3" aria-hidden="true" tabindex="-1"></a>temp.nu <span class="ot">&lt;-</span> temp.delta <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb320-4"><a href="ch-st.html#cb320-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(post.sampletype3)) {</span>
 <span id="cb320-5"><a href="ch-st.html#cb320-5" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> post.sampletype3[[k]]</span>

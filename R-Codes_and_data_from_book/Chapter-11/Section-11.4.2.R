@@ -53,7 +53,12 @@ tnc.kh3 <- inla(
   formula.kh3,
   data = data.kh,
   control.predictor = list(compute = TRUE, link = 1),
-  control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE),
+  control.compute = list(
+    dic = TRUE,
+    waic = TRUE,
+    cpo = TRUE,
+    config = TRUE
+  ),
   family = "poisson"
 )
 summary(tnc.kh3)
@@ -78,6 +83,26 @@ tnc.kh4 <- inla(
 )
 summary(tnc.kh4)
 # Code for Table 11.1
+# Temporal model
+formula.temp <-
+  tnc.month ~ 1 +
+  f(id.month, model = "rw1") +
+  f(id.monthu, model = "iid")
+tnc.temp <- inla(
+  formula.temp,
+  data = data.kh,
+  control.predictor = list(compute = TRUE, link = 1),
+  control.compute = list(dic = TRUE, waic = TRUE, cpo = TRUE),
+  family = "poisson"
+)
+# summary(tnc.temp)
+summary.tnc.typeA <- summary(tnc.add) # output of 11.4.1
+summary.tnc.typeB <- summary(tnc.temp)
+summary.tnc.type1 <- summary(tnc.kh1)
+summary.tnc.type2 <- summary(tnc.kh2)
+summary.tnc.type3 <- summary(tnc.kh3)
+summary.tnc.type4 <- summary(tnc.kh4)
+
 ## mae
 mae.typeA <-
   cbind.data.frame(
@@ -350,7 +375,7 @@ tm_shape(res.all) + tm_polygons(style = "quantile", col = "res") +
   tm_facets("model", ncol = 3)
 # Posterior distributions under Model KH3
 post.sampletype3 <-
-  inla.posterior.sample(n = 500, tnc.type3, seed = 1234)
+  inla.posterior.sample(n = 500, tnc.kh3, seed = 1234)
 temp.nu <- temp.delta <- list()
 for (k in 1:length(post.sampletype3)) {
   x <- post.sampletype3[[k]]
